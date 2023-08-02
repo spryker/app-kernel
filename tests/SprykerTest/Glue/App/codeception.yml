@@ -23,5 +23,4 @@ suites:
                 - \SprykerTest\Zed\App\Helper\AppHelper
                 - \SprykerTest\Zed\App\Helper\AppAssertionHelper
                 - \SprykerTest\Shared\Propel\Helper\TransactionHelper
-                - \SprykerTest\Shared\Testify\Helper\LocatorHelper:
-                    projectNamespaces: ['Spryker']
+                - \SprykerTest\Shared\Testify\Helper\LocatorHelper

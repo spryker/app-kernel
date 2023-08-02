@@ -16,7 +16,7 @@
     "psr-4": {
       "Spryker\\": "src/Spryker/",
       "SprykerTest\\Glue\\App\\Helper\\": "tests/SprykerTest/Glue/App/_support/Helper/",
-      "SprykerTest\\Zed\\App\\Helper\\": "tests/SprykerTest/Zed/Aüü/_support/Helper/"
+      "SprykerTest\\Zed\\App\\Helper\\": "tests/SprykerTest/Zed/App/_support/Helper/"
     }
   },
   "autoload-dev": {
