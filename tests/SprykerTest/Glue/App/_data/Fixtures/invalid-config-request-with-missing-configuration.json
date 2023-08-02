@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "x-store-reference": [
+      "store-reference"
+    ]
+  },
+  "content": {
+    "data": {
+      "type": "configuration",
+      "attributes": {
+        "configuration": ""
+      }
+    }
+  },
+  "__configurationPayload": {}
+}

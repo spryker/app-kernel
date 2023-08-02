@@ -1,0 +1,18 @@
+{
+  "meta": {
+    "x-store-reference": []
+  },
+  "content": {
+    "data": {
+      "type": "configuration",
+      "attributes": {
+        "configuration": ""
+      }
+    }
+  },
+  "__configurationPayload": {
+    "clientId": "ClientID",
+    "clientSecret": "ClientSecret",
+    "isActive": true
+  }
+}

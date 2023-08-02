@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "x-store-reference": [
+      "store-reference"
+    ]
+  },
+  "content": {
+    "unknown": {
+      "unknown": "configuration",
+      "attributes": {
+        "unknown": {}
+      }
+    }
+  },
+  "__configurationPayload": {}
+}
