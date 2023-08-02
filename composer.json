@@ -4,14 +4,19 @@
   "description": "AppKernel module",
   "license": "proprietary",
   "require": {
-    "php": ">=8.0"
+    "php": ">=8.0",
+    "spryker/message-broker": "^1.8",
+    "spryker/translator": "^1.11"
   },
   "require-dev": {
-    "spryker/code-sniffer": "*"
+    "spryker/code-sniffer": "*",
+    "spryker/testify": "^3.49"
   },
   "autoload": {
     "psr-4": {
-      "Spryker\\": "src/Spryker/"
+      "Spryker\\": "src/Spryker/",
+      "SprykerTest\\Glue\\App\\Helper\\": "tests/SprykerTest/Glue/App/_support/Helper/",
+      "SprykerTest\\Zed\\App\\Helper\\": "tests/SprykerTest/Zed/Aüü/_support/Helper/"
     }
   },
   "autoload-dev": {
@@ -31,6 +36,9 @@
     }
   },
   "config": {
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }
