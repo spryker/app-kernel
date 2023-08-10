@@ -9,6 +9,7 @@ namespace Spryker\Glue\App\Plugin\RouteProvider;
 
 use Spryker\Glue\App\Controller\AppConfigController;
 use Spryker\Glue\App\AppConfig;
+use Spryker\Glue\App\Controller\AppDisconnectController;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RouteProviderPluginInterface;
 use Spryker\Glue\Kernel\Backend\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,7 +51,7 @@ class AppRouteProviderPlugin extends AbstractPlugin implements RouteProviderPlug
     {
         return (new Route(AppConfig::DISCONNECT_ROUTE_PATH))
             ->setDefaults([
-                '_controller' => [AppConfigController::class, 'postDisconnectAction'],
+                '_controller' => [AppDisconnectController::class, 'postDisconnectAction'],
                 '_resourceName' => 'App',
             ])
             ->setMethods(Request::METHOD_POST);
