@@ -1,0 +1,19 @@
+{
+    "meta": {
+        "x-tenant-identifier": ["tenant-identifier"]
+    },
+    "content": {
+        "data": {
+            "type": "configuration",
+            "attributes": {
+                "configuration": ""
+            }
+        }
+    },
+    "__configurationPayload": {
+        "clientId": "ClientID",
+        "clientSecret": "ClientSecret",
+        "isActive": true,
+        "config": "{}"
+    }
+}

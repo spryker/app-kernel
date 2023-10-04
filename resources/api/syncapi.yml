@@ -9,18 +9,18 @@ info:
     license:
         name: MIT
 servers:
-    -   url: 'http://glue-backend.hello-world.spryker.local/'
-        description: 'Local development endpoint'
-    -   url: 'https://api.hello-world-testing.aop.demo-spryker.com/'
-        description: 'Testing'
-    -   url: 'https://api.hello-world-staging.aop.demo-spryker.com/'
-        description: 'Staging'
+    - url: 'http://glue-backend.hello-world.spryker.local/'
+      description: 'Local development endpoint'
+    - url: 'https://api.hello-world-testing.aop.demo-spryker.com/'
+      description: 'Testing'
+    - url: 'https://api.hello-world-staging.aop.demo-spryker.com/'
+      description: 'Staging'
 paths:
     '/private/configure':
         post:
             summary: 'Saves or updates Hello World App configuration between Tenants and this App.'
             parameters:
-                -   $ref: '#/components/parameters/storeReference'
+                - $ref: '#/components/parameters/tenantIdentifier'
             requestBody:
                 description: 'Provides configuration for the Hello World App.'
                 required: true
@@ -50,9 +50,9 @@ paths:
     '/private/disconnect':
         post:
             summary: 'Disconnects this App from a Tenants Application.
-                      Finds configuration and removes it.'
+                Finds configuration and removes it.'
             parameters:
-                -   $ref: '#/components/parameters/storeReference'
+                - $ref: '#/components/parameters/tenantIdentifier'
             responses:
                 204:
                     description: 'App is disconnected.'
@@ -108,14 +108,13 @@ components:
                 status:
                     type: string
     parameters:
-        storeReference:
-            name: X-Store-Reference
+        tenantIdentifier:
+            name: X-Tenant-Identifier
             in: header
             required: true
-            description: 'Reference of the Tenants store.'
+            description: 'Identifier of the Tenant.'
             schema:
                 type: string
             examples:
                 local_de:
-                    value: dev-de
-                    summary: DE store reference for local development
+                    value: 1234-5678-9012-3456

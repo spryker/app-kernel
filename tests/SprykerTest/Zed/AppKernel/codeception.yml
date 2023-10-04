@@ -1,0 +1,29 @@
+namespace: SprykerTest\Zed\AppKernel
+
+paths:
+    tests: .
+    data: _data
+    support: _support
+    output: _output
+
+coverage:
+    enabled: true
+    remote: false
+    whitelist: { include: ['../../../../src/Spryker/*/AppKernel/*.php'] }
+
+suites:
+    Business:
+        path: .
+        actor: AppKernelBusinessTester
+        modules:
+            enabled:
+                - \SprykerTest\Shared\Testify\Helper\Environment
+                - \SprykerTest\Shared\Testify\Helper\ConfigHelper
+                - \SprykerTest\Service\Container\Helper\ContainerHelper
+                - \SprykerTest\Shared\Testify\Helper\LocatorHelper
+                - \SprykerTest\Zed\Propel\Helper\PropelEncryptionHelper
+                - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
+                - \SprykerTest\Zed\Testify\Helper\Business\BusinessHelper
+                - \SprykerTest\Zed\Testify\Helper\Business\DependencyProviderHelper
+                - \SprykerTest\Zed\AppKernel\Helper\AppKernelHelper
+                - \SprykerTest\Shared\Propel\Helper\TransactionHelper

@@ -1,0 +1,29 @@
+namespace: SprykerTest\Glue\AppKernel
+
+paths:
+    tests: .
+    data: _data
+    support: _support
+    output: _output
+
+coverage:
+    enabled: true
+    remote: false
+    whitelist: { include: ['../../../../src/Spryker/*/AppKernel/*.php'] }
+
+suites:
+    Glue:
+        path: .
+        actor: AppKernelTester
+        modules:
+            enabled:
+                - \SprykerTest\Zed\Testify\Helper\Business\BusinessHelper
+                - \SprykerTest\Shared\Testify\Helper\Environment
+                - \SprykerTest\Zed\Propel\Helper\PropelEncryptionHelper
+                - \SprykerTest\Zed\Testify\Helper\Business\DependencyProviderHelper
+                - \SprykerTest\Client\Testify\Helper\DependencyProviderHelper
+                - \SprykerTest\Glue\AppKernel\Helper\AppKernelAssertionHelper
+                - \SprykerTest\Zed\AppKernel\Helper\AppKernelAssertionHelper
+                - \SprykerTest\Zed\AppKernel\Helper\AppKernelHelper
+                - \SprykerTest\Shared\Propel\Helper\TransactionHelper
+                - \SprykerTest\Shared\Testify\Helper\LocatorHelper

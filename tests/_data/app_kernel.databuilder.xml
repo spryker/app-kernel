@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<transfers
+    xmlns="spryker:databuilder-01"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="spryker:databuilder-01 http://static.spryker.com/databuilder-01.xsd"
+>
+
+    <transfer name="AppConfig" strict="true">
+        <property name="tenantIdentifier" dataBuilderRule="unique()->uuid()"/>
+        <property name="config" dataBuilderRule="=[]"/>
+    </transfer>
+
+    <transfer name="MyAppConfig" strict="true">
+        <property name="foo" dataBuilderRule="unique()->uuid()"/>
+        <property name="bar" dataBuilderRule="int()"/>
+        <property name="baz" dataBuilderRule="=[]"/>
+    </transfer>
+
+</transfers>

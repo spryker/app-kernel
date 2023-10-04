@@ -22,7 +22,7 @@ composer require spryker/app-kernel
 config/Shared/config_default.php
 
 ```
-use Spryker\Shared\App\AppConstants;
+use Spryker\Shared\AppKernel\AppConstants;
 
 $config[AppConstants::APP_IDENTIFIER] = getenv('APP_IDENTIFIER') ?: 'hello-world';
 ```
