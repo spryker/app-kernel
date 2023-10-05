@@ -49,8 +49,8 @@
     "stan": "phpstan analyze -l 8 src/Spryker/",
     "test": "codecept build && codecept run",
     "test-cover": "codecept build && codecept run --coverage-xml",
-    "rector": "vendor/bin/rector process --config rector.php --ansi",
-    "rector-diff": "vendor/bin/rector process --config rector.php --ansi --dry-run",
+    "rector": "vendor/bin/rector process src/Spryker/ --config rector.php --ansi",
+    "rector-diff": "vendor/bin/rector process src/Spryker/ --config rector.php --ansi --dry-run",
     "local-ci": "composer cs-fix && composer cs-check && composer stan && composer rector-diff && composer test"
   },
   "extra": {
