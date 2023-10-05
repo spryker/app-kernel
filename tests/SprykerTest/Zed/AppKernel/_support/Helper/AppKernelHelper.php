@@ -61,7 +61,7 @@ class AppKernelHelper extends Module
     {
         $appConfigTransfer = $this->haveAppConfigTransfer($seed);
 
-        // The AppConfigTransfer::CONFIG is an array but we need to have a BLOB in the database. For this we convert the config from an array to a JSON string.
+        // The AppConfigTransfer::CONFIG is an array, but we need to have a BLOB in the database. For this we convert the config from an array to a JSON string.
         $appConfigArray = $appConfigTransfer->modifiedToArray();
         $appConfigArray[AppConfigTransfer::CONFIG] = json_encode((array)$appConfigTransfer->getConfig());
 

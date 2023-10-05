@@ -31,5 +31,5 @@ use Codeception\Actor;
  */
 class AppKernelBusinessTester extends Actor
 {
-    use _generated\AppBusinessTesterActions;
+    use _generated\AppKernelBusinessTesterActions;
 }

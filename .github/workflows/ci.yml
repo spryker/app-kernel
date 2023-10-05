@@ -1,58 +1,115 @@
 name: CI
 
 on:
+    pull_request:
     push:
         branches:
-            - 'master'
-    pull_request:
+            - master
+            - feature/[a-z]+-[0-9]+/dev-*
     workflow_dispatch:
 
 jobs:
     validation:
-        name: Validation
-        runs-on: ubuntu-20.04
-
+        name: "CS, ArchSniffer, PHPStan, Security"
+        runs-on: ubuntu-latest
+        env:
+            APPLICATION_ENV: testing
+        strategy:
+            fail-fast: false
+            matrix:
+                php-version: [
+                        '8.1'
+                ]
         steps:
             - uses: actions/checkout@v3
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.0'
-                  extensions: mbstring, intl, bcmath
-                  coverage: none
+                  php-version: ${{ matrix.php-version }}
+                  extensions: mbstring, intl, pdo_mysql, redis
+                  tools: composer:v2
 
-            - name: Composer Install
-              run: composer install --prefer-dist --no-interaction --profile
+            - name: Composer get cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-            - name: Run validation
+            - name: Composer cache
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-
+
+            - name: Composer validate
               run: composer validate
 
-            - name: Syntax check
-              run: find ./src -path src -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+            - name: Composer version
+              run: composer --version
 
-    lowest:
-        name: Prefer Lowest
-        runs-on: ubuntu-20.04
+            - name: Composer install
+              run: composer install --optimize-autoloader
 
+            - name: Run PHPStan
+              run: composer stan
+
+            - name: Run Rector checks
+              run: composer rector-ci
+
+            - name: Run CodeStyle checks
+              run: composer cs-check
+
+            - name: Codecept tests with coverage
+              run: composer test-cover
+
+            - name: Code Coverage Report
+              if: success()
+              uses: codecov/codecov-action@v3
+              with:
+                  file: ./tests/_output/coverage.xml
+
+    prefer-lowest:
+        name: "Prefer lowest checks"
+        runs-on: ubuntu-latest
+        env:
+            APPLICATION_ENV: testing
+        strategy:
+            fail-fast: false
+            matrix:
+                php-version: [
+                        '8.1'
+                ]
         steps:
             - uses: actions/checkout@v3
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.0'
-                  extensions: mbstring, intl, bcmath
-                  coverage: none
+                  php-version: ${{ matrix.php-version }}
+                  extensions: mbstring, intl, pdo_mysql, redis
+                  tools: composer:v2
 
-            - name: Composer Install
-              run: composer install --prefer-dist --no-interaction --profile
+            - name: Composer get cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-            - name: Composer Update
-              run: composer update --prefer-lowest --prefer-dist --no-interaction --profile -vvv
+            - name: Composer cache
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-
 
-            - name: Composer Install prefer lowest tool
-              run: composer require --dev dereuromark/composer-prefer-lowest;
+            - name: Composer validate
+              run: composer validate
 
-            - name: Run validation
-              run: vendor/bin/validate-prefer-lowest -m
+            - name: Composer version
+              run: composer --version
+
+            - name: "Install lowest dependencies"
+              run: composer update --prefer-lowest
+
+            - name: Codecept tests
+              run: composer test

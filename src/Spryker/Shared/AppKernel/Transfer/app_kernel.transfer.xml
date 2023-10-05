@@ -49,4 +49,27 @@
         <property name="baz" type="[]"/>
     </transfer>
 
+    <transfer name="GlueRequest">
+        <property name="meta" type="[]"/>
+        <property name="content" type="string"/>
+    </transfer>
+
+    <transfer name="GlueResponse">
+        <property name="httpStatus" type="int"/>
+        <property name="content" type="string"/>
+        <property name="errors" type="GlueError[]" singular="error"/>
+    </transfer>
+
+    <transfer name="GlueRequestValidation">
+        <property name="isValid" type="bool"/>
+        <property name="status" type="string"/>
+        <property name="errors" type="GlueError[]" singular="error"/>
+    </transfer>
+
+    <transfer name="GlueError">
+        <property name="code" type="string"/>
+        <property name="status" type="int"/>
+        <property name="message" type="string"/>
+    </transfer>
+
 </transfers>

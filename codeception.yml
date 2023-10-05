@@ -4,6 +4,8 @@ include:
     - tests/SprykerTest/Glue/AppKernel
     - tests/SprykerTest/Zed/AppKernel
 
+bootstrap: _data/Environment.php
+
 paths:
     tests: tests
     support: .
