@@ -4,6 +4,7 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../_data/Environment.php';
 
+use Spryker\Zed\Development\Communication\Console\GenerateGlueBackendIdeAutoCompletionConsole;use Spryker\Zed\Development\Communication\Console\GenerateGlueIdeAutoCompletionConsole;use Spryker\Zed\Development\Communication\Console\GenerateZedIdeAutoCompletionConsole;
 use Spryker\Zed\Propel\Communication\Console\BuildModelConsole;
 use Spryker\Zed\Propel\Communication\Console\CreateDatabaseConsole;
 use Spryker\Zed\Propel\Communication\Console\DiffConsole;
@@ -32,6 +33,9 @@ $application->addCommands([
     new EntityTransferGeneratorConsole(),
     new DiffConsole(),
     new MigrateConsole(),
+    new GenerateZedIdeAutoCompletionConsole(),
+    new GenerateGlueIdeAutoCompletionConsole(),
+    new GenerateGlueBackendIdeAutoCompletionConsole(),
     new class extends Command
     {
         /**

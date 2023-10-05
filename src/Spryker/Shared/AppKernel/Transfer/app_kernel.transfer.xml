@@ -62,7 +62,7 @@
 
     <transfer name="GlueRequestValidation">
         <property name="isValid" type="bool"/>
-        <property name="status" type="string"/>
+        <property name="status" type="int"/>
         <property name="errors" type="GlueError[]" singular="error"/>
     </transfer>
 

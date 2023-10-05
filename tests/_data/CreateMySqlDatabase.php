@@ -17,14 +17,14 @@ class CreateMySqlDatabase implements CreateDatabaseInterface
     /**
      * @return void
      */
-    public function createIfNotExists()
+    public function createIfNotExists(): void
     {
     }
 
     /**
      * @return \PDO
      */
-    protected function getConnection()
+    protected function getConnection(): PDO
     {
         return new PDO(
             $this->getDatabaseSourceName(),
@@ -34,10 +34,9 @@ class CreateMySqlDatabase implements CreateDatabaseInterface
     /**
      * @return string
      */
-    protected function getDatabaseSourceName()
+    protected function getDatabaseSourceName(): string
     {
         $propelConfig = Config::get(PropelConstants::PROPEL);
-        echo '<pre>' . PHP_EOL . \Symfony\Component\VarDumper\VarDumper::dump($propelConfig) . PHP_EOL . 'Line: ' . __LINE__ . PHP_EOL . 'File: ' . __FILE__ . die();
 
         return $propelConfig['database']['connections']['default']['dsn'];
     }

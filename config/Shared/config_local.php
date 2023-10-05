@@ -64,6 +64,7 @@ $config[PropelConstants::ZED_DB_PASSWORD] = 'catface';
 $config[PropelConstants::PROPEL]['database']['connections']['default'] = $connections['mysql'];
 $config[PropelConstants::PROPEL]['database']['connections']['zed'] = $connections['mysql'];
 
+$config[KernelConstants::PROJECT_NAMESPACE] = 'Spryker';
 $config[KernelConstants::PROJECT_NAMESPACES] = ['Spryker'];
 $config[KernelConstants::CORE_NAMESPACES] = ['Spryker'];
 $config[KernelConstants::ENABLE_CONTAINER_OVERRIDING] = true;
