@@ -5,7 +5,6 @@
   "license": "proprietary",
   "require": {
     "php": ">=8.0",
-    "rector/rector": "^0.18.5",
     "spryker/app-kernel-extension": "dev-feature/pbc-3017/master-appkernel-finalization",
     "spryker/glue-application-extension": "^1.0.0",
     "spryker/kernel": "^3.30.0",
@@ -18,7 +17,9 @@
     "spryker/util-text": "^1.0.0"
   },
   "require-dev": {
+    "codeception/codeception": "^5.0",
     "phpstan/phpstan": "^1.10",
+    "rector/rector": "^0.18.5",
     "spryker/code-sniffer": "*",
     "spryker/container": "*",
     "spryker/development": "^3.34",
