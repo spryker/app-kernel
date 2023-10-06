@@ -13,6 +13,7 @@
     "spryker/secrets-manager": "^1.0.0",
     "spryker/secrets-manager-extension": "^1.0.0",
     "spryker/symfony": "^3.0.0",
+    "spryker/transfer": "^3.33.0",
     "spryker/util-encoding": "^2.0.0",
     "spryker/util-text": "^1.0.0"
   },
@@ -24,8 +25,7 @@
     "spryker/container": "*",
     "spryker/development": "^3.34",
     "spryker/propel": "*",
-    "spryker/testify": "*",
-    "spryker/transfer": "^3.33.0"
+    "spryker/testify": "*"
   },
   "autoload": {
     "psr-4": {
