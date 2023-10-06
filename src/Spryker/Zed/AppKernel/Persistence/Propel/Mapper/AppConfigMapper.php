@@ -32,7 +32,7 @@ class AppConfigMapper
         SpyAppConfig $appConfigEntity
     ): SpyAppConfig {
         $appConfigArray = $appConfigTransfer->modifiedToArray();
-        $appConfigArray[AppConfigTransfer::CONFIG] = $this->utilEncodingService->encodeJson($appConfigTransfer->getConfigOrFail());
+        $appConfigArray[AppConfigTransfer::CONFIG] = $this->utilEncodingService->encodeJson($appConfigTransfer->getConfig());
 
         $appConfigEntity->fromArray($appConfigArray);
 
