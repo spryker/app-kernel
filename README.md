@@ -51,5 +51,20 @@ $config[MessageBrokerAwsConstants::CHANNEL_TO_RECEIVER_TRANSPORT_MAP] = [
 ];
 ```
 
-#### Plugins
- TBD
+### Testing the AppKernel
+
+You can test the AppKernel as usual with Codeception. Before that you need to run some commands
+
+```
+tests/bin/console app-kernel:setup
+tests/bin/console transfer:generate
+tests/bin/console transfer:databuilder:generate
+tests/bin/console propel:install
+```
+
+With these commands you've set up the AppKernel and can start the tests
+
+```
+vendor/bin/codecept build
+vendor/bin/codecept run
+```

@@ -50,7 +50,7 @@
     </transfer>
 
     <transfer name="GlueRequest">
-        <property name="meta" type="[]"/>
+        <property name="meta" type="array" associative="true" singular="meta"/>
         <property name="content" type="string"/>
     </transfer>
 
