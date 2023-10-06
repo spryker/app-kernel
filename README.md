@@ -1,5 +1,5 @@
 # AppKernel Module
-[![Latest Stable Version](https://poser.pugx.org/spryker/app-kernel/v/stable.svg)](https://packagist.org/packages/spryker/acl-entity-extension)
+[![Latest Stable Version](https://poser.pugx.org/spryker/app-kernel/v/stable.svg)](https://packagist.org/packages/spryker/app-kernel)
 [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.0-8892BF.svg)](https://php.net/)
 
 Provides SyncAPI and AsyncAPI schema files and the needed code to make the Mini-Framework an App.
