@@ -12,7 +12,7 @@ composer require spryker/app-kernel
 
 ## Documentation
 
-[Spryker Documentation](https://docs.spryker.com/developing_with_spryker/module_guide/modules.html)
+[Spryker Documentation](https://docs.spryker.com/)
 
 ## Integration
 
