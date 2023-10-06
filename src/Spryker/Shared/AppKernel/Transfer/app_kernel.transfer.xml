@@ -5,7 +5,7 @@
     <transfer name="AppConfig" strict="true">
         <property name="tenantIdentifier" type="string"/>
         <property name="isActive" type="bool"/>
-        <property name="config" type="array"/>
+        <property name="config" type="array" singular="config"/>
     </transfer>
 
     <transfer name="AppConfigResponse" strict="true">
@@ -46,7 +46,7 @@
     <transfer name="MyAppConfig" strict="true" deprecated="Transfer is only needed for tests, do not use this outside of tests.">
         <property name="foo" type="string"/>
         <property name="bar" type="int"/>
-        <property name="baz" type="[]"/>
+        <property name="baz" type="[]" singular="baz"/>
     </transfer>
 
     <transfer name="GlueRequest">
