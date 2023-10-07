@@ -31,7 +31,8 @@
         "psr-4": {
             "Spryker\\": "src/Spryker/",
             "SprykerTest\\Glue\\AppKernel\\Helper\\": "tests/SprykerTest/Glue/AppKernel/_support/Helper/",
-            "SprykerTest\\Zed\\AppKernel\\Helper\\": "tests/SprykerTest/Zed/AppKernel/_support/Helper/"
+            "SprykerTest\\Zed\\AppKernel\\Helper\\": "tests/SprykerTest/Zed/AppKernel/_support/Helper/",
+            "SprykerTest\\Zed\\Propel\\Helper\\": "tests/SprykerTest/Zed/Propel/_support/Helper/"
         }
     },
     "autoload-dev": {
@@ -44,9 +45,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
-        "cs-check": "phpcs -p -s --standard=vendor/spryker/code-sniffer/SprykerStrict/ruleset.xml src/ tests/",
-        "cs-fix": "phpcbf -p --standard=vendor/spryker/code-sniffer/SprykerStrict/ruleset.xml src/ tests/",
-        "stan": "phpstan analyze -l 8 src/Spryker/",
+        "cs-check": "phpcs -p src/ tests/",
+        "cs-fix": "phpcbf -p src/ tests/",
+        "stan": "phpstan analyze src/Spryker/",
         "test": "codecept build && codecept run",
         "test-cover": "codecept build && codecept run --coverage-xml",
         "rector": "vendor/bin/rector process src/Spryker/ --config rector.php --ansi",
