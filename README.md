@@ -27,30 +27,6 @@ use Spryker\Shared\AppKernel\AppConstants;
 $config[AppConstants::APP_IDENTIFIER] = getenv('APP_IDENTIFIER') ?: 'hello-world';
 ```
 
-#### Messages
-
-```
-use Generated\Shared\Transfer\ConfigureAppTransfer;
-use Generated\Shared\Transfer\DeleteAppTransfer;
-use Spryker\Shared\MessageBroker\MessageBrokerConstants;
-use Spryker\Shared\MessageBrokerAws\MessageBrokerAwsConstants;
-use Spryker\Zed\MessageBrokerAws\MessageBrokerAwsConfig;
-
-$config[MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP] = [
-    ConfigureAppTransfer::class => 'app-commands',
-    DeleteAppTransfer::class => 'app-commands',
-];
-
-$config[MessageBrokerAwsConstants::CHANNEL_TO_SENDER_TRANSPORT_MAP] = [
-    'app-commands' => 'http',
-];
-
-$config[MessageBrokerConstants::CHANNEL_TO_TRANSPORT_MAP] =
-$config[MessageBrokerAwsConstants::CHANNEL_TO_RECEIVER_TRANSPORT_MAP] = [
-    'app-commands' => MessageBrokerAwsConfig::SQS_TRANSPORT,
-];
-```
-
 ### Testing the AppKernel
 
 You can test the AppKernel as usual with Codeception. Before that you need to run some commands
