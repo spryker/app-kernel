@@ -10,10 +10,6 @@ Provides SyncAPI and AsyncAPI schema files and the needed code to make the Mini-
 composer require spryker/app-kernel
 ```
 
-## Documentation
-
-[Spryker Documentation](https://docs.spryker.com/)
-
 ## Integration
 
 ### Configure
