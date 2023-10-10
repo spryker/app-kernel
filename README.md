@@ -10,9 +10,8 @@ Provides SyncAPI and AsyncAPI schema files and the needed code to make the Mini-
 composer require spryker/app-kernel
 ```
 
-## Integration
-
 ### Configure
+
 #### App Identifier
 
 config/Shared/config_default.php
