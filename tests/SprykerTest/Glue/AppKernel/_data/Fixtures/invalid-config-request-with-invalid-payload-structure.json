@@ -1,0 +1,14 @@
+{
+    "meta": {
+        "x-tenant-identifier": ["tenant-identifier"]
+    },
+    "content": {
+        "unknown": {
+            "unknown": "configuration",
+            "attributes": {
+                "unknown": {}
+            }
+        }
+    },
+    "__configurationPayload": {}
+}

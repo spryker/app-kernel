@@ -7,8 +7,8 @@ channels:
         subscribe:
             message:
                 oneOf:
-                    -   $ref: '#/components/messages/ConfigureApp'
-                    -   $ref: '#/components/messages/DeleteApp'
+                    - $ref: '#/components/messages/ConfigureApp'
+                    - $ref: '#/components/messages/DeleteApp'
 components:
     messages:
         ConfigureApp:

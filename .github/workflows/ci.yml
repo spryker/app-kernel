@@ -1,58 +1,88 @@
 name: CI
 
 on:
+    pull_request:
     push:
         branches:
-            - 'master'
-    pull_request:
+            - master
+            - feature/[a-z]+-[0-9]+/dev-*
     workflow_dispatch:
 
 jobs:
     validation:
-        name: Validation
-        runs-on: ubuntu-20.04
-
+        name: "CS, ArchSniffer, PHPStan, Security"
+        runs-on: ubuntu-latest
+        env:
+            APPLICATION_ENV: testing
+        strategy:
+            fail-fast: false
+            matrix:
+                php-version: [
+                    '8.0',
+                    '8.2',
+                ]
         steps:
             - uses: actions/checkout@v3
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.0'
-                  extensions: mbstring, intl, bcmath
-                  coverage: none
+                  php-version: ${{ matrix.php-version }}
+                  extensions: mbstring, intl, pdo_mysql, redis
+                  tools: composer:v2
 
-            - name: Composer Install
-              run: composer install --prefer-dist --no-interaction --profile
+            - name: Composer get cache directory
+              id: composer-cache
+              run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-            - name: Run validation
+            - name: Composer cache
+              uses: actions/cache@v3
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-composer-
+
+            - name: Composer validate
               run: composer validate
 
-            - name: Syntax check
-              run: find ./src -path src -prune -o -type f -name '*.php' -print0 | xargs -0 -n1 -P4 php -l -n | (! grep -v "No syntax errors detected" )
+            - name: Composer version
+              run: composer --version
 
-    lowest:
-        name: Prefer Lowest
-        runs-on: ubuntu-20.04
+            - name: Composer install
+              run: composer install --optimize-autoloader
 
-        steps:
-            - uses: actions/checkout@v3
+            - name: Setup AppKernel for testing
+              run: tests/bin/console app-kernel:setup
 
-            - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+            - name: Generate Transfers & AutoCompletion
+              run: |
+                  tests/bin/console transfer:generate
+                  tests/bin/console transfer:databuilder:generate
+                  tests/bin/console dev:ide-auto-completion:zed:generate
+                  tests/bin/console dev:ide-auto-completion:glue:generate
+                  tests/bin/console dev:ide-auto-completion:glue-backend:generate
+
+            - name: Propel Install
+              run: |
+                  mkdir -p tests/_data
+                  touch tests/_data/app_kernel_db
+                  tests/bin/console propel:install
+
+            - name: Run PHPStan
+              run: composer stan
+
+            - name: Run Rector checks
+              run: composer rector-diff
+
+            - name: Run CodeStyle checks
+              run: composer cs-check
+
+            - name: Codecept tests with coverage
+              run: composer test-cover
+
+            - name: Code Coverage Report
+              if: success() && matrix.php-version == '8.2'
+              uses: codecov/codecov-action@v3
               with:
-                  php-version: '8.0'
-                  extensions: mbstring, intl, bcmath
-                  coverage: none
-
-            - name: Composer Install
-              run: composer install --prefer-dist --no-interaction --profile
-
-            - name: Composer Update
-              run: composer update --prefer-lowest --prefer-dist --no-interaction --profile -vvv
-
-            - name: Composer Install prefer lowest tool
-              run: composer require --dev dereuromark/composer-prefer-lowest;
-
-            - name: Run validation
-              run: vendor/bin/validate-prefer-lowest -m
+                  file: ./tests/_output/coverage.xml

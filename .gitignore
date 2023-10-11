@@ -22,13 +22,10 @@ vendor/
 composer.lock
 .phpunit.result.cache
 
-# built client resources
-src/*/Zed/*/Static/Public
-src/*/Zed/*/Static/Assets/sprite
-
-# Propel classes
-src/*/Zed/*/Persistence/Propel/Base/*
-src/*/Zed/*/Persistence/Propel/Map/*
+# built resources
+src/Generated
+src/Orm
+tests/_data/app_kernel_db
 
 # tests
 tests/**/_generated/

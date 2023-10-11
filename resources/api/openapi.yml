@@ -1,0 +1,120 @@
+openapi: 3.0.0
+info:
+    version: 1.1.0
+    contact:
+        name: Spryker
+        url: 'https://spryker.com/app-composition-platform/'
+        email: support@spryker.com
+    title: 'Hello World'
+    license:
+        name: MIT
+servers:
+    - url: 'http://glue-backend.hello-world.spryker.local/'
+      description: 'Local development endpoint'
+    - url: 'https://api.hello-world-testing.aop.demo-spryker.com/'
+      description: 'Testing'
+    - url: 'https://api.hello-world-staging.aop.demo-spryker.com/'
+      description: 'Staging'
+paths:
+    '/private/configure':
+        post:
+            summary: 'Saves or updates Hello World App configuration between Tenants and this App.'
+            parameters:
+                - $ref: '#/components/parameters/tenantIdentifier'
+            requestBody:
+                description: 'Provides configuration for the Hello World App.'
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ConfigurationApiRequest'
+            responses:
+                200:
+                    description: 'Expected response to a valid request.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ConfigurationApiResponse'
+                400:
+                    description: 'Bad request.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ApiErrorMessages'
+                default:
+                    description: 'Expected response to a bad request.'
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+    '/private/disconnect':
+        post:
+            summary: 'Disconnects this App from a Tenants Application.
+                Finds configuration and removes it.'
+            parameters:
+                - $ref: '#/components/parameters/tenantIdentifier'
+            responses:
+                204:
+                    description: 'App is disconnected.'
+                422:
+                    description: 'Unprocessable entity.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ApiErrorMessages'
+                default:
+                    description: 'Expected response to a bad request.'
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+components:
+    schemas:
+        ConfigurationApiRequest:
+            properties:
+                data:
+                    type: object
+                    required:
+                        - attributes
+                    properties:
+                        attributes:
+                            type: object
+                            required:
+                                - configuration
+                            properties:
+                                configuration:
+                                    description: 'Contains the JSON encoded configuration.'
+                                    type: string
+        ConfigurationApiResponse:
+            properties:
+                configuration:
+                    type: object
+                    properties:
+                        # Add your properties here
+                        isActive:
+                            type: boolean
+        ApiErrorMessages:
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ApiErrorMessage'
+        ApiErrorMessage:
+            properties:
+                code:
+                    type: string
+                detail:
+                    type: string
+                status:
+                    type: string
+    parameters:
+        tenantIdentifier:
+            name: X-Tenant-Identifier
+            in: header
+            required: true
+            description: 'Identifier of the Tenant.'
+            schema:
+                type: string
+            examples:
+                local_de:
+                    value: 1234-5678-9012-3456

@@ -1,2 +1,5 @@
 parameters:
+    level: 8
     ignoreErrors:
+    bootstrapFiles:
+        - '%rootDir%/../../../phpstan-bootstrap.php'

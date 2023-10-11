@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<database xmlns="spryker:schema-01" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="zed" xsi:schemaLocation="spryker:schema-01 https://static.spryker.com/schema-01.xsd" namespace="Orm\Zed\AppKernel\Persistence" package="src.Orm.Zed.AppKernel.Persistence">
+
+    <table name="spy_app_config" identifierQuoting="true">
+        <column name="id_app_config" required="true" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+        <column name="tenant_identifier" required="true" type="VARCHAR" size="255"/>
+        <column name="is_active" required="true" defaultValue="false" type="BOOLEAN"/>
+        <column name="config" required="true" type="BLOB"/>
+
+        <behavior name="encryption">
+            <parameter name="column_name_1" value="config"/>
+        </behavior>
+
+        <unique name="spy_app_config-unique-tenant-identifier">
+            <unique-column name="tenant_identifier"/>
+        </unique>
+
+        <behavior name="timestampable">
+            <parameter name="create_column" value="created_at"/>
+            <parameter name="update_column" value="updated_at"/>
+        </behavior>
+    </table>
+
+</database>
