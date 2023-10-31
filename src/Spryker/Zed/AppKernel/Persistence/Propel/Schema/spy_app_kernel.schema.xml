@@ -7,10 +7,6 @@
         <column name="is_active" required="true" defaultValue="false" type="BOOLEAN"/>
         <column name="config" required="true" type="BLOB"/>
 
-        <behavior name="encryption">
-            <parameter name="column_name_1" value="config"/>
-        </behavior>
-
         <unique name="spy_app_config-unique-tenant-identifier">
             <unique-column name="tenant_identifier"/>
         </unique>
