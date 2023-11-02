@@ -24,7 +24,7 @@ $config[AppConstants::APP_IDENTIFIER] = getenv('APP_IDENTIFIER') ?: 'hello-world
 
 ### Testing the AppKernel
 
-You can test the AppKernel as usual with Codeception. Before that you need to run some commands
+You can test the AppKernel as usual with Codeception. Before that you need to run some commands:
 
 ```
 tests/bin/console app-kernel:setup
