@@ -46,7 +46,7 @@
     <transfer name="MyAppConfig" strict="true" deprecated="Transfer is only needed for tests, do not use this outside of tests.">
         <property name="foo" type="string"/>
         <property name="bar" type="int"/>
-        <property name="baz" type="[]" singular="baz"/>
+        <property name="baz" type="array" singular="baz"/>
     </transfer>
 
     <transfer name="GlueRequest">
