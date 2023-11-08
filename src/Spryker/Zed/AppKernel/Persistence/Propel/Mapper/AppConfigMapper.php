@@ -50,7 +50,7 @@ class AppConfigMapper
         TransferInterface $transfer
     ): TransferInterface {
         return $transfer->fromArray(
-            (array)$this->utilEncodingService->decodeJson(stream_get_contents($appConfigEntity->getConfig()), true),
+            (array)$this->utilEncodingService->decodeJson((string)stream_get_contents($appConfigEntity->getConfig()), true),
             true,
         );
     }
