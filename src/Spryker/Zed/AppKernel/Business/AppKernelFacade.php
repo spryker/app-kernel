@@ -59,10 +59,12 @@ class AppKernelFacade extends AbstractFacade implements AppKernelFacadeInterface
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
+     * @template T of \Spryker\Shared\Kernel\Transfer\TransferInterface
      *
-     * @return \Spryker\Shared\Kernel\Transfer\TransferInterface
+     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
+     * @param T $transfer
+     *
+     * @return T
      */
     public function getConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer, TransferInterface $transfer): TransferInterface
     {
