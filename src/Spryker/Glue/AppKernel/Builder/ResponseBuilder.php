@@ -40,7 +40,7 @@ class ResponseBuilder implements ResponseBuilderInterface
 
             $errors[] = [
                 'code' => $error->getCode(),
-                'detail' => $error->getMessage(),
+                'message' => $error->getMessage(),
                 'status' => $error->getStatus(),
             ];
         }
@@ -102,7 +102,7 @@ class ResponseBuilder implements ResponseBuilderInterface
     {
         return [
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-            'detail' => $errorMessage,
+            'message' => $errorMessage,
             'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
         ];
     }
