@@ -40,7 +40,7 @@ class ResponseBuilder implements ResponseBuilderInterface
 
             $errors[] = [
                 'code' => $error->getCode(),
-                'message' => $error->getMessage(),
+                'detail' => $error->getMessage(),
                 'status' => $error->getStatus(),
             ];
         }
