@@ -49,9 +49,16 @@ class AppConfigMapper
         SpyAppConfig $appConfigEntity,
         TransferInterface $transfer
     ): TransferInterface {
-        return $transfer->fromArray(
+        $decodedAppConfig = (array)$this->utilEncodingService->decodeJson($appConfigEntity->getConfig(), true);
+        $transfer->fromArray(
             (array)$this->utilEncodingService->decodeJson($appConfigEntity->getConfig(), true),
             true,
         );
+
+        if ($transfer instanceof AppConfigTransfer) {
+            $transfer->setConfig($decodedAppConfig);
+        }
+
+        return $transfer;
     }
 }
