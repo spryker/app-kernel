@@ -56,6 +56,7 @@ class AppConfigMapper
         );
 
         if ($transfer instanceof AppConfigTransfer) {
+            $transfer->fromArray($appConfigEntity->toArray(), true);
             $transfer->setConfig($decodedAppConfig);
         }
 
