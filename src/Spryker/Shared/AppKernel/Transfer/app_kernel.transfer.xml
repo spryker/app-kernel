@@ -6,6 +6,7 @@
         <property name="tenantIdentifier" type="string"/>
         <property name="isActive" type="bool"/>
         <property name="config" type="array" singular="config"/>
+        <property name="state" type="string"/>
     </transfer>
 
     <transfer name="AppConfigResponse" strict="true">

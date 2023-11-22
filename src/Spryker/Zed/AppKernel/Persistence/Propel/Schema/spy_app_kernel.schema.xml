@@ -6,6 +6,7 @@
         <column name="tenant_identifier" required="true" type="VARCHAR" size="255"/>
         <column name="is_active" required="true" defaultValue="false" type="BOOLEAN"/>
         <column name="config" required="true" type="LONGVARCHAR"/>
+        <column name="status" required="true" type="ENUM" valueSet="NEW,CONNECTED" default="NEW"/>
 
         <unique name="spy_app_config-unique-tenant-identifier">
             <unique-column name="tenant_identifier"/>
