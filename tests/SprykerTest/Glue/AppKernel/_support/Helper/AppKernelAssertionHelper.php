@@ -10,7 +10,6 @@ namespace SprykerTest\Glue\AppKernel\Helper;
 use Codeception\Module;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
-use Spryker\Glue\AppKernel\AppKernelConfig;
 use Symfony\Component\HttpFoundation\Response;
 
 class AppKernelAssertionHelper extends Module
