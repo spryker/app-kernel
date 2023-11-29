@@ -91,7 +91,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     protected function addRequestConfigureValidatorPlugins(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
         $glueBackendContainer->set(static::PLUGINS_REQUEST_CONFIGURE_VALIDATOR, function () {
-            return $this->getDefaultRequestConfigureValidatorPlugins() + $this->getRequestConfigureValidatorPlugins();
+            return array_merge($this->getDefaultRequestConfigureValidatorPlugins(), $this->getRequestConfigureValidatorPlugins());
         });
 
         return $glueBackendContainer;
@@ -124,7 +124,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     protected function addRequestDisconnectValidatorPlugins(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
         $glueBackendContainer->set(static::PLUGINS_REQUEST_DISCONNECT_VALIDATOR, function () {
-            return $this->getDefaultRequestDisconnectValidatorPlugins() + $this->getRequestDisconnectValidatorPlugins();
+            return array_merge($this->getDefaultRequestDisconnectValidatorPlugins(), $this->getRequestDisconnectValidatorPlugins());
         });
 
         return $glueBackendContainer;

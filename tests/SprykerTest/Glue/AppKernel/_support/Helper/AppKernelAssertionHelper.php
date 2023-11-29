@@ -10,7 +10,6 @@ namespace SprykerTest\Glue\AppKernel\Helper;
 use Codeception\Module;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
-use Spryker\Glue\AppKernel\AppKernelConfig;
 use Symfony\Component\HttpFoundation\Response;
 
 class AppKernelAssertionHelper extends Module
@@ -46,13 +45,13 @@ class AppKernelAssertionHelper extends Module
      */
     public function assertGlueResponseContainsErrorMessageWhenXTenantIdentifierIsMissing(GlueResponseTransfer $glueResponse): void
     {
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $glueResponse->getHttpStatus());
+        $this->assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $glueResponse->getHttpStatus());
         $contentData = json_decode($glueResponse->getContent(), true);
         $this->assertNotEmpty($contentData);
         $this->assertEquals(1, count($contentData['errors']));
         $this->assertEquals(
             'X-Tenant-Identifier in header is required.',
-            $contentData['errors'][0]['detail'],
+            $contentData['errors'][0]['message'],
         );
     }
 
@@ -63,13 +62,14 @@ class AppKernelAssertionHelper extends Module
      */
     public function assertGlueResponseContainsErrorMessageWhenRequestBodyHasInvalidStructure(GlueResponseTransfer $glueResponse): void
     {
-        $this->assertEquals(Response::HTTP_BAD_REQUEST, $glueResponse->getHttpStatus());
+        $this->assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $glueResponse->getHttpStatus());
         $contentData = json_decode($glueResponse->getContent(), true);
+
         $this->assertNotEmpty($contentData);
         $this->assertEquals(1, count($contentData['errors']));
         $this->assertEquals(
             'Wrong request format.',
-            $contentData['errors'][0]['detail'],
+            $contentData['errors'][0]['message'],
         );
     }
 
@@ -85,8 +85,8 @@ class AppKernelAssertionHelper extends Module
         $this->assertNotEmpty($contentData);
         $this->assertEquals(1, count($contentData['errors']));
         $this->assertEquals(
-            AppKernelConfig::RESPONSE_MESSAGE_CONFIGURE_ERROR,
-            $contentData['errors'][0]['detail'],
+            'Tenant registration failed: Something went wrong',
+            $contentData['errors'][0]['message'],
         );
     }
 
@@ -114,10 +114,10 @@ class AppKernelAssertionHelper extends Module
         $contentData = json_decode($glueResponse->getContent(), true);
         $this->assertNotEmpty($contentData);
         $this->assertEquals(5, count($contentData['errors']));
-        $this->assertEquals('Client ID is required.', $contentData['errors'][0]['detail']);
-        $this->assertEquals('Client ID must be a string.', $contentData['errors'][1]['detail']);
-        $this->assertEquals('Client Secret is required.', $contentData['errors'][2]['detail']);
-        $this->assertEquals('Client Secret must be a string.', $contentData['errors'][3]['detail']);
+        $this->assertEquals('Client ID is required.', $contentData['errors'][0]['message']);
+        $this->assertEquals('Client ID must be a string.', $contentData['errors'][1]['message']);
+        $this->assertEquals('Client Secret is required.', $contentData['errors'][2]['message']);
+        $this->assertEquals('Client Secret must be a string.', $contentData['errors'][3]['message']);
     }
 
     /**
@@ -131,7 +131,7 @@ class AppKernelAssertionHelper extends Module
         $contentData = json_decode($glueResponse->getContent(), true);
         $this->assertNotEmpty($contentData);
         $this->assertEquals(1, count($contentData['errors']));
-        $this->assertEquals('Invalid credentials', $contentData['errors'][0]['detail']);
+        $this->assertEquals('Invalid credentials', $contentData['errors'][0]['message']);
     }
 
     /**

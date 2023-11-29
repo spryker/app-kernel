@@ -41,7 +41,7 @@ class AppConfigController extends AbstractController
 
         if (!$appConfigResponseTransfer->getIsSuccessful()) {
             return $this->getFactory()->createResponseBuilder()
-                ->buildErrorResponse(AppKernelConfig::RESPONSE_MESSAGE_CONFIGURE_ERROR);
+                ->buildErrorResponse($appConfigResponseTransfer->getErrorMessage() ?? AppKernelConfig::RESPONSE_MESSAGE_CONFIGURE_ERROR);
         }
 
         return $this->getFactory()->createResponseBuilder()->buildSuccessfulResponse(
