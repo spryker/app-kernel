@@ -11,4 +11,6 @@ use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class AppKernelConfig extends AbstractBundleConfig
 {
+    public const APP_STATUS_NEW = 'NEW';
+    public const APP_STATUS_CONNECTED = 'CONNECTED';
 }
