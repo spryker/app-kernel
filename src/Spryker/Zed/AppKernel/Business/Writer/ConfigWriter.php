@@ -13,6 +13,7 @@ use Spryker\Client\SecretsManager\Exception\MissingSecretsManagerProviderPluginE
 use Spryker\Client\SecretsManager\SecretsManagerDependencyProvider;
 use Spryker\Client\SecretsManagerExtension\Dependency\Plugin\SecretsManagerProviderPluginInterface;
 use Spryker\Shared\Log\LoggerTrait;
+use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
 use Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface;
@@ -77,6 +78,9 @@ class ConfigWriter implements ConfigWriterInterface
 
         $this->configurePropelEncryption($appConfigTransfer);
 
+        if (!$appConfigTransfer->getStatus()) {
+            $appConfigTransfer->setStatus(AppKernelConfig::APP_STATUS_NEW);
+        }
         $appConfigTransfer = $this->appEntityManager->saveConfig($appConfigTransfer);
 
         if ($this->configurationAfterSavePlugin) {

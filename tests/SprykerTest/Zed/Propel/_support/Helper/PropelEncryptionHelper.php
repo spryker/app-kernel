@@ -27,11 +27,6 @@ class PropelEncryptionHelper extends Module
     protected const TEST_SECRET_PASSPHRASE = 'my_secret_passphrase';
 
     /**
-     * @var string
-     */
-    protected const CLIENT_SECRETS_MANAGER = 'CLIENT_SECRETS_MANAGER';
-
-    /**
      * @param \Codeception\TestInterface $test
      *
      * @return void

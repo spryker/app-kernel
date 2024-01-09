@@ -5,11 +5,8 @@
         <column name="id_app_config" required="true" type="INTEGER" autoIncrement="true" primaryKey="true"/>
         <column name="tenant_identifier" required="true" type="VARCHAR" size="255"/>
         <column name="is_active" required="true" defaultValue="false" type="BOOLEAN"/>
-        <column name="config" required="true" type="BLOB"/>
-
-        <behavior name="encryption">
-            <parameter name="column_name_1" value="config"/>
-        </behavior>
+        <column name="config" required="true" type="LONGVARCHAR"/>
+        <column name="status" required="true" type="ENUM" valueSet="NEW,CONNECTED" default="NEW"/>
 
         <unique name="spy_app_config-unique-tenant-identifier">
             <unique-column name="tenant_identifier"/>

@@ -13,6 +13,7 @@ use Generated\Shared\Transfer\AppConfigTransfer;
 use Generated\Shared\Transfer\MyAppConfigTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
+use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
 use SprykerTest\Zed\AppKernel\AppKernelBusinessTester;
 
 /**
@@ -28,6 +29,8 @@ use SprykerTest\Zed\AppKernel\AppKernelBusinessTester;
  */
 class AppKernelFacadeTest extends Unit
 {
+    use LocatorHelperTrait;
+
     /**
      * @var \SprykerTest\Zed\AppKernel\AppKernelBusinessTester
      */
@@ -36,7 +39,7 @@ class AppKernelFacadeTest extends Unit
     /**
      * @return void
      */
-    public function testGetConfigReturnsAppConfigTransferWhenAppConfigByTenantIdentifierFound(): void
+    public function testGetConfigReturnsMyAppConfigTransferWhenAppConfigByTenantIdentifierFound(): void
     {
         // Arrange
         $tenantIdentifier = Uuid::uuid4()->toString();
@@ -57,6 +60,31 @@ class AppKernelFacadeTest extends Unit
         $this->assertInstanceOf(MyAppConfigTransfer::class, $myAppConfigTransfer);
         $this->assertSame('foo', $myAppConfigTransfer->getFoo());
         $this->assertSame(123, $myAppConfigTransfer->getBar());
+    }
+
+    /**
+     * @return void
+     */
+    public function testGetConfigReturnsAppConfigTransferWhenAppConfigByTenantIdentifierFound(): void
+    {
+        // Arrange
+        $tenantIdentifier = Uuid::uuid4()->toString();
+        $seed = [
+            AppConfigTransfer::TENANT_IDENTIFIER => $tenantIdentifier,
+            AppConfigTransfer::CONFIG => ['foo' => 'foo', 'bar' => 123],
+        ];
+
+        $this->tester->havePersistedAppConfigTransfer($seed);
+
+        $appConfigCriteriaTransfer = new AppConfigCriteriaTransfer();
+        $appConfigCriteriaTransfer->setTenantIdentifier($tenantIdentifier);
+
+        // Act
+        $appConfigTransfer = $this->tester->getFacade()->getConfig($appConfigCriteriaTransfer, new AppConfigTransfer());
+
+        // Assert
+        $this->assertInstanceOf(AppConfigTransfer::class, $appConfigTransfer);
+        $this->assertIsArray($appConfigTransfer->getConfig());
     }
 
     /**

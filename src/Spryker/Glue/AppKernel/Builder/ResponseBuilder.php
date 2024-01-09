@@ -8,6 +8,7 @@
 namespace Spryker\Glue\AppKernel\Builder;
 
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\GlueErrorTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
@@ -32,17 +33,21 @@ class ResponseBuilder implements ResponseBuilderInterface
     ): GlueResponseTransfer {
         $errors = [];
 
+        $glueResponseTransfer = new GlueResponseTransfer();
+
         foreach ($glueRequestValidationTransfer->getErrors() as $error) {
+            $glueResponseTransfer->addError($error);
+
             $errors[] = [
                 'code' => $error->getCode(),
-                'detail' => $error->getMessage(),
+                'message' => $error->getMessage(),
                 'status' => $error->getStatus(),
             ];
         }
 
-        return (new GlueResponseTransfer())
+        return $glueResponseTransfer
             ->setContent($this->utilEncodingService->encodeJson(['errors' => $errors]))
-            ->setHttpStatus(Response::HTTP_BAD_REQUEST);
+            ->setHttpStatus($glueRequestValidationTransfer->getStatus() ?? Response::HTTP_BAD_REQUEST);
     }
 
     /**
@@ -52,13 +57,16 @@ class ResponseBuilder implements ResponseBuilderInterface
      */
     public function buildErrorResponse(string $errorMessage): GlueResponseTransfer
     {
+        $errorData = $this->composeErrorArray($errorMessage);
+
         return (new GlueResponseTransfer())
             ->setContent($this->utilEncodingService
                 ->encodeJson([
                     'errors' => [
-                        $this->composeErrorArray($errorMessage),
+                        $errorData,
                     ],
                 ]))
+            ->addError((new GlueErrorTransfer())->fromArray($errorData))
             ->setHttpStatus(Response::HTTP_BAD_REQUEST);
     }
 
@@ -94,7 +102,7 @@ class ResponseBuilder implements ResponseBuilderInterface
     {
         return [
             'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
-            'detail' => $errorMessage,
+            'message' => $errorMessage,
             'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
         ];
     }
