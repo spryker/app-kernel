@@ -55,7 +55,7 @@ class ConfigWriter implements ConfigWriterInterface
     {
         try {
             $appConfigTransfer = $this->getTransactionHandler()->handleTransaction(function () use ($appConfigTransfer) {
-                $appConfigTransfer = $this->mergeWithExistingConfiguration($appConfigTransfer);
+                $appConfigTransfer = $this->updateStatus($appConfigTransfer);
 
                 return $this->doSaveAppConfig($appConfigTransfer);
             });
