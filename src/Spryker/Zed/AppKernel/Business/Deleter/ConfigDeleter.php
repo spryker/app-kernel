@@ -12,8 +12,6 @@ use Generated\Shared\Transfer\AppDisconnectResponseTransfer;
 use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface;
 use Throwable;
 
 class ConfigDeleter implements ConfigDeleterInterface
@@ -27,13 +25,13 @@ class ConfigDeleter implements ConfigDeleterInterface
 
     /**
      * @param \Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface $appEntityManager
-     * @param \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface|null $configurationBeforeDeletePlugin
-     * @param \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface|null $configurationAfterDeletePlugin
+     * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface> $configurationBeforeDeletePlugin
+     * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface> $configurationAfterDeletePlugin
      */
     public function __construct(
         protected AppKernelEntityManagerInterface $appEntityManager,
-        protected ?ConfigurationBeforeDeletePluginInterface $configurationBeforeDeletePlugin = null,
-        protected ?ConfigurationAfterDeletePluginInterface $configurationAfterDeletePlugin = null
+        protected array $configurationBeforeDeletePlugin = [],
+        protected array $configurationAfterDeletePlugin = []
     ) {
     }
 
@@ -45,9 +43,7 @@ class ConfigDeleter implements ConfigDeleterInterface
     public function deleteConfig(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectResponseTransfer
     {
         try {
-            if ($this->configurationBeforeDeletePlugin) {
-                $appDisconnectTransfer = $this->configurationBeforeDeletePlugin->beforeDelete($appDisconnectTransfer);
-            }
+            $this->executeConfigurationBeforeDeletePlugin($appDisconnectTransfer);
 
             $appConfigCriteriaTransfer = (new AppConfigCriteriaTransfer())
                 ->fromArray($appDisconnectTransfer->toArray(), true);
@@ -60,15 +56,37 @@ class ConfigDeleter implements ConfigDeleterInterface
                     ->setErrorMessage(static::DISCONNECT_ERROR_MESSAGE);
             }
 
-            if ($this->configurationAfterDeletePlugin) {
-                $this->configurationAfterDeletePlugin->afterDelete($appDisconnectTransfer);
-            }
+            $this->executeConfigurationAfterDeletePlugin($appDisconnectTransfer);
 
             return (new AppDisconnectResponseTransfer())->setIsSuccessful(true);
         } catch (Throwable $throwable) {
             return (new AppDisconnectResponseTransfer())
                 ->setIsSuccessful(false)
                 ->setErrorMessage(sprintf('%s: %s', static::DISCONNECT_ERROR_MESSAGE, $throwable->getMessage()));
+        }
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+     *
+     * @return void
+     */
+    protected function executeConfigurationBeforeDeletePlugin(AppDisconnectTransfer $appDisconnectTransfer): void
+    {
+        foreach ($this->configurationBeforeDeletePlugin as $configurationBeforeDeletePlugin) {
+            $configurationBeforeDeletePlugin->beforeDelete($appDisconnectTransfer);
+        }
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+     *
+     * @return void
+     */
+    protected function executeConfigurationAfterDeletePlugin(AppDisconnectTransfer $appDisconnectTransfer): void
+    {
+        foreach ($this->configurationAfterDeletePlugin as $configurationAfterDeletePlugin) {
+            $configurationAfterDeletePlugin->afterDelete($appDisconnectTransfer);
         }
     }
 }

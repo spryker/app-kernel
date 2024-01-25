@@ -20,10 +20,6 @@ use Spryker\Zed\AppKernel\Business\Writer\ConfigWriter;
 use Spryker\Zed\AppKernel\Business\Writer\ConfigWriterInterface;
 use Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientInterface;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilTextServiceInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
@@ -40,9 +36,10 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
     {
         return new ConfigWriter(
             $this->getEntityManager(),
+            $this->getRepository(),
             $this->createPropelEncryptionConfigurator(),
-            $this->getConfigurationBeforeSavePlugin(),
-            $this->getConfigurationAfterSavePlugin(),
+            $this->getConfigurationBeforeSavePlugins(),
+            $this->getConfigurationAfterSavePlugins(),
         );
     }
 
@@ -53,8 +50,8 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
     {
         return new ConfigDeleter(
             $this->getEntityManager(),
-            $this->getConfigurationBeforeDeletePlugin(),
-            $this->getConfigurationAfterDeletePlugin(),
+            $this->getConfigurationBeforeDeletePlugins(),
+            $this->getConfigurationAfterDeletePlugins(),
         );
     }
 
@@ -107,34 +104,34 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface|null
+     * @return array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface>
      */
-    public function getConfigurationBeforeSavePlugin(): ?ConfigurationBeforeSavePluginInterface
+    public function getConfigurationBeforeSavePlugins(): array
     {
-        return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGIN);
+        return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS);
     }
 
     /**
-     * @return \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface|null
+     * @return array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface>
      */
-    public function getConfigurationAfterSavePlugin(): ?ConfigurationAfterSavePluginInterface
+    public function getConfigurationAfterSavePlugins(): array
     {
-        return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGIN);
+        return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS);
     }
 
     /**
-     * @return \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface|null
+     * @return array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface>
      */
-    public function getConfigurationBeforeDeletePlugin(): ?ConfigurationBeforeDeletePluginInterface
+    public function getConfigurationBeforeDeletePlugins(): array
     {
-        return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGIN);
+        return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGINS);
     }
 
     /**
-     * @return \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface|null
+     * @return array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface>
      */
-    public function getConfigurationAfterDeletePlugin(): ?ConfigurationAfterDeletePluginInterface
+    public function getConfigurationAfterDeletePlugins(): array
     {
-        return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGIN);
+        return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS);
     }
 }

@@ -7,17 +7,16 @@
 
 namespace Spryker\Zed\AppKernel\Business\Writer;
 
+use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
 use Spryker\Client\SecretsManager\Exception\MissingSecretsManagerProviderPluginException;
-use Spryker\Client\SecretsManager\SecretsManagerDependencyProvider;
-use Spryker\Client\SecretsManagerExtension\Dependency\Plugin\SecretsManagerProviderPluginInterface;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
 use Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface;
+use Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface;
+use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
 use Throwable;
 
@@ -33,15 +32,17 @@ class ConfigWriter implements ConfigWriterInterface
 
     /**
      * @param \Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface $appEntityManager
+     * @param \Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface $appKernelRepository
      * @param \Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator
-     * @param \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface|null $configurationBeforeSavePlugin
-     * @param \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface|null $configurationAfterSavePlugin
+     * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface> $configurationBeforeSavePlugins
+     * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface> $configurationAfterSavePlugins
      */
     public function __construct(
         protected AppKernelEntityManagerInterface $appEntityManager,
+        protected AppKernelRepositoryInterface $appKernelRepository,
         protected PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator,
-        protected ?ConfigurationBeforeSavePluginInterface $configurationBeforeSavePlugin = null,
-        protected ?ConfigurationAfterSavePluginInterface $configurationAfterSavePlugin = null
+        protected array $configurationBeforeSavePlugins = [],
+        protected array $configurationAfterSavePlugins = []
     ) {
     }
 
@@ -54,6 +55,8 @@ class ConfigWriter implements ConfigWriterInterface
     {
         try {
             $appConfigTransfer = $this->getTransactionHandler()->handleTransaction(function () use ($appConfigTransfer) {
+                $appConfigTransfer = $this->updateStatus($appConfigTransfer);
+
                 return $this->doSaveAppConfig($appConfigTransfer);
             });
 
@@ -70,11 +73,31 @@ class ConfigWriter implements ConfigWriterInterface
      *
      * @return \Generated\Shared\Transfer\AppConfigTransfer
      */
+    protected function updateStatus(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+    {
+        try {
+            /** @var \Generated\Shared\Transfer\AppConfigTransfer $existingAppConfigTransfer */
+            $existingAppConfigTransfer = $this->appKernelRepository->findAppConfigByCriteria(
+                (new AppConfigCriteriaTransfer())->setTenantIdentifier($appConfigTransfer->getTenantIdentifierOrFail()),
+                new AppConfigTransfer(),
+            );
+        } catch (AppConfigNotFoundException) {
+            return $appConfigTransfer;
+        }
+
+        $appConfigTransfer->setStatus($existingAppConfigTransfer->getStatus());
+
+        return $appConfigTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     */
     protected function doSaveAppConfig(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
-        if ($this->configurationBeforeSavePlugin) {
-            $appConfigTransfer = $this->configurationBeforeSavePlugin->beforeSave($appConfigTransfer);
-        }
+        $appConfigTransfer = $this->executeConfigurationBeforeSavePlugins($appConfigTransfer);
 
         $this->configurePropelEncryption($appConfigTransfer);
 
@@ -83,8 +106,32 @@ class ConfigWriter implements ConfigWriterInterface
         }
         $appConfigTransfer = $this->appEntityManager->saveConfig($appConfigTransfer);
 
-        if ($this->configurationAfterSavePlugin) {
-            $appConfigTransfer = $this->configurationAfterSavePlugin->afterSave($appConfigTransfer);
+        return $this->executeConfigurationAfterSavePlugins($appConfigTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     */
+    protected function executeConfigurationBeforeSavePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+    {
+        foreach ($this->configurationBeforeSavePlugins as $configurationBeforeSavePlugin) {
+            $appConfigTransfer = $configurationBeforeSavePlugin->beforeSave($appConfigTransfer);
+        }
+
+        return $appConfigTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     */
+    protected function executeConfigurationAfterSavePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+    {
+        foreach ($this->configurationAfterSavePlugins as $configurationAfterSavePlugin) {
+            $appConfigTransfer = $configurationAfterSavePlugin->afterSave($appConfigTransfer);
         }
 
         return $appConfigTransfer;
@@ -100,7 +147,6 @@ class ConfigWriter implements ConfigWriterInterface
         try {
             $this->propelEncryptionConfigurator->configurePropelEncryption($appConfigTransfer->getTenantIdentifierOrFail());
         } catch (MissingSecretsManagerProviderPluginException) {
-            $this->getLogger()->warning(sprintf('There is no %s attached to %s::getSecretsManagerProviderPlugin(). This leads to unencrypted data in the database which should be avoided.', SecretsManagerProviderPluginInterface::class, SecretsManagerDependencyProvider::class));
         }
     }
 

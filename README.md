@@ -31,6 +31,9 @@ tests/bin/console app-kernel:setup
 tests/bin/console transfer:generate
 tests/bin/console transfer:databuilder:generate
 tests/bin/console propel:install
+tests/bin/console dev:ide-auto-completion:zed:generate
+tests/bin/console dev:ide-auto-completion:glue:generate
+tests/bin/console dev:ide-auto-completion:glue-backend:generate
 ```
 
 With these commands you've set up the AppKernel and can start the tests

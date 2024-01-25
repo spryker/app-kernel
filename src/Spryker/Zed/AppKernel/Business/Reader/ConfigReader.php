@@ -9,8 +9,6 @@ namespace Spryker\Zed\AppKernel\Business\Reader;
 
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Spryker\Client\SecretsManager\Exception\MissingSecretsManagerProviderPluginException;
-use Spryker\Client\SecretsManager\SecretsManagerDependencyProvider;
-use Spryker\Client\SecretsManagerExtension\Dependency\Plugin\SecretsManagerProviderPluginInterface;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
@@ -53,7 +51,6 @@ class ConfigReader implements ConfigReaderInterface
         try {
             $this->propelEncryptionConfigurator->configurePropelEncryption($appConfigCriteriaTransfer->getTenantIdentifierOrFail());
         } catch (MissingSecretsManagerProviderPluginException) {
-            $this->getLogger()->warning(sprintf('There is no %s attached to %s::getSecretsManagerProviderPlugin(). This leads to unencrypted data in the database which should be avoided.', SecretsManagerProviderPluginInterface::class, SecretsManagerDependencyProvider::class));
         }
     }
 }
