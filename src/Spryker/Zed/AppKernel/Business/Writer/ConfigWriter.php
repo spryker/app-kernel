@@ -7,15 +7,16 @@
 
 namespace Spryker\Zed\AppKernel\Business\Writer;
 
+use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
 use Spryker\Client\SecretsManager\Exception\MissingSecretsManagerProviderPluginException;
-use Spryker\Client\SecretsManager\SecretsManagerDependencyProvider;
-use Spryker\Client\SecretsManagerExtension\Dependency\Plugin\SecretsManagerProviderPluginInterface;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
 use Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface;
+use Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface;
+use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
 use Throwable;
 
@@ -31,12 +32,14 @@ class ConfigWriter implements ConfigWriterInterface
 
     /**
      * @param \Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface $appEntityManager
+     * @param \Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface $appKernelRepository
      * @param \Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface> $configurationBeforeSavePlugins
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface> $configurationAfterSavePlugins
      */
     public function __construct(
         protected AppKernelEntityManagerInterface $appEntityManager,
+        protected AppKernelRepositoryInterface $appKernelRepository,
         protected PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator,
         protected array $configurationBeforeSavePlugins = [],
         protected array $configurationAfterSavePlugins = []
@@ -52,6 +55,8 @@ class ConfigWriter implements ConfigWriterInterface
     {
         try {
             $appConfigTransfer = $this->getTransactionHandler()->handleTransaction(function () use ($appConfigTransfer) {
+                $appConfigTransfer = $this->mergeWithExistingConfiguration($appConfigTransfer);
+
                 return $this->doSaveAppConfig($appConfigTransfer);
             });
 
@@ -61,6 +66,28 @@ class ConfigWriter implements ConfigWriterInterface
 
             return $this->getFailResponse(sprintf('%s: %s', static::FAILED_TO_REGISTER_TENANT_MESSAGE, $throwable->getMessage()));
         }
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     */
+    protected function mergeWithExistingConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+    {
+        try {
+            /** @var \Generated\Shared\Transfer\AppConfigTransfer $existingAppConfigTransfer */
+            $existingAppConfigTransfer = $this->appKernelRepository->findAppConfigByCriteria(
+                (new AppConfigCriteriaTransfer())->setTenantIdentifier($appConfigTransfer->getTenantIdentifierOrFail()),
+                new AppConfigTransfer(),
+            );
+        } catch (AppConfigNotFoundException) {
+            return $appConfigTransfer;
+        }
+
+        $appConfigTransfer->setStatus($existingAppConfigTransfer->getStatus());
+
+        return $appConfigTransfer;
     }
 
     /**

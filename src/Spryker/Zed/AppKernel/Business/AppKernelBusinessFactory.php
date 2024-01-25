@@ -36,6 +36,7 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
     {
         return new ConfigWriter(
             $this->getEntityManager(),
+            $this->getRepository(),
             $this->createPropelEncryptionConfigurator(),
             $this->getConfigurationBeforeSavePlugins(),
             $this->getConfigurationAfterSavePlugins(),

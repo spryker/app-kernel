@@ -9,8 +9,6 @@ namespace Spryker\Zed\AppKernel\Business\Reader;
 
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Spryker\Client\SecretsManager\Exception\MissingSecretsManagerProviderPluginException;
-use Spryker\Client\SecretsManager\SecretsManagerDependencyProvider;
-use Spryker\Client\SecretsManagerExtension\Dependency\Plugin\SecretsManagerProviderPluginInterface;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
