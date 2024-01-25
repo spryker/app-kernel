@@ -73,7 +73,7 @@ class ConfigWriter implements ConfigWriterInterface
      *
      * @return \Generated\Shared\Transfer\AppConfigTransfer
      */
-    protected function mergeWithExistingConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+    protected function updateStatus(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         try {
             /** @var \Generated\Shared\Transfer\AppConfigTransfer $existingAppConfigTransfer */
