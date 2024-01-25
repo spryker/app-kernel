@@ -7,6 +7,7 @@
 
 namespace Spryker\Glue\AppKernel\Dependency\Facade;
 
+use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
 use Generated\Shared\Transfer\AppDisconnectResponseTransfer;
@@ -25,6 +26,16 @@ class AppKernelToAppKernelFacadeBridge implements AppKernelToAppKernelFacadeInte
     public function __construct($appKernelFacade)
     {
         $this->appKernelFacade = $appKernelFacade;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     */
+    public function getConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer): AppConfigTransfer
+    {
+        return $this->appKernelFacade->getConfig($appConfigCriteriaTransfer, new AppConfigTransfer());
     }
 
     /**
