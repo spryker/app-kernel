@@ -94,7 +94,7 @@ class AppConfigureControllerTest extends Unit
             }
         };
 
-        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGIN, $configurationBeforeSavePlugin);
+        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, [$configurationBeforeSavePlugin]);
 
         // Act
         $appConfigController->postConfigureAction($glueRequest);
@@ -133,7 +133,7 @@ class AppConfigureControllerTest extends Unit
             }
         };
 
-        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGIN, $configurationAfterSavePlugin);
+        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS, [$configurationAfterSavePlugin]);
 
         // Act
         $appConfigController->postConfigureAction($glueRequest);
@@ -223,7 +223,7 @@ class AppConfigureControllerTest extends Unit
             }
         };
 
-        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGIN, $configurationBeforeSavePlugin);
+        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, [$configurationBeforeSavePlugin]);
 
         $appConfigController = $this->tester->createAppConfigController();
 

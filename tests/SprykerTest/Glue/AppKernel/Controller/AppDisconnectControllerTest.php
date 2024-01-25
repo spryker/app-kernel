@@ -101,7 +101,7 @@ class AppDisconnectControllerTest extends Unit
             }
         };
 
-        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGIN, $configurationBeforeDeletePlugin);
+        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGINS, [$configurationBeforeDeletePlugin]);
 
         $appDisconnectController = $this->tester->createAppDisconnectController();
 
@@ -144,7 +144,7 @@ class AppDisconnectControllerTest extends Unit
             }
         };
 
-        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGIN, $configurationAfterDeletePlugin);
+        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS, [$configurationAfterDeletePlugin]);
 
         $appDisconnectController = $this->tester->createAppDisconnectController();
 
@@ -217,7 +217,7 @@ class AppDisconnectControllerTest extends Unit
             }
         };
 
-        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGIN, $configurationBeforeDeletePlugin);
+        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGINS, [$configurationBeforeDeletePlugin]);
 
         $appDisconnectController = $this->tester->createAppDisconnectController();
 

@@ -10,10 +10,6 @@ namespace Spryker\Zed\AppKernel;
 use Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientBridge;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceBridge;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilTextServiceBridge;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 
@@ -40,22 +36,22 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     /**
      * @var string
      */
-    public const PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGIN = 'APP_KERNEL:PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGIN';
+    public const PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS = 'APP_KERNEL:PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS';
 
     /**
      * @var string
      */
-    public const PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGIN = 'APP_KERNEL:PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGIN';
+    public const PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS = 'APP_KERNEL:PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS';
 
     /**
      * @var string
      */
-    public const PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGIN = 'APP_KERNEL:PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGIN';
+    public const PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGINS = 'APP_KERNEL:PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGINS';
 
     /**
      * @var string
      */
-    public const PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGIN = 'APP_KERNEL:PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGIN';
+    public const PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS = 'APP_KERNEL:PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -68,10 +64,10 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addSecretsManagerClient($container);
         $container = $this->addUtilTextService($container);
         $container = $this->addUtilEncodingService($container);
-        $container = $this->addConfigurationBeforeSavePlugin($container);
-        $container = $this->addConfigurationAfterSavePlugin($container);
-        $container = $this->addConfigurationBeforeDeletePlugin($container);
-        $container = $this->addConfigurationAfterDeletePlugin($container);
+        $container = $this->addConfigurationBeforeSavePlugins($container);
+        $container = $this->addConfigurationAfterSavePlugins($container);
+        $container = $this->addConfigurationBeforeDeletePlugins($container);
+        $container = $this->addConfigurationAfterDeletePlugins($container);
 
         return $container;
     }
@@ -136,21 +132,21 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addConfigurationBeforeSavePlugin(Container $container): Container
+    protected function addConfigurationBeforeSavePlugins(Container $container): Container
     {
-        $container->set(static::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGIN, function (Container $container) {
-            return $this->getConfigurationBeforeSavePlugin();
+        $container->set(static::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, function (Container $container) {
+            return $this->getConfigurationBeforeSavePlugins();
         });
 
         return $container;
     }
 
     /**
-     * @return \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface|null
+     * @return array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface>
      */
-    protected function getConfigurationBeforeSavePlugin(): ?ConfigurationBeforeSavePluginInterface
+    protected function getConfigurationBeforeSavePlugins(): array
     {
-        return null;
+        return [];
     }
 
     /**
@@ -158,21 +154,21 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addConfigurationAfterSavePlugin(Container $container): Container
+    protected function addConfigurationAfterSavePlugins(Container $container): Container
     {
-        $container->set(static::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGIN, function (Container $container) {
-            return $this->getConfigurationAfterSavePlugin();
+        $container->set(static::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS, function (Container $container) {
+            return $this->getConfigurationAfterSavePlugins();
         });
 
         return $container;
     }
 
     /**
-     * @return \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface|null
+     * @return array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface>
      */
-    protected function getConfigurationAfterSavePlugin(): ?ConfigurationAfterSavePluginInterface
+    protected function getConfigurationAfterSavePlugins(): array
     {
-        return null;
+        return [];
     }
 
     /**
@@ -180,21 +176,21 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addConfigurationBeforeDeletePlugin(Container $container): Container
+    protected function addConfigurationBeforeDeletePlugins(Container $container): Container
     {
-        $container->set(static::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGIN, function (Container $container) {
-            return $this->getConfigurationBeforeDeletePlugin();
+        $container->set(static::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGINS, function (Container $container) {
+            return $this->getConfigurationBeforeDeletePlugins();
         });
 
         return $container;
     }
 
     /**
-     * @return \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface|null
+     * @return array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface>
      */
-    protected function getConfigurationBeforeDeletePlugin(): ?ConfigurationBeforeDeletePluginInterface
+    protected function getConfigurationBeforeDeletePlugins(): array
     {
-        return null;
+        return [];
     }
 
     /**
@@ -202,20 +198,20 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addConfigurationAfterDeletePlugin(Container $container): Container
+    protected function addConfigurationAfterDeletePlugins(Container $container): Container
     {
-        $container->set(static::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGIN, function (Container $container) {
-            return $this->getConfigurationAfterDeletePlugin();
+        $container->set(static::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS, function (Container $container) {
+            return $this->getConfigurationAfterDeletePlugins();
         });
 
         return $container;
     }
 
     /**
-     * @return \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface|null
+     * @return array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface>
      */
-    protected function getConfigurationAfterDeletePlugin(): ?ConfigurationAfterDeletePluginInterface
+    protected function getConfigurationAfterDeletePlugins(): array
     {
-        return null;
+        return [];
     }
 }

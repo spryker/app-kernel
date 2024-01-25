@@ -16,8 +16,6 @@ use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
 use Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface;
-use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
 use Throwable;
 
@@ -34,14 +32,14 @@ class ConfigWriter implements ConfigWriterInterface
     /**
      * @param \Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface $appEntityManager
      * @param \Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator
-     * @param \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface|null $configurationBeforeSavePlugin
-     * @param \Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface|null $configurationAfterSavePlugin
+     * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface> $configurationBeforeSavePlugins
+     * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface> $configurationAfterSavePlugins
      */
     public function __construct(
         protected AppKernelEntityManagerInterface $appEntityManager,
         protected PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator,
-        protected ?ConfigurationBeforeSavePluginInterface $configurationBeforeSavePlugin = null,
-        protected ?ConfigurationAfterSavePluginInterface $configurationAfterSavePlugin = null
+        protected array $configurationBeforeSavePlugins = [],
+        protected array $configurationAfterSavePlugins = []
     ) {
     }
 
@@ -72,9 +70,7 @@ class ConfigWriter implements ConfigWriterInterface
      */
     protected function doSaveAppConfig(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
-        if ($this->configurationBeforeSavePlugin) {
-            $appConfigTransfer = $this->configurationBeforeSavePlugin->beforeSave($appConfigTransfer);
-        }
+        $appConfigTransfer = $this->executeConfigurationBeforeSavePlugins($appConfigTransfer);
 
         $this->configurePropelEncryption($appConfigTransfer);
 
@@ -83,8 +79,32 @@ class ConfigWriter implements ConfigWriterInterface
         }
         $appConfigTransfer = $this->appEntityManager->saveConfig($appConfigTransfer);
 
-        if ($this->configurationAfterSavePlugin) {
-            $appConfigTransfer = $this->configurationAfterSavePlugin->afterSave($appConfigTransfer);
+        return $this->executeConfigurationAfterSavePlugins($appConfigTransfer);
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     */
+    protected function executeConfigurationBeforeSavePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+    {
+        foreach ($this->configurationBeforeSavePlugins as $configurationBeforeSavePlugin) {
+            $appConfigTransfer = $configurationBeforeSavePlugin->beforeSave($appConfigTransfer);
+        }
+
+        return $appConfigTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     */
+    protected function executeConfigurationAfterSavePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+    {
+        foreach ($this->configurationAfterSavePlugins as $configurationAfterSavePlugin) {
+            $appConfigTransfer = $configurationAfterSavePlugin->afterSave($appConfigTransfer);
         }
 
         return $appConfigTransfer;
