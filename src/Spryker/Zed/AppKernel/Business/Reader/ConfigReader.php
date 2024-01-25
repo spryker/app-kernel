@@ -53,7 +53,6 @@ class ConfigReader implements ConfigReaderInterface
         try {
             $this->propelEncryptionConfigurator->configurePropelEncryption($appConfigCriteriaTransfer->getTenantIdentifierOrFail());
         } catch (MissingSecretsManagerProviderPluginException) {
-            $this->getLogger()->warning(sprintf('There is no %s attached to %s::getSecretsManagerProviderPlugin(). This leads to unencrypted data in the database which should be avoided.', SecretsManagerProviderPluginInterface::class, SecretsManagerDependencyProvider::class));
         }
     }
 }

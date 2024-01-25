@@ -120,7 +120,6 @@ class ConfigWriter implements ConfigWriterInterface
         try {
             $this->propelEncryptionConfigurator->configurePropelEncryption($appConfigTransfer->getTenantIdentifierOrFail());
         } catch (MissingSecretsManagerProviderPluginException) {
-            $this->getLogger()->warning(sprintf('There is no %s attached to %s::getSecretsManagerProviderPlugin(). This leads to unencrypted data in the database which should be avoided.', SecretsManagerProviderPluginInterface::class, SecretsManagerDependencyProvider::class));
         }
     }
 
