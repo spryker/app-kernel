@@ -62,7 +62,7 @@ class ConfigWriter implements ConfigWriterInterface
                 static::FAILED_TO_REGISTER_TENANT_MESSAGE,
                 [
                     'tenantIdentifier' => $appConfigTransfer->getTenantIdentifier(),
-                    'exception' => $throwable
+                    'exception' => $throwable,
                 ]
             );
 
