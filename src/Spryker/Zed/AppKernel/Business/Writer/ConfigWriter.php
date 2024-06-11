@@ -58,7 +58,13 @@ class ConfigWriter implements ConfigWriterInterface
 
             return $this->getSuccessResponse($appConfigTransfer);
         } catch (Throwable $throwable) {
-            $this->getLogger()->error(static::FAILED_TO_REGISTER_TENANT_MESSAGE, ['exception' => $throwable]);
+            $this->getLogger()->error(
+                static::FAILED_TO_REGISTER_TENANT_MESSAGE,
+                [
+                    'tenantIdentifier' => $appConfigTransfer->getTenantIdentifier(),
+                    'exception' => $throwable,
+                ],
+            );
 
             return $this->getFailResponse(sprintf('%s: %s', static::FAILED_TO_REGISTER_TENANT_MESSAGE, $throwable->getMessage()));
         }

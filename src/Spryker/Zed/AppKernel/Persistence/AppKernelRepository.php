@@ -40,7 +40,7 @@ class AppKernelRepository extends AbstractRepository implements AppKernelReposit
             $errorMessage = 'Could not find an App configuration for the given Tenant';
 
             $this->getLogger()->error($errorMessage, [
-                'Tenant' => $appConfigCriteriaTransfer->getTenantIdentifierOrFail(),
+                'tenantIdentifier' => $appConfigCriteriaTransfer->getTenantIdentifierOrFail(),
             ]);
 
             throw new AppConfigNotFoundException($errorMessage);
