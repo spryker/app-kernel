@@ -43,7 +43,7 @@ components:
             title: Update App config Command
             summary: 'Request to update app config for tenant.'
             payload:
-                $ref: '#/components/schemas/sales-payment/schemas/AppStatusChanged'
+                $ref: '#/components/schemas/AppStatusChanged'
             headers:
                 $ref: '#/components/schemas/message-broker/components/schemas/headers'
     schemas:
@@ -73,6 +73,9 @@ components:
                 appIdentifier:
                     type: string
                     description: The app identifier to identify the PBC.
+                status:
+                    type: boolean
+                    description: The status of PBC (enabled, disabled).
             required:
                 - appIdentifier
                 - status
