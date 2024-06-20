@@ -7,7 +7,6 @@
 
 namespace Spryker\Zed\AppKernel\Persistence;
 
-use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
 
 interface AppKernelEntityManagerInterface
@@ -18,11 +17,4 @@ interface AppKernelEntityManagerInterface
      * @return \Generated\Shared\Transfer\AppConfigTransfer
      */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     *
-     * @return int Affected number of deleted rows
-     */
-    public function deleteConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer): int;
 }
