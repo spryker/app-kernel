@@ -19,7 +19,7 @@ class MessageSender implements MessageSenderInterface
     /**
      * @var \Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface
      */
-    private AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade;
+    protected AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade;
 
     /**
      * @var \Spryker\Zed\AppKernel\AppKernelConfig
@@ -30,7 +30,7 @@ class MessageSender implements MessageSenderInterface
      * @param \Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade
      * @param \Spryker\Zed\AppKernel\AppKernelConfig $config
      */
-    public function __construct(AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade, AppKernelConfig $config)
+    public function __construct(protected AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade, protected AppKernelConfig $config)
     {
         $this->messageBrokerFacade = $messageBrokerFacade;
         $this->config = $config;
