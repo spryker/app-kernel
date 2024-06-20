@@ -68,9 +68,9 @@ class MessageSender implements MessageSenderInterface
     /**
      * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
      *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
      */
-    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppConfigTransfer
+    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
     {
         $appStatusChangedTransfer = new AppStatusChangedTransfer();
         $appStatusChangedTransfer
