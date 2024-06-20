@@ -74,4 +74,30 @@ interface AppKernelFacadeInterface
      * @return T
      */
     public function getConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer, TransferInterface $transfer): TransferInterface;
+
+    /**
+     * Specification:
+     * - Sends a message to the tenant about the changed configuration.
+     * - Returns the unchanged AppConfigTransfer (Only used).
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     */
+    public function informTenantAboutChangedConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigTransfer;
+
+    /**
+     * Specification:
+     * - Sends a message to the tenant about the removed configuration.
+     * - Returns the unchanged AppDisconnectTransfer (Only used).
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
+     */
+    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer;
 }

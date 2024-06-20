@@ -8,6 +8,8 @@
 namespace Spryker\Zed\AppKernel;
 
 use Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientBridge;
+use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeBridge;
+use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceBridge;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilTextServiceBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
@@ -18,6 +20,11 @@ use Spryker\Zed\Kernel\Container;
  */
 class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
+    public const FACADE_MESSAGE_BROKER = 'APP_KERNEL:FACADE_MESSAGE_BROKER';
+
     /**
      * @var string
      */
@@ -61,6 +68,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = parent::provideBusinessLayerDependencies($container);
+        $container = $this->addMessageBrokerFacade($container);
         $container = $this->addSecretsManagerClient($container);
         $container = $this->addUtilTextService($container);
         $container = $this->addUtilEncodingService($container);
@@ -81,6 +89,20 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     {
         $container = parent::providePersistenceLayerDependencies($container);
         $container = $this->addUtilEncodingService($container);
+
+        return $container;
+    }
+
+    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Spryker\Zed\Kernel\Container
+     */
+    protected function addMessageBrokerFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_MESSAGE_BROKER, static function (Container $container): AppKernelToMessageBrokerFacadeInterface {
+            return new AppKernelToMessageBrokerFacadeBridge($container->getLocator()->messageBroker()->facade());
+        });
 
         return $container;
     }

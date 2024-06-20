@@ -7,6 +7,7 @@
 
 namespace Spryker\Zed\AppKernel;
 
+use Spryker\Shared\AppKernel\AppKernelConstants;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class AppKernelConfig extends AbstractBundleConfig
@@ -20,4 +21,14 @@ class AppKernelConfig extends AbstractBundleConfig
      * @var string
      */
     public const APP_STATUS_CONNECTED = 'CONNECTED';
+
+    /**
+     * @api
+     *
+     * @return string
+     */
+    public function getAppIdentifier(): string
+    {
+        return $this->get(AppKernelConstants::APP_IDENTIFIER);
+    }
 }

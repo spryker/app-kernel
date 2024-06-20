@@ -12,6 +12,8 @@ use Spryker\Zed\AppKernel\Business\Deleter\ConfigDeleter;
 use Spryker\Zed\AppKernel\Business\Deleter\ConfigDeleterInterface;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfigurator;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
+use Spryker\Zed\AppKernel\Business\MessageSender\MessageSender;
+use Spryker\Zed\AppKernel\Business\MessageSender\MessageSenderInterface;
 use Spryker\Zed\AppKernel\Business\Reader\ConfigReader;
 use Spryker\Zed\AppKernel\Business\Reader\ConfigReaderInterface;
 use Spryker\Zed\AppKernel\Business\SecretsManager\SecretsManager;
@@ -19,6 +21,7 @@ use Spryker\Zed\AppKernel\Business\SecretsManager\SecretsManagerInterface;
 use Spryker\Zed\AppKernel\Business\Writer\ConfigWriter;
 use Spryker\Zed\AppKernel\Business\Writer\ConfigWriterInterface;
 use Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientInterface;
+use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilTextServiceInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
@@ -88,6 +91,14 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @return \Spryker\Zed\AppKernel\Business\MessageSender\MessageSenderInterface
+     */
+    public function createMessageSender(): MessageSenderInterface
+    {
+        return new MessageSender($this->getMessageBrokerFacade(), $this->getConfig());
+    }
+
+    /**
      * @return \Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientInterface
      */
     public function getSecretsManagerClient(): AppKernelToSecretsManagerClientInterface
@@ -133,5 +144,13 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
     public function getConfigurationAfterDeletePlugins(): array
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS);
+    }
+
+    /**
+     * @return \Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface
+     */
+    public function getMessageBrokerFacade(): AppKernelToMessageBrokerFacadeInterface
+    {
+        return $this->getProvidedDependency(AppKernelDependencyProvider::FACADE_MESSAGE_BROKER);
     }
 }

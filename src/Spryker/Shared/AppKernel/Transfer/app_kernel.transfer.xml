@@ -9,6 +9,14 @@
         <property name="status" type="string"/>
     </transfer>
 
+    <transfer name="AppStatusChanged" strict="true">
+        <property name="status" type="bool" description="The Status of an App that enabled (1) or disabled (0)"/>
+        <property name="appIdentifier" type="string" description="The identifier of an App"/>
+        <property name="messageAttributes" type="MessageAttributes"/>
+    </transfer>
+
+    <transfer name="MessageAttributes"/>
+
     <transfer name="AppConfigResponse" strict="true">
         <property name="isSuccessful" type="bool"/>
         <property name="errorMessage" type="string"/>

@@ -9,6 +9,7 @@
         "spryker/glue-application-extension": "^1.0.0",
         "spryker/kernel": "^3.30.0",
         "spryker/log": "^3.0.0",
+        "spryker/message-broker": "^1.11.0",
         "spryker/propel-encryption-behavior": "^0.1.1",
         "spryker/secrets-manager": "^1.0.0",
         "spryker/secrets-manager-extension": "^1.0.0",

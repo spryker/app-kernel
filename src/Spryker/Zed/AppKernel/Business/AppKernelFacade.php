@@ -70,4 +70,36 @@ class AppKernelFacade extends AbstractFacade implements AppKernelFacadeInterface
     {
         return $this->getFactory()->createConfigReader()->getAppConfigByCriteria($appConfigCriteriaTransfer, $transfer);
     }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
+     */
+    public function informTenantAboutChangedConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+    {
+        return $this->getFactory()
+            ->createMessageSender()
+            ->informTenantAboutChangedConfiguration($appConfigTransfer);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
+     */
+    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
+    {
+        return $this->getFactory()
+            ->createMessageSender()
+            ->informTenantAboutDeletedConfiguration($appDisconnectTransfer);
+    }
 }
