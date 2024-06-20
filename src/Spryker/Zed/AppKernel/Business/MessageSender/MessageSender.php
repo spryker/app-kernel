@@ -17,23 +17,11 @@ use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterf
 class MessageSender implements MessageSenderInterface
 {
     /**
-     * @var \Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface
-     */
-    protected AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade;
-
-    /**
-     * @var \Spryker\Zed\AppKernel\AppKernelConfig
-     */
-    protected AppKernelConfig $config;
-
-    /**
      * @param \Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade
      * @param \Spryker\Zed\AppKernel\AppKernelConfig $config
      */
     public function __construct(protected AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade, protected AppKernelConfig $config)
     {
-        $this->messageBrokerFacade = $messageBrokerFacade;
-        $this->config = $config;
     }
 
     /**
