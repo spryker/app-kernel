@@ -9,6 +9,10 @@ channels:
                 oneOf:
                     - $ref: '#/components/messages/ConfigureApp'
                     - $ref: '#/components/messages/DeleteApp'
+        publish:
+            message:
+                oneOf:
+                    -   $ref: '#/components/messages/AppStatusChanged'
 components:
     messages:
         ConfigureApp:
@@ -32,6 +36,16 @@ components:
                 $ref: '#/components/schemas/message-broker/components/schemas/headers'
             payload:
                 $ref: '#/components/schemas/AppDisconnect'
+        AppStatusChanged:
+            x-spryker:
+                module: AppConfig
+            name: AppStatusChanged
+            title: Update App config Command
+            summary: 'Request to update app config for tenant.'
+            payload:
+                $ref: '#/components/schemas/sales-payment/schemas/AppStatusChanged'
+            headers:
+                $ref: '#/components/schemas/message-broker/components/schemas/headers'
     schemas:
         AppConfiguration:
             type: object
@@ -53,5 +67,14 @@ components:
                     description: The app identifier to identify the PBC.
             required:
                 - appIdentifier
+        AppStatusChanged:
+            type: object
+            properties:
+                appIdentifier:
+                    type: string
+                    description: The app identifier to identify the PBC.
+            required:
+                - appIdentifier
+                - status
         message-broker:
             $ref: 'https://raw.githubusercontent.com/spryker/message-broker/1.6.0/resources/api/template.yml'
