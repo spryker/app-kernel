@@ -10,7 +10,6 @@ namespace SprykerTest\Glue\AppKernel\Controller;
 use Codeception\Test\Unit;
 use Exception;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Spryker\Zed\AppKernel\AppKernelDependencyProvider;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface;

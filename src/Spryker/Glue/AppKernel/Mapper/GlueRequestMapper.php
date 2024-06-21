@@ -8,7 +8,6 @@
 namespace Spryker\Glue\AppKernel\Mapper;
 
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Spryker\Glue\AppKernel\AppKernelConfig;
 use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
