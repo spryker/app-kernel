@@ -7,11 +7,13 @@
 
 namespace Spryker\Glue\AppKernel\Controller;
 
+use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\AppKernel\AppKernelConfig;
 use Spryker\Glue\Kernel\Backend\Controller\AbstractController;
+use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
 
 /**
  * @method \Spryker\Glue\AppKernel\AppKernelFactory getFactory()
@@ -36,11 +38,27 @@ class AppDisconnectController extends AbstractController
         $disconnectParameterTransfer = $this->getFactory()->createGlueRequestMapper()
             ->mapGlueRequestTransferToAppDisconnectTransfer($glueRequestTransfer, new AppDisconnectTransfer());
 
-        $appDisconnectResponseTransfer = $this->getFactory()->getAppKernelFacade()
-            ->deleteConfig($disconnectParameterTransfer);
+        $appConfigCriteriaTransfer = new AppConfigCriteriaTransfer();
+        $appConfigCriteriaTransfer->setTenantIdentifier($disconnectParameterTransfer->getTenantIdentifier());
 
-        if (!$appDisconnectResponseTransfer->getIsSuccessful()) {
-            return $this->getFactory()->createResponseBuilder()
+        try {
+            $appConfigTransfer = $this->getFactory()
+                ->getAppKernelFacade()
+                ->getConfig($appConfigCriteriaTransfer);
+
+            $appConfigTransfer->setIsActive(false);
+            $appConfigResponseTransfer = $this->getFactory()
+                ->getAppKernelFacade()
+                ->saveConfig($appConfigTransfer);
+        } catch (AppConfigNotFoundException $exception) {
+            return $this->getFactory()
+                ->createResponseBuilder()
+                ->buildErrorResponse($exception->getMessage());
+        }
+
+        if (!$appConfigResponseTransfer->getIsSuccessful()) {
+            return $this->getFactory()
+                ->createResponseBuilder()
                 ->buildErrorResponse(AppKernelConfig::RESPONSE_MESSAGE_DISCONNECT_ERROR);
         }
 

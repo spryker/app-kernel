@@ -44,9 +44,57 @@ class AppKernelAssertionHelper extends Module
             ->toArray();
 
         $this->assertSame(0, count($appConfigEntities), sprintf(
-            'Expected to have no persisted configurations for tenant identifier "%s" but found "%d".',
+            'Expected to have exactly no persisted configuration for tenant identifier "%s" but found "%d".',
             $tenantIdentifier,
             count($appConfigEntities),
+        ));
+    }
+
+    /**
+     * @param string $tenantIdentifier
+     *
+     * @return void
+     */
+    public function assertAppConfigIsActivated(string $tenantIdentifier): void
+    {
+        $appConfigEntities = SpyAppConfigQuery::create()
+            ->filterByTenantIdentifier($tenantIdentifier)
+            ->find()
+            ->toArray();
+
+        $this->assertSame(1, count($appConfigEntities), sprintf(
+            'Expected to have one persisted configurations for tenant identifier "%s" but found "%d".',
+            $tenantIdentifier,
+            count($appConfigEntities),
+        ));
+
+        $this->assertTrue($appConfigEntities[0]['IsActive'] === true, sprintf(
+            'Expected to have the configuration for tenant identifier "%s" activated but it is deactivated.',
+            $tenantIdentifier,
+        ));
+    }
+
+    /**
+     * @param string $tenantIdentifier
+     *
+     * @return void
+     */
+    public function assertAppConfigIsDeactivated(string $tenantIdentifier): void
+    {
+        $appConfigEntities = SpyAppConfigQuery::create()
+            ->filterByTenantIdentifier($tenantIdentifier)
+            ->find()
+            ->toArray();
+
+        $this->assertSame(1, count($appConfigEntities), sprintf(
+            'Expected to have one persisted configurations for tenant identifier "%s" but found "%d".',
+            $tenantIdentifier,
+            count($appConfigEntities),
+        ));
+
+        $this->assertTrue($appConfigEntities[0]['IsActive'] === false, sprintf(
+            'Expected to have the configuration for tenant identifier "%s" deactivated but it is activated.',
+            $tenantIdentifier,
         ));
     }
 }

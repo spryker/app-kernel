@@ -39,6 +39,7 @@ class AppConfigController extends AbstractController
             ->mapGlueRequestTransferToAppConfigTransfer($glueRequestTransfer, new AppConfigTransfer());
 
         $appConfigTransfer = $this->updateStatus($appConfigTransfer);
+        $appConfigTransfer->setIsActive(true);
 
         $appConfigResponseTransfer = $this->getFactory()->getAppKernelFacade()
             ->saveConfig($appConfigTransfer);
@@ -66,6 +67,7 @@ class AppConfigController extends AbstractController
                     ->getConfig((new AppConfigCriteriaTransfer())->setTenantIdentifier($appConfigTransfer->getTenantIdentifier()));
 
                 $appConfigTransfer->setStatus($existingAppConfigTransfer->getStatus());
+                $appConfigTransfer->setIsActive($existingAppConfigTransfer->getIsActive());
             } catch (AppConfigNotFoundException) {
             }
         }
