@@ -67,6 +67,24 @@ class AppConfigureControllerTest extends Unit
     /**
      * @return void
      */
+    public function testPostConfigureReturnsSuccessResponseAndActivatesTheAppConfigurationWhenAnAppConfigurationExistsAndWasMarkedAsDeactivated(): void
+    {
+        // Arrange
+        $glueRequest = $this->tester->createGlueRequestFromFixture('valid-config-request');
+        $this->tester->havePersistedAppConfigTransfer([AppConfigTransfer::TENANT_IDENTIFIER => 'tenant-identifier', AppConfigTransfer::IS_ACTIVE => false]);
+        $appConfigController = $this->tester->createAppConfigController();
+
+        // Act
+        $glueResponse = $appConfigController->postConfigureAction($glueRequest);
+
+        // Assert
+        $this->tester->assertGlueResponseContainsSuccessContents($glueRequest, $glueResponse);
+        $this->tester->assertAppConfigIsActivated('tenant-identifier');
+    }
+
+    /**
+     * @return void
+     */
     public function testPostConfigureExecutesBeforeSavePlugin(): void
     {
         // Arrange
@@ -106,10 +124,90 @@ class AppConfigureControllerTest extends Unit
     /**
      * @return void
      */
+    public function testPostConfigureExecutesBeforeSavePluginWhenAnExistingAppConfigurationWasFoundAndIsSetToEnabledAgain(): void
+    {
+        // Arrange
+        $glueRequest = $this->tester->createGlueRequestFromFixture('valid-config-request');
+        $this->tester->havePersistedAppConfigTransfer([AppConfigTransfer::TENANT_IDENTIFIER => 'tenant-identifier', AppConfigTransfer::IS_ACTIVE => false]);
+        $appConfigController = $this->tester->createAppConfigController();
+
+        $configurationBeforeSavePlugin = new class ($this) implements ConfigurationBeforeSavePluginInterface {
+            /**
+             * @param \SprykerTest\Glue\AppKernel\Controller\AppConfigureControllerTest $test
+             */
+            public function __construct(protected AppConfigureControllerTest $test)
+            {
+            }
+
+            /**
+             * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+             *
+             * @return \Generated\Shared\Transfer\AppConfigTransfer
+             */
+            public function beforeSave(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+            {
+                $this->test->beforeSavePluginWasExecuted = true;
+
+                return $appConfigTransfer;
+            }
+        };
+
+        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, [$configurationBeforeSavePlugin]);
+
+        // Act
+        $appConfigController->postConfigureAction($glueRequest);
+
+        // Assert
+        $this->assertTrue($this->beforeSavePluginWasExecuted, 'Expected that the ConfigurationBeforeSavePluginInterface gets executed but was not.');
+    }
+
+    /**
+     * @return void
+     */
     public function testPostConfigureExecutesAfterSavePlugin(): void
     {
         // Arrange
         $glueRequest = $this->tester->createGlueRequestFromFixture('valid-config-request');
+        $appConfigController = $this->tester->createAppConfigController();
+
+        $configurationAfterSavePlugin = new class ($this) implements ConfigurationAfterSavePluginInterface {
+            /**
+             * @param \SprykerTest\Glue\AppKernel\Controller\AppConfigureControllerTest $test
+             */
+            public function __construct(protected AppConfigureControllerTest $test)
+            {
+            }
+
+            /**
+             * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
+             *
+             * @return \Generated\Shared\Transfer\AppConfigTransfer
+             */
+            public function afterSave(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+            {
+                $this->test->afterSavePluginWasExecuted = true;
+
+                return $appConfigTransfer;
+            }
+        };
+
+        $this->getDependencyProviderHelper()->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS, [$configurationAfterSavePlugin]);
+
+        // Act
+        $appConfigController->postConfigureAction($glueRequest);
+
+        // Assert
+        $this->assertTrue($this->afterSavePluginWasExecuted, 'Expected that the ConfigurationAfterSavePluginInterface gets executed but was not.');
+    }
+
+    /**
+     * @return void
+     */
+    public function testPostConfigureExecutesAfterSavePluginWhenAnExistingAppConfigurationWasFoundAndIsSetToEnabledAgain(): void
+    {
+        // Arrange
+        $glueRequest = $this->tester->createGlueRequestFromFixture('valid-config-request');
+        $this->tester->havePersistedAppConfigTransfer([AppConfigTransfer::TENANT_IDENTIFIER => 'tenant-identifier', AppConfigTransfer::IS_ACTIVE => false]);
         $appConfigController = $this->tester->createAppConfigController();
 
         $configurationAfterSavePlugin = new class ($this) implements ConfigurationAfterSavePluginInterface {

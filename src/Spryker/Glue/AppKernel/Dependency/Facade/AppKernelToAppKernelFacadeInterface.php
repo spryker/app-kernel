@@ -10,8 +10,6 @@ namespace Spryker\Glue\AppKernel\Dependency\Facade;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\AppDisconnectResponseTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
 
 interface AppKernelToAppKernelFacadeInterface
 {
@@ -28,11 +26,4 @@ interface AppKernelToAppKernelFacadeInterface
      * @return \Generated\Shared\Transfer\AppConfigResponseTransfer
      */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppDisconnectResponseTransfer
-     */
-    public function deleteConfig(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectResponseTransfer;
 }

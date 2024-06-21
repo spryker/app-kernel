@@ -7,7 +7,6 @@
 
 namespace Spryker\Zed\AppKernel\Persistence;
 
-use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
 use Orm\Zed\AppKernel\Persistence\SpyAppConfig;
 use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
@@ -42,19 +41,5 @@ class AppKernelEntityManager extends AbstractEntityManager implements AppKernelE
         $appConfigEntity->save();
 
         return $appConfigTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     *
-     * @return int Affected number of deleted rows
-     */
-    public function deleteConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer): int
-    {
-        $appConfigQuery = $this->getFactory()->createAppConfigQuery();
-
-        return $appConfigQuery
-            ->filterByTenantIdentifier($appConfigCriteriaTransfer->getTenantIdentifierOrFail())
-            ->delete();
     }
 }

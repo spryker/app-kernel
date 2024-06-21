@@ -66,7 +66,7 @@ class AppDisconnectControllerTest extends Unit
 
         // Assert
         $this->tester->assertGlueResponseContainsSuccessContentsWhenDisconnectIsSuccessful($glueResponse);
-        $this->tester->assertAppConfigIsNotPersisted($appConfigTransfer->getTenantIdentifier());
+        $this->tester->assertAppConfigIsDeactivated($appConfigTransfer->getTenantIdentifier());
     }
 
     /**
@@ -174,6 +174,8 @@ class AppDisconnectControllerTest extends Unit
     }
 
     /**
+     * This should fail because there is no configuration for the tenant identifier.
+     *
      * @return void
      */
     public function testPostDisconnectReturnsErrorResponseWithStatusCode400WhenAppCouldNotBeDisconnected(): void

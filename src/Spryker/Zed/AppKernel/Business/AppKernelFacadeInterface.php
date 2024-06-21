@@ -10,8 +10,6 @@ namespace Spryker\Zed\AppKernel\Business;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\AppDisconnectResponseTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
 interface AppKernelFacadeInterface
@@ -37,23 +35,6 @@ interface AppKernelFacadeInterface
      * @return \Generated\Shared\Transfer\AppConfigResponseTransfer
      */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer;
-
-    /**
-     * Specification:
-     * - Deletes the App configuration from the DB.
-     * - Requires `AppDisconnectTransfer.tenantIdentifier` to be set.
-     * - Executes `ConfigurationBeforeDeletePluginInterface::beforeDelete()` method before the configuration is deleted from the database.
-     * - Executes `ConfigurationAfterDeletePluginInterface::afterDelete()` method after the configuration was deleted from the database.
-     * - Returns a successful `AppDisconnectResponseTransfer` when configuration was deleted from the database.
-     * - Returns a failed `AppDisconnectResponseTransfer` when configuration could not be deleted from the database.
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppDisconnectResponseTransfer
-     */
-    public function deleteConfig(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectResponseTransfer;
 
     /**
      * Specification:

@@ -8,8 +8,6 @@
 namespace Spryker\Zed\AppKernel\Business;
 
 use Spryker\Zed\AppKernel\AppKernelDependencyProvider;
-use Spryker\Zed\AppKernel\Business\Deleter\ConfigDeleter;
-use Spryker\Zed\AppKernel\Business\Deleter\ConfigDeleterInterface;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfigurator;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
 use Spryker\Zed\AppKernel\Business\Reader\ConfigReader;
@@ -40,16 +38,6 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
             $this->createPropelEncryptionConfigurator(),
             $this->getConfigurationBeforeSavePlugins(),
             $this->getConfigurationAfterSavePlugins(),
-        );
-    }
-
-    /**
-     * @return \Spryker\Zed\AppKernel\Business\Deleter\ConfigDeleterInterface
-     */
-    public function createConfigDeleter(): ConfigDeleterInterface
-    {
-        return new ConfigDeleter(
-            $this->getEntityManager(),
             $this->getConfigurationBeforeDeletePlugins(),
             $this->getConfigurationAfterDeletePlugins(),
         );
