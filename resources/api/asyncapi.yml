@@ -9,10 +9,11 @@ channels:
                 oneOf:
                     - $ref: '#/components/messages/ConfigureApp'
                     - $ref: '#/components/messages/DeleteApp'
+    app-events:
         publish:
             message:
                 oneOf:
-                    -   $ref: '#/components/messages/AppStatusChanged'
+                    - $ref: '#/components/messages/AppConfigChanged'
 components:
     messages:
         ConfigureApp:
@@ -36,14 +37,14 @@ components:
                 $ref: '#/components/schemas/message-broker/components/schemas/headers'
             payload:
                 $ref: '#/components/schemas/AppDisconnect'
-        AppStatusChanged:
+        AppConfigChanged:
             x-spryker:
                 module: AppConfig
-            name: AppStatusChanged
+            name: AppConfigChanged
             title: Update App config Command
             summary: 'Request to update app config for tenant.'
             payload:
-                $ref: '#/components/schemas/AppStatusChanged'
+                $ref: '#/components/schemas/AppConfigChanged'
             headers:
                 $ref: '#/components/schemas/message-broker/components/schemas/headers'
     schemas:
@@ -67,7 +68,7 @@ components:
                     description: The app identifier to identify the PBC.
             required:
                 - appIdentifier
-        AppStatusChanged:
+        AppConfigChanged:
             type: object
             properties:
                 appIdentifier:

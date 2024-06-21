@@ -1,9 +1,9 @@
 <?php
 $serviceContainer = \Propel\Runtime\Propel::getServiceContainer();
 $serviceContainer->initDatabaseMapFromDumps(array (
-  'zed' => 
+  'zed' =>
   array (
-    'tablesByName' => 
+    'tablesByName' =>
     array (
       'spy_app_config' => '\\Orm\\Zed\\AppKernel\\Persistence\\Map\\SpyAppConfigTableMap',
       'spy_locale' => '\\Orm\\Zed\\Locale\\Persistence\\Map\\SpyLocaleTableMap',
@@ -11,7 +11,7 @@ $serviceContainer->initDatabaseMapFromDumps(array (
       'spy_queue_process' => '\\Orm\\Zed\\Queue\\Persistence\\Map\\SpyQueueProcessTableMap',
       'spy_store' => '\\Orm\\Zed\\Store\\Persistence\\Map\\SpyStoreTableMap',
     ),
-    'tablesByPhpName' => 
+    'tablesByPhpName' =>
     array (
       '\\SpyAppConfig' => '\\Orm\\Zed\\AppKernel\\Persistence\\Map\\SpyAppConfigTableMap',
       '\\SpyLocale' => '\\Orm\\Zed\\Locale\\Persistence\\Map\\SpyLocaleTableMap',

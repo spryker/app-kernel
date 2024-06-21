@@ -86,20 +86,4 @@ class AppKernelFacade extends AbstractFacade implements AppKernelFacadeInterface
             ->createMessageSender()
             ->informTenantAboutChangedConfiguration($appConfigTransfer);
     }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
-     */
-    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
-    {
-        return $this->getFactory()
-            ->createMessageSender()
-            ->informTenantAboutDeletedConfiguration($appDisconnectTransfer);
-    }
 }
