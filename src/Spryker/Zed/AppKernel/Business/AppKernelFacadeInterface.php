@@ -10,6 +10,7 @@ namespace Spryker\Zed\AppKernel\Business;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
 interface AppKernelFacadeInterface
@@ -68,4 +69,17 @@ interface AppKernelFacadeInterface
      * @return \Generated\Shared\Transfer\AppConfigTransfer
      */
     public function informTenantAboutChangedConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigTransfer;
+
+    /**
+     * Specification:
+     * - Sends a message to the tenant about the removed configuration.
+     * - Returns the unchanged AppDisconnectTransfer (Only used).
+     *
+     * @api
+     *
+     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
+     */
+    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer;
 }

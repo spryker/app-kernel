@@ -8,6 +8,7 @@
 namespace Spryker\Zed\AppKernel\Business\MessageSender;
 
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\AppDisconnectTransfer;
 
 interface MessageSenderInterface
 {
@@ -17,4 +18,11 @@ interface MessageSenderInterface
      * @return \Generated\Shared\Transfer\AppConfigTransfer
      */
     public function informTenantAboutChangedConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigTransfer;
+
+    /**
+     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
+     */
+    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer;
 }

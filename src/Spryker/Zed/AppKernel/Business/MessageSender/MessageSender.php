@@ -9,6 +9,7 @@ namespace Spryker\Zed\AppKernel\Business\MessageSender;
 
 use Generated\Shared\Transfer\AppConfigChangedTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface;
@@ -50,6 +51,28 @@ class MessageSender implements MessageSenderInterface
         $this->messageBrokerFacade->sendMessage($appConfigChangedTransfer);
 
         return $appConfigTransfer;
+    }
+
+    /**
+     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+     *
+     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
+     */
+    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
+    {
+        $appStatusChangedTransfer = new AppConfigChangedTransfer();
+        $appStatusChangedTransfer
+            ->setAppIdentifier($this->config->getAppIdentifier())
+            ->setStatus(false);
+
+        $appStatusChangedTransfer->setMessageAttributes($this->getMessageAttributes(
+            $appDisconnectTransfer->getTenantIdentifierOrFail(),
+            $appStatusChangedTransfer::class,
+        ));
+
+        $this->messageBrokerFacade->sendMessage($appStatusChangedTransfer);
+
+        return $appDisconnectTransfer;
     }
 
     /**
