@@ -43,19 +43,6 @@ class GlueRequestMapper implements GlueRequestMapperInterface
 
     /**
      * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
-     */
-    public function mapGlueRequestTransferToAppDisconnectTransfer(
-        GlueRequestTransfer $glueRequestTransfer,
-        AppDisconnectTransfer $appDisconnectTransfer
-    ): AppDisconnectTransfer {
-        return $appDisconnectTransfer->setTenantIdentifier($this->getTenantIdentifier($glueRequestTransfer));
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
      *
      * @return string
      */
@@ -72,6 +59,10 @@ class GlueRequestMapper implements GlueRequestMapperInterface
     protected function getConfiguration(GlueRequestTransfer $glueRequestTransfer): array
     {
         $content = (array)$this->utilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
+
+        if (!isset($content['data']['attributes']['configuration'])) {
+            return [];
+        }
 
         return (array)$this->utilEncodingService->decodeJson($content['data']['attributes']['configuration'], true);
     }

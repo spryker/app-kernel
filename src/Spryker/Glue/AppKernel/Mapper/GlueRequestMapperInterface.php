@@ -8,7 +8,6 @@
 namespace Spryker\Glue\AppKernel\Mapper;
 
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 
 interface GlueRequestMapperInterface
@@ -23,15 +22,4 @@ interface GlueRequestMapperInterface
         GlueRequestTransfer $glueRequestTransfer,
         AppConfigTransfer $appConfigTransfer
     ): AppConfigTransfer;
-
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
-     */
-    public function mapGlueRequestTransferToAppDisconnectTransfer(
-        GlueRequestTransfer $glueRequestTransfer,
-        AppDisconnectTransfer $appDisconnectTransfer
-    ): AppDisconnectTransfer;
 }

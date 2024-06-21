@@ -19,10 +19,6 @@
         <property name="tenantIdentifier" type="string"/>
     </transfer>
 
-    <transfer name="AppDisconnect" strict="true">
-        <property name="tenantIdentifier" type="string"/>
-    </transfer>
-
     <transfer name="AppDisconnectResponse" strict="true">
         <property name="isSuccessful" type="bool"/>
         <property name="errorMessage" type="string"/>
