@@ -9,7 +9,6 @@ namespace Spryker\Zed\AppKernel\Business\MessageSender;
 
 use Generated\Shared\Transfer\AppConfigTransfer;
 use Generated\Shared\Transfer\AppConfigUpdatedTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface;
@@ -29,7 +28,7 @@ class MessageSender implements MessageSenderInterface
      *
      * @return \Generated\Shared\Transfer\AppConfigTransfer
      */
-    public function informTenantAboutChangedConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
+    public function sendAppConfigUpdatedMessage(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         $appConfigUpdatedTransfer = new AppConfigUpdatedTransfer();
         $appConfigUpdatedTransfer->fromArray($appConfigTransfer->toArray(), true);
@@ -44,28 +43,6 @@ class MessageSender implements MessageSenderInterface
         $this->messageBrokerFacade->sendMessage($appConfigUpdatedTransfer);
 
         return $appConfigTransfer;
-    }
-
-    /**
-     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
-     */
-    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
-    {
-        $appConfigUpdatedTransfer = new AppConfigUpdatedTransfer();
-        $appConfigUpdatedTransfer
-            ->setAppIdentifier($this->config->getAppIdentifier())
-            ->setIsActive(false);
-
-        $appConfigUpdatedTransfer->setMessageAttributes($this->getMessageAttributes(
-            $appDisconnectTransfer->getTenantIdentifierOrFail(),
-            $appConfigUpdatedTransfer::class,
-        ));
-
-        $this->messageBrokerFacade->sendMessage($appConfigUpdatedTransfer);
-
-        return $appDisconnectTransfer;
     }
 
     /**

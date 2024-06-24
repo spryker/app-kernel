@@ -20,14 +20,17 @@
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
-        "phpstan/phpstan": "1.10.66",
+        "codeception/module-asserts": "^3.0",
         "phpstan/phpdoc-parser": "1.25.0",
+        "phpstan/phpstan": "1.10.66",
         "rector/rector": "^0.19.0",
         "spryker/code-sniffer": "*",
         "spryker/container": "*",
         "spryker/development": "^3.34.0",
+        "spryker/message-broker-aws": "^1.7",
         "spryker/propel": "*",
-        "spryker/testify": "*"
+        "spryker/testify": "*",
+        "spryker/testify-async-api": "^0.1.4"
     },
     "autoload": {
         "psr-4": {

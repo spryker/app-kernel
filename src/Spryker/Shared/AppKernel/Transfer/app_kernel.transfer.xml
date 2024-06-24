@@ -17,7 +17,13 @@
         <property name="messageAttributes" type="MessageAttributes"/>
     </transfer>
 
-    <transfer name="MessageAttributes"/>
+    <transfer name="MessageAttributes">
+        <property name="actorId" type="string"/>
+        <property name="emitter" type="string"/>
+        <property name="tenantIdentifier" type="string"/>
+        <property name="storeReference" type="string"/>
+        <property name="transferName" type="string"/>
+    </transfer>
 
     <transfer name="AppConfigResponse" strict="true">
         <property name="isSuccessful" type="bool"/>

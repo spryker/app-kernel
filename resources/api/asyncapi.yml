@@ -3,12 +3,6 @@ info:
     title: 'PBC AsyncAPI definition.'
     version: 0.1.0
 channels:
-    app-commands:
-        subscribe:
-            message:
-                oneOf:
-                    - $ref: '#/components/messages/ConfigureApp'
-                    - $ref: '#/components/messages/DeleteApp'
     app-events:
         subscribe:
             message:

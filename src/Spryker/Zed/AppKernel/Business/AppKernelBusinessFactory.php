@@ -39,6 +39,7 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
             $this->getEntityManager(),
             $this->getRepository(),
             $this->createPropelEncryptionConfigurator(),
+            $this->createMessageSender(),
             $this->getConfigurationBeforeSavePlugins(),
             $this->getConfigurationAfterSavePlugins(),
             $this->getConfigurationBeforeDeletePlugins(),

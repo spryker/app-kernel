@@ -1,13 +1,13 @@
 <?php
 
 /**
- * This file is part of the Spryker Suite.
- * For full license information, please view the LICENSE file that was distributed with this source code.
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
 declare(strict_types=1);
 
-namespace PyzTest\AsyncApi\AppMerchant;
+namespace SprykerTest\AsyncApi\AppKernel;
 
 use Codeception\Actor;
 
@@ -25,11 +25,11 @@ use Codeception\Actor;
  * @method void comment($description)
  * @method void pause($vars = [])
  *
- * @SuppressWarnings(\PyzTest\AsyncApi\AppMerchant\PHPMD)
+ * @SuppressWarnings(PHPMD)
  *
- * @method \Pyz\Zed\AppMerchant\Business\AppMerchantFacadeInterface getFacade()
+ * @method \Spryker\Zed\AppKernel\Business\AppKernelFacadeInterface getFacade()
  */
-class AppMerchantAsyncApiTester extends Actor
+class AppKernelAsyncApiTester extends Actor
 {
-    use _generated\AppMerchantAsyncApiTesterActions;
+    use _generated\AppKernelAsyncApiTesterActions;
 }

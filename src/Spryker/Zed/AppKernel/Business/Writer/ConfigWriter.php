@@ -13,6 +13,7 @@ use Spryker\Client\SecretsManager\Exception\MissingSecretsManagerProviderPluginE
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
+use Spryker\Zed\AppKernel\Business\MessageSender\MessageSenderInterface;
 use Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface;
 use Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
@@ -32,6 +33,7 @@ class ConfigWriter implements ConfigWriterInterface
      * @param \Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface $appEntityManager
      * @param \Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface $appKernelRepository
      * @param \Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator
+     * @param \Spryker\Zed\AppKernel\Business\MessageSender\MessageSenderInterface $messageSender
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface> $configurationBeforeSavePlugins
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface> $configurationAfterSavePlugins
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface> $configurationBeforeDeletePlugin
@@ -41,6 +43,7 @@ class ConfigWriter implements ConfigWriterInterface
         protected AppKernelEntityManagerInterface $appEntityManager,
         protected AppKernelRepositoryInterface $appKernelRepository,
         protected PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator,
+        protected MessageSenderInterface $messageSender,
         protected array $configurationBeforeSavePlugins = [],
         protected array $configurationAfterSavePlugins = [],
         protected array $configurationBeforeDeletePlugin = [],
@@ -91,7 +94,9 @@ class ConfigWriter implements ConfigWriterInterface
 
         $appConfigTransfer = $this->appEntityManager->saveConfig($appConfigTransfer);
 
-        return $this->executeAfterPlugins($appConfigTransfer);
+        $appConfigTransfer = $this->executeAfterPlugins($appConfigTransfer);
+
+        return $this->messageSender->sendAppConfigUpdatedMessage($appConfigTransfer);
     }
 
     /**

@@ -10,7 +10,6 @@ namespace Spryker\Zed\AppKernel\Business;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
@@ -52,37 +51,5 @@ class AppKernelFacade extends AbstractFacade implements AppKernelFacadeInterface
     public function getConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer, TransferInterface $transfer): TransferInterface
     {
         return $this->getFactory()->createConfigReader()->getAppConfigByCriteria($appConfigCriteriaTransfer, $transfer);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
-    public function informTenantAboutChangedConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
-    {
-        return $this->getFactory()
-            ->createMessageSender()
-            ->informTenantAboutChangedConfiguration($appConfigTransfer);
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @api
-     *
-     * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppDisconnectTransfer
-     */
-    public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
-    {
-        return $this->getFactory()
-            ->createMessageSender()
-            ->informTenantAboutDeletedConfiguration($appDisconnectTransfer);
     }
 }

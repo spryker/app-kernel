@@ -8,7 +8,11 @@
 namespace SprykerTest\AsyncApi\AppKernel\AppKernelTests\AppEvents;
 
 use Codeception\Test\Unit;
-use Spryker\Zed\AppKernel\Business\AppKernelFacade;
+use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\AppConfigUpdatedTransfer;
+use Ramsey\Uuid\Uuid;
+use Spryker\Shared\AppKernel\AppKernelConstants;
+use SprykerTest\AsyncApi\AppKernel\AppKernelAsyncApiTester;
 
 /**
  * Auto-generated group annotations
@@ -24,153 +28,25 @@ use Spryker\Zed\AppKernel\Business\AppKernelFacade;
 class AppConfigUpdatedTest extends Unit
 {
     /**
-     * @var \PyzTest\AsyncApi\AppMerchant\AppMerchantAsyncApiTester
+     * @var \SprykerTest\AsyncApi\AppKernel\AppKernelAsyncApiTester
      */
     protected AppKernelAsyncApiTester $tester;
 
     /**
      * @return void
      */
-    public function testGivenTenantIsNotConnectedWithAppWhenMarketplaceOwnerConfiguresTheAppThenTheReadyForMerchantAppOnboardingMessageIsSend(): void
+    public function testGivenTenantIsNotConnectedWithAppWhenMarketplaceOwnerConfiguresTheAppThenTheAppConfigUpdatedMessageIsSend(): void
     {
         // Arrange
-        $readyForMerchantAppOnboardingTransfer = $this->tester->haveReadyForMerchantAppOnboardingTransfer();
-        $appConfigTransfer = $this->tester->haveAppConfigTransfer();
-
-        $onboardingTransfer = new OnboardingTransfer();
-        $onboardingTransfer
-            ->setStrategy('test-strategy')
-            ->setUrl('url');
-
-        $merchantAppOnboardingDetailsTransfer = new MerchantAppOnboardingDetailsTransfer();
-        $merchantAppOnboardingDetailsTransfer
-            ->setType('TestType')
-            ->setAppName('AppName')
-            ->setAppIdentifier('AppIdentifier')
-            ->setOnboarding($onboardingTransfer);
-
-        $this->tester->mockPlatformPluginImplementation($merchantAppOnboardingDetailsTransfer, new MerchantAppOnboardingResponseTransfer());
-        $this->tester->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, [
-            new InformTenantAboutMerchantAppOnboardingReadinessConfigurationBeforeSavePlugin(),
-        ]);
-        $this->tester->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS, []);
+        $appIdentifier = Uuid::uuid4()->toString();
+        $appConfigTransfer = $this->tester->haveAppConfigTransfer([AppConfigTransfer::IS_ACTIVE => true, AppConfigTransfer::CONFIG => ['foo' => 'bar'], AppConfigTransfer::STATUS => 'NEW']);
+        $appConfigUpdatedTransfer = $this->tester->haveAppConfigUpdatedTransfer($appConfigTransfer->toArray() + [AppConfigUpdatedTransfer::APP_IDENTIFIER => $appIdentifier]);
+        $this->tester->mockEnvironmentConfig(AppKernelConstants::APP_IDENTIFIER, $appIdentifier);
 
         // Act
-        $appKernelFacade = new AppKernelFacade();
-        $appKernelFacade->saveConfig($appConfigTransfer);
+        $this->tester->getFacade()->saveConfig($appConfigTransfer);
 
         // Assert
-        $this->tester->assertMessageWasEmittedOnChannel($readyForMerchantAppOnboardingTransfer, 'merchant-app-events');
-    }
-
-    /**
-     * @return void
-     */
-    public function testGivenTenantIsConnectedWithAppAndTheOnboardingDetailsWereAlreadySentWhenMarketplaceOwnerUpdatesTheAppConfigurationThenTheReadyForMerchantAppOnboardingMessageIsNotSend(): void
-    {
-        // Arrange
-        $appConfigTransfer = $this->tester->haveAppConfigTransfer(['config' => ['tenant-onboarding-status' => 'onboarded']]);
-
-        $onboardingTransfer = new OnboardingTransfer();
-        $onboardingTransfer
-            ->setStrategy('test-strategy')
-            ->setUrl('url');
-
-        $merchantAppOnboardingDetailsTransfer = new MerchantAppOnboardingDetailsTransfer();
-        $merchantAppOnboardingDetailsTransfer
-            ->setType('TestType')
-            ->setAppName('AppName')
-            ->setAppIdentifier('AppIdentifier')
-            ->setOnboarding($onboardingTransfer);
-
-        $this->tester->mockPlatformPluginImplementation($merchantAppOnboardingDetailsTransfer, new MerchantAppOnboardingResponseTransfer());
-        $this->tester->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, [
-            new InformTenantAboutMerchantAppOnboardingReadinessConfigurationBeforeSavePlugin(),
-        ]);
-        $this->tester->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS, []);
-
-        // Act
-
-        $appKernelFacade = new AppKernelFacade();
-        $appKernelFacade->saveConfig($appConfigTransfer);
-
-        // Assert
-        $this->tester->assertMessageWasNotSent(ReadyForMerchantAppOnboardingTransfer::class);
-    }
-
-    /**
-     * @return void
-     */
-    public function testGivenTenantIsNotConnectedWithAppWhenMarketplaceOwnerConfiguresTheAppThenTheReadyForMerchantAppOnboardingMessageIsSendWithTheStrategyAndUrlProvidedByTheAppPluginImplementation(): void
-    {
-        // Arrange
-        $expectedStrategy = 'test-strategy';
-        $expectedUrl = 'www.test-url.com';
-
-        $readyForMerchantAppOnboardingTransfer = $this->tester->haveReadyForMerchantAppOnboardingTransfer();
-        $appConfigTransfer = $this->tester->haveAppConfigTransfer();
-
-        $merchantAppOnboardingDetailsTransfer = new MerchantAppOnboardingDetailsTransfer();
-        $merchantAppOnboardingDetailsTransfer
-            ->setType('TestType')
-            ->setAppName('AppName')
-            ->setAppIdentifier('AppIdentifier');
-
-        $onboardingTransfer = new OnboardingTransfer();
-        $onboardingTransfer->setStrategy($expectedStrategy);
-        $onboardingTransfer->setUrl($expectedUrl);
-
-        $merchantAppOnboardingDetailsTransfer->setOnboarding($onboardingTransfer);
-
-        $this->tester->mockPlatformPluginImplementation($merchantAppOnboardingDetailsTransfer);
-
-        $this->tester->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, [
-            new InformTenantAboutMerchantAppOnboardingReadinessConfigurationBeforeSavePlugin(),
-        ]);
-        $this->tester->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS, []);
-
-        // Act
-        $appKernelFacade = new AppKernelFacade();
-        $appKernelFacade->saveConfig($appConfigTransfer);
-
-        // Assert
-        $this->tester->assertMessageWasEmittedOnChannel($readyForMerchantAppOnboardingTransfer, 'merchant-app-events');
-    }
-
-    /**
-     * @return void
-     */
-    public function testGivenTenantIsNotConnectedWithAppWhenThePlatformPluginImplementationReturnsTheApiStrategyAndNoUrlThenTheApiEndpointUrlIsUsedFromTheAppMerchant(): void
-    {
-        // Arrange
-        $expectedStrategy = 'api';
-
-        $readyForMerchantAppOnboardingTransfer = $this->tester->haveReadyForMerchantAppOnboardingTransfer();
-        $appConfigTransfer = $this->tester->haveAppConfigTransfer();
-
-        $merchantAppOnboardingDetailsTransfer = new MerchantAppOnboardingDetailsTransfer();
-        $merchantAppOnboardingDetailsTransfer
-            ->setType('TestType')
-            ->setAppName('AppName')
-            ->setAppIdentifier('AppIdentifier');
-
-        $onboardingTransfer = new OnboardingTransfer();
-        $onboardingTransfer->setStrategy($expectedStrategy);
-
-        $merchantAppOnboardingDetailsTransfer->setOnboarding($onboardingTransfer);
-
-        $this->tester->mockPlatformPluginImplementation($merchantAppOnboardingDetailsTransfer);
-
-        $this->tester->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, [
-            new InformTenantAboutMerchantAppOnboardingReadinessConfigurationBeforeSavePlugin(),
-        ]);
-        $this->tester->setDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS, []);
-
-        // Act
-        $appKernelFacade = new AppKernelFacade();
-        $appKernelFacade->saveConfig($appConfigTransfer);
-
-        // Assert
-        $this->tester->assertMessageWasEmittedOnChannel($readyForMerchantAppOnboardingTransfer, 'merchant-app-events');
+        $this->tester->assertMessageWasEmittedOnChannel($appConfigUpdatedTransfer, 'app-events');
     }
 }
