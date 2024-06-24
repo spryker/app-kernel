@@ -10,27 +10,6 @@ channels:
                     - $ref: '#/components/messages/AppConfigUpdated'
 components:
     messages:
-        ConfigureApp:
-            x-spryker:
-                module: AppConfig
-            name: ConfigureApp
-            title: Configure App Command
-            summary: This message is sent when the PBC is connected to a client application or the PBC configuration has been updated. This message contains the PBC Glue API URL and credentials that can be used in the client application to submit requests.
-            headers:
-                $ref: '#/components/schemas/message-broker/components/schemas/headers'
-            payload:
-                $ref: '#/components/schemas/AppConfiguration'
-
-        DeleteApp:
-            x-spryker:
-                module: AppConfig
-            name: DeleteApp
-            title: Delete App Command
-            summary: This message is sent when the PBC disconnects from the client application.
-            headers:
-                $ref: '#/components/schemas/message-broker/components/schemas/headers'
-            payload:
-                $ref: '#/components/schemas/AppDisconnect'
         AppConfigUpdated:
             x-spryker:
                 module: AppConfig
@@ -42,26 +21,6 @@ components:
             headers:
                 $ref: '#/components/schemas/message-broker/components/schemas/headers'
     schemas:
-        AppConfiguration:
-            type: object
-            properties:
-                apiUrl:
-                    type: string
-                    description: The URI of the PBC endpoint.
-                appIdentifier:
-                    type: string
-                    description: The app identifier to identify the PBC.
-            required:
-                - apiUrl
-                - appIdentifier
-        AppDisconnect:
-            type: object
-            properties:
-                appIdentifier:
-                    type: string
-                    description: The app identifier to identify the PBC.
-            required:
-                - appIdentifier
         AppConfigUpdated:
             type: object
             properties:
