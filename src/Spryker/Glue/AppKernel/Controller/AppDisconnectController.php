@@ -8,7 +8,7 @@
 namespace Spryker\Glue\AppKernel\Controller;
 
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
+use Generated\Shared\Transfer\AppConfigTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\AppKernel\AppKernelConfig;
@@ -35,11 +35,11 @@ class AppDisconnectController extends AbstractController
                 ->buildRequestNotValidResponse($glueRequestValidationTransfer);
         }
 
-        $disconnectParameterTransfer = $this->getFactory()->createGlueRequestMapper()
-            ->mapGlueRequestTransferToAppDisconnectTransfer($glueRequestTransfer, new AppDisconnectTransfer());
+        $appConfigTransfer = $this->getFactory()->createGlueRequestMapper()
+            ->mapGlueRequestTransferToAppConfigTransfer($glueRequestTransfer, new AppConfigTransfer());
 
         $appConfigCriteriaTransfer = new AppConfigCriteriaTransfer();
-        $appConfigCriteriaTransfer->setTenantIdentifier($disconnectParameterTransfer->getTenantIdentifier());
+        $appConfigCriteriaTransfer->setTenantIdentifier($appConfigTransfer->getTenantIdentifier());
 
         try {
             $appConfigTransfer = $this->getFactory()

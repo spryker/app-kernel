@@ -9,7 +9,6 @@ namespace Spryker\Zed\AppKernel\Business\Writer;
 
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Spryker\Client\SecretsManager\Exception\MissingSecretsManagerProviderPluginException;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\AppKernelConfig;
@@ -198,11 +197,8 @@ class ConfigWriter implements ConfigWriterInterface
      */
     protected function executeConfigurationBeforeDeletePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
-        $appDisconnectTransfer = new AppDisconnectTransfer();
-        $appDisconnectTransfer->setTenantIdentifier($appConfigTransfer->getTenantIdentifier());
-
         foreach ($this->configurationBeforeDeletePlugin as $configurationBeforeDeletePlugin) {
-            $configurationBeforeDeletePlugin->beforeDelete($appDisconnectTransfer);
+            $configurationBeforeDeletePlugin->beforeDelete($appConfigTransfer);
         }
 
         return $appConfigTransfer;
@@ -215,11 +211,8 @@ class ConfigWriter implements ConfigWriterInterface
      */
     protected function executeConfigurationAfterDeletePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
-        $appDisconnectTransfer = new AppDisconnectTransfer();
-        $appDisconnectTransfer->setTenantIdentifier($appConfigTransfer->getTenantIdentifier());
-
         foreach ($this->configurationAfterDeletePlugin as $configurationAfterDeletePlugin) {
-            $configurationAfterDeletePlugin->afterDelete($appDisconnectTransfer);
+            $configurationAfterDeletePlugin->afterDelete($appConfigTransfer);
         }
 
         return $appConfigTransfer;
