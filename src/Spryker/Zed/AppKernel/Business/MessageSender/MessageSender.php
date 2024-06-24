@@ -7,8 +7,8 @@
 
 namespace Spryker\Zed\AppKernel\Business\MessageSender;
 
-use Generated\Shared\Transfer\AppConfigChangedTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\AppConfigUpdatedTransfer;
 use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Generated\Shared\Transfer\MessageAttributesTransfer;
 use Spryker\Zed\AppKernel\AppKernelConfig;
@@ -31,24 +31,17 @@ class MessageSender implements MessageSenderInterface
      */
     public function informTenantAboutChangedConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
-        $status = false;
-        if (
-            $appConfigTransfer->getStatus() === AppKernelConfig::APP_STATUS_CONNECTED &&
-            ($appConfigTransfer->getIsActive() === null || $appConfigTransfer->getIsActive() === true)
-        ) {
-            $status = true;
-        }
-        $appConfigChangedTransfer = new AppConfigChangedTransfer();
-        $appConfigChangedTransfer
-            ->setAppIdentifier($this->config->getAppIdentifier())
-            ->setStatus($status);
+        $appConfigUpdatedTransfer = new AppConfigUpdatedTransfer();
+        $appConfigUpdatedTransfer->fromArray($appConfigTransfer->toArray(), true);
+        $appConfigUpdatedTransfer
+            ->setAppIdentifier($this->config->getAppIdentifier());
 
-        $appConfigChangedTransfer->setMessageAttributes($this->getMessageAttributes(
+        $appConfigUpdatedTransfer->setMessageAttributes($this->getMessageAttributes(
             $appConfigTransfer->getTenantIdentifierOrFail(),
             $appConfigTransfer::class,
         ));
 
-        $this->messageBrokerFacade->sendMessage($appConfigChangedTransfer);
+        $this->messageBrokerFacade->sendMessage($appConfigUpdatedTransfer);
 
         return $appConfigTransfer;
     }
@@ -60,17 +53,17 @@ class MessageSender implements MessageSenderInterface
      */
     public function informTenantAboutDeletedConfiguration(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
     {
-        $appStatusChangedTransfer = new AppConfigChangedTransfer();
-        $appStatusChangedTransfer
+        $appConfigUpdatedTransfer = new AppConfigUpdatedTransfer();
+        $appConfigUpdatedTransfer
             ->setAppIdentifier($this->config->getAppIdentifier())
-            ->setStatus(false);
+            ->setIsActive(false);
 
-        $appStatusChangedTransfer->setMessageAttributes($this->getMessageAttributes(
+        $appConfigUpdatedTransfer->setMessageAttributes($this->getMessageAttributes(
             $appDisconnectTransfer->getTenantIdentifierOrFail(),
-            $appStatusChangedTransfer::class,
+            $appConfigUpdatedTransfer::class,
         ));
 
-        $this->messageBrokerFacade->sendMessage($appStatusChangedTransfer);
+        $this->messageBrokerFacade->sendMessage($appConfigUpdatedTransfer);
 
         return $appDisconnectTransfer;
     }
