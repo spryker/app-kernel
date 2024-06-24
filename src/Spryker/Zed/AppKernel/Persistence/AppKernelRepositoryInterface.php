@@ -12,12 +12,6 @@ use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
 interface AppKernelRepositoryInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
-     *
-     * @return \Spryker\Shared\Kernel\Transfer\TransferInterface
-     */
     public function findAppConfigByCriteria(
         AppConfigCriteriaTransfer $appConfigCriteriaTransfer,
         TransferInterface $transfer

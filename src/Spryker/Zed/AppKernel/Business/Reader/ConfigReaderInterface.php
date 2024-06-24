@@ -12,11 +12,5 @@ use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
 interface ConfigReaderInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
-     *
-     * @return \Spryker\Shared\Kernel\Transfer\TransferInterface
-     */
     public function getAppConfigByCriteria(AppConfigCriteriaTransfer $appConfigCriteriaTransfer, TransferInterface $transfer): TransferInterface;
 }

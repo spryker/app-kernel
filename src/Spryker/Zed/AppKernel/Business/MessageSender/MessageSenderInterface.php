@@ -5,12 +5,11 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Zed\AppKernel\Business\Writer;
+namespace Spryker\Zed\AppKernel\Business\MessageSender;
 
-use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
 
-interface ConfigWriterInterface
+interface MessageSenderInterface
 {
-    public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer;
+    public function sendAppConfigUpdatedMessage(AppConfigTransfer $appConfigTransfer): AppConfigTransfer;
 }

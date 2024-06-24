@@ -8,6 +8,8 @@
 namespace Spryker\Zed\AppKernel;
 
 use Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientBridge;
+use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeBridge;
+use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceBridge;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilTextServiceBridge;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
@@ -18,6 +20,11 @@ use Spryker\Zed\Kernel\Container;
  */
 class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
+    public const FACADE_MESSAGE_BROKER = 'APP_KERNEL:FACADE_MESSAGE_BROKER';
+
     /**
      * @var string
      */
@@ -53,14 +60,10 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
      */
     public const PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS = 'APP_KERNEL:PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS';
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = parent::provideBusinessLayerDependencies($container);
+        $container = $this->addMessageBrokerFacade($container);
         $container = $this->addSecretsManagerClient($container);
         $container = $this->addUtilTextService($container);
         $container = $this->addUtilEncodingService($container);
@@ -72,69 +75,52 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     public function providePersistenceLayerDependencies(Container $container): Container
     {
         $container = parent::providePersistenceLayerDependencies($container);
-        $container = $this->addUtilEncodingService($container);
+
+        return $this->addUtilEncodingService($container);
+    }
+
+    protected function addMessageBrokerFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_MESSAGE_BROKER, static function (Container $container): AppKernelToMessageBrokerFacadeInterface {
+            return new AppKernelToMessageBrokerFacadeBridge($container->getLocator()->messageBroker()->facade());
+        });
 
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addSecretsManagerClient(Container $container): Container
     {
-        $container->set(static::CLIENT_SECRETS_MANAGER, function (Container $container) {
+        $container->set(static::CLIENT_SECRETS_MANAGER, static function (Container $container): AppKernelToSecretsManagerClientBridge {
             return new AppKernelToSecretsManagerClientBridge($container->getLocator()->secretsManager()->client());
         });
 
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addUtilTextService(Container $container): Container
     {
-        $container->set(static::SERVICE_UTIL_TEXT, function (Container $container) {
+        $container->set(static::SERVICE_UTIL_TEXT, static function (Container $container): AppKernelToUtilTextServiceBridge {
             return new AppKernelToUtilTextServiceBridge($container->getLocator()->utilText()->service());
         });
 
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addUtilEncodingService(Container $container): Container
     {
-        $container->set(static::SERVICE_UTIL_ENCODING, function (Container $container) {
+        $container->set(static::SERVICE_UTIL_ENCODING, static function (Container $container): AppKernelToUtilEncodingServiceBridge {
             return new AppKernelToUtilEncodingServiceBridge($container->getLocator()->utilEncoding()->service());
         });
 
         return $container;
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addConfigurationBeforeSavePlugins(Container $container): Container
     {
-        $container->set(static::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, function (Container $container) {
+        $container->set(static::PLUGIN_CONFIGURATION_BEFORE_SAVE_PLUGINS, function (Container $container): array {
             return $this->getConfigurationBeforeSavePlugins();
         });
 
@@ -149,14 +135,9 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addConfigurationAfterSavePlugins(Container $container): Container
     {
-        $container->set(static::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS, function (Container $container) {
+        $container->set(static::PLUGIN_CONFIGURATION_AFTER_SAVE_PLUGINS, function (Container $container): array {
             return $this->getConfigurationAfterSavePlugins();
         });
 
@@ -171,14 +152,9 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addConfigurationBeforeDeletePlugins(Container $container): Container
     {
-        $container->set(static::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGINS, function (Container $container) {
+        $container->set(static::PLUGIN_CONFIGURATION_BEFORE_DELETE_PLUGINS, function (Container $container): array {
             return $this->getConfigurationBeforeDeletePlugins();
         });
 
@@ -193,14 +169,9 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Zed\Kernel\Container $container
-     *
-     * @return \Spryker\Zed\Kernel\Container
-     */
     protected function addConfigurationAfterDeletePlugins(Container $container): Container
     {
-        $container->set(static::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS, function (Container $container) {
+        $container->set(static::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS, function (Container $container): array {
             return $this->getConfigurationAfterDeletePlugins();
         });
 

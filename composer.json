@@ -9,6 +9,7 @@
         "spryker/glue-application-extension": "^1.0.0",
         "spryker/kernel": "^3.30.0",
         "spryker/log": "^3.0.0",
+        "spryker/message-broker": "^1.11.0",
         "spryker/propel-encryption-behavior": "^0.1.1",
         "spryker/secrets-manager": "^1.0.0",
         "spryker/secrets-manager-extension": "^1.0.0",
@@ -19,14 +20,17 @@
     },
     "require-dev": {
         "codeception/codeception": "^5.0",
-        "phpstan/phpstan": "1.10.66",
+        "codeception/module-asserts": "^3.0",
         "phpstan/phpdoc-parser": "1.25.0",
+        "phpstan/phpstan": "1.10.66",
         "rector/rector": "^0.19.0",
         "spryker/code-sniffer": "*",
         "spryker/container": "*",
         "spryker/development": "^3.34.0",
+        "spryker/message-broker-aws": "^1.7.0",
         "spryker/propel": "*",
-        "spryker/testify": "*"
+        "spryker/testify": "*",
+        "spryker/testify-async-api": "^0.1.4"
     },
     "autoload": {
         "psr-4": {
@@ -52,8 +56,8 @@
         "test": "codecept build && codecept run",
         "test-cover": "codecept build && codecept run --coverage-xml",
         "rector": "vendor/bin/rector process src/Spryker/ --config rector.php --ansi",
-        "rector-diff": "vendor/bin/rector process src/Spryker/ --config rector.php --ansi --dry-run",
-        "local-ci": "composer cs-fix && composer cs-check && composer stan && composer rector-diff && composer test"
+        "rector-ci": "vendor/bin/rector process src/Spryker/ --config rector.php --ansi --dry-run",
+        "local-ci": "composer cs-fix && composer cs-check && composer stan && composer rector-ci && composer test"
     },
     "extra": {
         "branch-alias": {

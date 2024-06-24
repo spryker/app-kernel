@@ -11,10 +11,5 @@ use Generated\Shared\Transfer\AppConfigTransfer;
 
 interface AppKernelEntityManagerInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigTransfer;
 }

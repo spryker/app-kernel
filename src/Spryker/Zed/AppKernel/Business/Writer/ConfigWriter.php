@@ -13,6 +13,7 @@ use Spryker\Client\SecretsManager\Exception\MissingSecretsManagerProviderPluginE
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
+use Spryker\Zed\AppKernel\Business\MessageSender\MessageSenderInterface;
 use Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface;
 use Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface;
 use Spryker\Zed\Kernel\Persistence\EntityManager\TransactionTrait;
@@ -29,18 +30,16 @@ class ConfigWriter implements ConfigWriterInterface
     protected const FAILED_TO_REGISTER_TENANT_MESSAGE = 'Tenant registration failed';
 
     /**
-     * @param \Spryker\Zed\AppKernel\Persistence\AppKernelEntityManagerInterface $appEntityManager
-     * @param \Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface $appKernelRepository
-     * @param \Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface> $configurationBeforeSavePlugins
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface> $configurationAfterSavePlugins
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface> $configurationBeforeDeletePlugin
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface> $configurationAfterDeletePlugin
      */
     public function __construct(
-        protected AppKernelEntityManagerInterface $appEntityManager,
+        protected AppKernelEntityManagerInterface $appKernelEntityManager,
         protected AppKernelRepositoryInterface $appKernelRepository,
         protected PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator,
+        protected MessageSenderInterface $messageSender,
         protected array $configurationBeforeSavePlugins = [],
         protected array $configurationAfterSavePlugins = [],
         protected array $configurationBeforeDeletePlugin = [],
@@ -48,15 +47,10 @@ class ConfigWriter implements ConfigWriterInterface
     ) {
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigResponseTransfer
-     */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer
     {
         try {
-            $appConfigTransfer = $this->getTransactionHandler()->handleTransaction(function () use ($appConfigTransfer) {
+            $appConfigTransfer = $this->getTransactionHandler()->handleTransaction(function () use ($appConfigTransfer): AppConfigTransfer {
                 return $this->doSaveAppConfig($appConfigTransfer);
             });
 
@@ -74,31 +68,23 @@ class ConfigWriter implements ConfigWriterInterface
         }
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     protected function doSaveAppConfig(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         $appConfigTransfer = $this->executeBeforePlugins($appConfigTransfer);
 
         $this->configurePropelEncryption($appConfigTransfer);
 
-        if (!$appConfigTransfer->getStatus()) {
+        if ($appConfigTransfer->getStatus() === null || $appConfigTransfer->getStatus() === '' || $appConfigTransfer->getStatus() === '0') {
             $appConfigTransfer->setStatus(AppKernelConfig::APP_STATUS_NEW);
         }
 
-        $appConfigTransfer = $this->appEntityManager->saveConfig($appConfigTransfer);
+        $appConfigTransfer = $this->appKernelEntityManager->saveConfig($appConfigTransfer);
 
-        return $this->executeAfterPlugins($appConfigTransfer);
+        $appConfigTransfer = $this->executeAfterPlugins($appConfigTransfer);
+
+        return $this->messageSender->sendAppConfigUpdatedMessage($appConfigTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     protected function executeBeforePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         if ($appConfigTransfer->getIsActive() !== false) {
@@ -108,11 +94,6 @@ class ConfigWriter implements ConfigWriterInterface
         return $this->executeConfigurationBeforeDeletePlugins($appConfigTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     protected function executeAfterPlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         if ($appConfigTransfer->getIsActive() !== false) {
@@ -122,11 +103,6 @@ class ConfigWriter implements ConfigWriterInterface
         return $this->executeConfigurationAfterDeletePlugins($appConfigTransfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     protected function executeConfigurationBeforeSavePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         foreach ($this->configurationBeforeSavePlugins as $configurationBeforeSavePlugin) {
@@ -136,11 +112,6 @@ class ConfigWriter implements ConfigWriterInterface
         return $appConfigTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     protected function executeConfigurationAfterSavePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         foreach ($this->configurationAfterSavePlugins as $configurationAfterSavePlugin) {
@@ -150,11 +121,6 @@ class ConfigWriter implements ConfigWriterInterface
         return $appConfigTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return void
-     */
     protected function configurePropelEncryption(AppConfigTransfer $appConfigTransfer): void
     {
         try {
@@ -163,26 +129,16 @@ class ConfigWriter implements ConfigWriterInterface
         }
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigResponseTransfer
-     */
     protected function getSuccessResponse(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer
     {
-        $appResponseTransfer = new AppConfigResponseTransfer();
+        $appConfigResponseTransfer = new AppConfigResponseTransfer();
 
-        $appResponseTransfer->setIsSuccessful(true)
+        $appConfigResponseTransfer->setIsSuccessful(true)
             ->setAppConfig($appConfigTransfer);
 
-        return $appResponseTransfer;
+        return $appConfigResponseTransfer;
     }
 
-    /**
-     * @param string $errorMessage
-     *
-     * @return \Generated\Shared\Transfer\AppConfigResponseTransfer
-     */
     protected function getFailResponse(string $errorMessage): AppConfigResponseTransfer
     {
         return (new AppConfigResponseTransfer())
@@ -190,11 +146,6 @@ class ConfigWriter implements ConfigWriterInterface
             ->setErrorMessage($errorMessage);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     protected function executeConfigurationBeforeDeletePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         foreach ($this->configurationBeforeDeletePlugin as $configurationBeforeDeletePlugin) {
@@ -204,11 +155,6 @@ class ConfigWriter implements ConfigWriterInterface
         return $appConfigTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     protected function executeConfigurationAfterDeletePlugins(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         foreach ($this->configurationAfterDeletePlugin as $configurationAfterDeletePlugin) {

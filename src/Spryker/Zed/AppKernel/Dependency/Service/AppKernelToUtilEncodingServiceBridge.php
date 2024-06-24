@@ -26,8 +26,6 @@ class AppKernelToUtilEncodingServiceBridge implements AppKernelToUtilEncodingSer
      * @param array<string, mixed> $value
      * @param int|null $options
      * @param int|null $depth
-     *
-     * @return string|null
      */
     public function encodeJson($value, $options = null, $depth = null): ?string
     {

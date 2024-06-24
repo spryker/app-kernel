@@ -20,9 +20,6 @@ use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
  */
 class AppKernelPersistenceFactory extends AbstractPersistenceFactory
 {
-    /**
-     * @return \Spryker\Zed\AppKernel\Persistence\Propel\Mapper\AppConfigMapper
-     */
     public function createAppConfigMapper(): AppConfigMapper
     {
         return new AppConfigMapper(
@@ -30,17 +27,11 @@ class AppKernelPersistenceFactory extends AbstractPersistenceFactory
         );
     }
 
-    /**
-     * @return \Orm\Zed\AppKernel\Persistence\SpyAppConfigQuery
-     */
     public function createAppConfigQuery(): SpyAppConfigQuery
     {
         return SpyAppConfigQuery::create();
     }
 
-    /**
-     * @return \Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface
-     */
     public function getUtilEncodingService(): AppKernelToUtilEncodingServiceInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::SERVICE_UTIL_ENCODING);

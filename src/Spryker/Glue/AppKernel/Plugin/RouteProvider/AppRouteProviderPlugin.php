@@ -18,11 +18,6 @@ use Symfony\Component\Routing\RouteCollection;
 
 class AppRouteProviderPlugin extends AbstractPlugin implements RouteProviderPluginInterface
 {
-    /**
-     * @param \Symfony\Component\Routing\RouteCollection $routeCollection
-     *
-     * @return \Symfony\Component\Routing\RouteCollection
-     */
     public function addRoutes(RouteCollection $routeCollection): RouteCollection
     {
         $routeCollection->add('postConfigure', $this->getPostConfigureRoute());
@@ -31,9 +26,6 @@ class AppRouteProviderPlugin extends AbstractPlugin implements RouteProviderPlug
         return $routeCollection;
     }
 
-    /**
-     * @return \Symfony\Component\Routing\Route
-     */
     protected function getPostConfigureRoute(): Route
     {
         return (new Route(AppKernelConfig::CONFIGURE_ROUTE_PATH))
@@ -44,9 +36,6 @@ class AppRouteProviderPlugin extends AbstractPlugin implements RouteProviderPlug
             ->setMethods(Request::METHOD_POST);
     }
 
-    /**
-     * @return \Symfony\Component\Routing\Route
-     */
     protected function getPostDisconnectRoute(): Route
     {
         return (new Route(AppKernelConfig::DISCONNECT_ROUTE_PATH))

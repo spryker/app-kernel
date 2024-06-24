@@ -24,10 +24,6 @@ class AppKernelFacade extends AbstractFacade implements AppKernelFacadeInterface
   * {@inheritDoc}
   *
   * @api
-  *
-  * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-  *
-  * @return \Generated\Shared\Transfer\AppConfigResponseTransfer
   */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer
     {
@@ -43,7 +39,6 @@ class AppKernelFacade extends AbstractFacade implements AppKernelFacadeInterface
      *
      * @template T of \Spryker\Shared\Kernel\Transfer\TransferInterface
      *
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
      * @param T $transfer
      *
      * @return T

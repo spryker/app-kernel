@@ -18,22 +18,12 @@ class ConfigReader implements ConfigReaderInterface
 {
     use LoggerTrait;
 
-    /**
-     * @param \Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface $appKernelRepository
-     * @param \Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator
-     */
     public function __construct(
         protected AppKernelRepositoryInterface $appKernelRepository,
         protected PropelEncryptionConfiguratorInterface $propelEncryptionConfigurator
     ) {
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
-     *
-     * @return \Spryker\Shared\Kernel\Transfer\TransferInterface
-     */
     public function getAppConfigByCriteria(AppConfigCriteriaTransfer $appConfigCriteriaTransfer, TransferInterface $transfer): TransferInterface
     {
         $this->configurePropelEncryption($appConfigCriteriaTransfer);
@@ -41,11 +31,6 @@ class ConfigReader implements ConfigReaderInterface
         return $this->appKernelRepository->findAppConfigByCriteria($appConfigCriteriaTransfer, $transfer);
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     *
-     * @return void
-     */
     protected function configurePropelEncryption(AppConfigCriteriaTransfer $appConfigCriteriaTransfer): void
     {
         try {

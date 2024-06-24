@@ -20,11 +20,6 @@ use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
  */
 class AppDisconnectController extends AbstractController
 {
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueResponseTransfer
-     */
     public function postDisconnectAction(GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
         $glueRequestValidationTransfer = $this->getFactory()->createApiRequestDisconnectValidator()
@@ -50,16 +45,16 @@ class AppDisconnectController extends AbstractController
             $appConfigResponseTransfer = $this->getFactory()
                 ->getAppKernelFacade()
                 ->saveConfig($appConfigTransfer);
-        } catch (AppConfigNotFoundException $exception) {
+        } catch (AppConfigNotFoundException $appConfigNotFoundException) {
             return $this->getFactory()
                 ->createResponseBuilder()
-                ->buildErrorResponse($exception->getMessage());
+                ->buildErrorResponse($appConfigNotFoundException->getMessage());
         }
 
         if (!$appConfigResponseTransfer->getIsSuccessful()) {
             return $this->getFactory()
-                ->createResponseBuilder()
-                ->buildErrorResponse(AppKernelConfig::RESPONSE_MESSAGE_DISCONNECT_ERROR);
+                 ->createResponseBuilder()
+                 ->buildErrorResponse(AppKernelConfig::RESPONSE_MESSAGE_DISCONNECT_ERROR);
         }
 
         return $this->getFactory()->createResponseBuilder()->buildSuccessfulResponse();

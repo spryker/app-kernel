@@ -9,9 +9,11 @@ namespace SprykerTest\Zed\AppKernel\Helper;
 
 use Codeception\Module;
 use Generated\Shared\DataBuilder\AppConfigBuilder;
+use Generated\Shared\DataBuilder\AppConfigUpdatedBuilder;
 use Generated\Shared\DataBuilder\AppDisconnectBuilder;
 use Generated\Shared\DataBuilder\MyAppConfigBuilder;
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\AppConfigUpdatedTransfer;
 use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Generated\Shared\Transfer\MyAppConfigTransfer;
 use Orm\Zed\AppKernel\Persistence\SpyAppConfig;
@@ -50,6 +52,16 @@ class AppKernelHelper extends Module
     public function haveAppDisconnectTransfer(array $seed = []): AppDisconnectTransfer
     {
         return (new AppDisconnectBuilder($seed))->build();
+    }
+
+    /**
+     * @param array $seed
+     *
+     * @return \Generated\Shared\Transfer\AppConfigUpdatedTransfer
+     */
+    public function haveAppConfigUpdatedTransfer(array $seed = []): AppConfigUpdatedTransfer
+    {
+        return (new AppConfigUpdatedBuilder($seed))->build();
     }
 
     /**

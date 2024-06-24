@@ -24,8 +24,6 @@ class AppKernelToUtilTextServiceBridge implements AppKernelToUtilTextServiceInte
 
     /**
      * @param int $length
-     *
-     * @return string
      */
     public function generateRandomString($length): string
     {

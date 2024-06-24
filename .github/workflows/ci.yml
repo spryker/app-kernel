@@ -73,7 +73,7 @@ jobs:
               run: composer stan
 
             - name: Run Rector checks
-              run: composer rector-diff
+              run: composer rector-ci
 
             - name: Run CodeStyle checks
               run: composer cs-check

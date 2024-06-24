@@ -23,21 +23,12 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BodyStructureValidator implements RequestValidatorInterface
 {
-    /**
-     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
-     * @param \Spryker\Service\UtilEncoding\UtilEncodingServiceInterface $utilEncodingService
-     */
     public function __construct(
         protected ValidatorInterface $validator,
         protected UtilEncodingServiceInterface $utilEncodingService
     ) {
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestValidationTransfer
-     */
     public function validate(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
     {
         $glueRequestValidationTransfer = (new GlueRequestValidationTransfer())
@@ -62,9 +53,6 @@ class BodyStructureValidator implements RequestValidatorInterface
         return $glueRequestValidationTransfer;
     }
 
-    /**
-     * @return \Symfony\Component\Validator\Constraints\Collection
-     */
     protected function getConstraintForRequestStructure(): Collection
     {
         return new Collection([

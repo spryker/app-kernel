@@ -11,17 +11,7 @@ use Generated\Shared\Transfer\SecretTransfer;
 
 interface AppKernelToSecretsManagerClientInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\SecretTransfer $secretTransfer
-     *
-     * @return \Generated\Shared\Transfer\SecretTransfer
-     */
     public function getSecret(SecretTransfer $secretTransfer): SecretTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\SecretTransfer $secretTransfer
-     *
-     * @return bool
-     */
     public function createSecret(SecretTransfer $secretTransfer): bool;
 }

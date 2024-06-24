@@ -12,12 +12,6 @@ use Generated\Shared\Transfer\GlueRequestTransfer;
 
 interface GlueRequestMapperInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     public function mapGlueRequestTransferToAppConfigTransfer(
         GlueRequestTransfer $glueRequestTransfer,
         AppConfigTransfer $appConfigTransfer
