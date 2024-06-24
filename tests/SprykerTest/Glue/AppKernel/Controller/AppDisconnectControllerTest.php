@@ -10,7 +10,6 @@ namespace SprykerTest\Glue\AppKernel\Controller;
 use Codeception\Test\Unit;
 use Exception;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\AppDisconnectTransfer;
 use Spryker\Zed\AppKernel\AppKernelDependencyProvider;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface;
@@ -89,11 +88,11 @@ class AppDisconnectControllerTest extends Unit
             }
 
             /**
-             * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+             * @param \Generated\Shared\Transfer\AppConfigTransfer $appDisconnectTransfer
              *
-             * @return \Generated\Shared\Transfer\AppDisconnectTransfer
+             * @return \Generated\Shared\Transfer\AppConfigTransfer
              */
-            public function beforeDelete(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
+            public function beforeDelete(AppConfigTransfer $appDisconnectTransfer): AppConfigTransfer
             {
                 $this->test->beforeDeletePluginWasExecuted = true;
 
@@ -132,11 +131,11 @@ class AppDisconnectControllerTest extends Unit
             }
 
             /**
-             * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+             * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
              *
-             * @return \Generated\Shared\Transfer\AppDisconnectTransfer
+             * @return \Generated\Shared\Transfer\AppConfigTransfer
              */
-            public function afterDelete(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
+            public function afterDelete(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
             {
                 $this->test->afterDeletePluginWasExecuted = true;
 
@@ -207,13 +206,13 @@ class AppDisconnectControllerTest extends Unit
 
         $configurationBeforeDeletePlugin = new class implements ConfigurationBeforeDeletePluginInterface {
             /**
-             * @param \Generated\Shared\Transfer\AppDisconnectTransfer $appDisconnectTransfer
+             * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
              *
              * @throws \Exception
              *
-             * @return \Generated\Shared\Transfer\AppDisconnectTransfer
+             * @return \Generated\Shared\Transfer\AppConfigTransfer
              */
-            public function beforeDelete(AppDisconnectTransfer $appDisconnectTransfer): AppDisconnectTransfer
+            public function beforeDelete(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
             {
                 throw new Exception('Something went wrong.');
             }
