@@ -24,8 +24,6 @@ class AppKernelConfig extends AbstractBundleConfig
 
     /**
      * @api
-     *
-     * @return string
      */
     public function getAppIdentifier(): string
     {

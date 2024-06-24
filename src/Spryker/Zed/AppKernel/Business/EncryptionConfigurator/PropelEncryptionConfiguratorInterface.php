@@ -9,10 +9,5 @@ namespace Spryker\Zed\AppKernel\Business\EncryptionConfigurator;
 
 interface PropelEncryptionConfiguratorInterface
 {
-    /**
-     * @param string $tenantIdentifier
-     *
-     * @return bool
-     */
     public function configurePropelEncryption(string $tenantIdentifier): bool;
 }

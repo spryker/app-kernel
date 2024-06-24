@@ -14,49 +14,34 @@ use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInter
 
 class AppConfigMapper
 {
-    /**
-     * @param \Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface $utilEncodingService
-     */
-    public function __construct(protected AppKernelToUtilEncodingServiceInterface $utilEncodingService)
+    public function __construct(protected AppKernelToUtilEncodingServiceInterface $appKernelToUtilEncodingService)
     {
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     * @param \Orm\Zed\AppKernel\Persistence\SpyAppConfig $appConfigEntity
-     *
-     * @return \Orm\Zed\AppKernel\Persistence\SpyAppConfig
-     */
     public function mapAppConfigTransferToAppConfigEntity(
         AppConfigTransfer $appConfigTransfer,
-        SpyAppConfig $appConfigEntity
+        SpyAppConfig $spyAppConfig
     ): SpyAppConfig {
         $appConfigArray = $appConfigTransfer->modifiedToArray();
-        $appConfigArray[AppConfigTransfer::CONFIG] = $this->utilEncodingService->encodeJson($appConfigTransfer->getConfig());
+        $appConfigArray[AppConfigTransfer::CONFIG] = $this->appKernelToUtilEncodingService->encodeJson($appConfigTransfer->getConfig());
 
-        $appConfigEntity->fromArray($appConfigArray);
+        $spyAppConfig->fromArray($appConfigArray);
 
-        return $appConfigEntity;
+        return $spyAppConfig;
     }
 
-    /**
-     * @param \Orm\Zed\AppKernel\Persistence\SpyAppConfig $appConfigEntity
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
-     *
-     * @return \Spryker\Shared\Kernel\Transfer\TransferInterface
-     */
     public function mapAppConfigEntityToAppConfigTransfer(
-        SpyAppConfig $appConfigEntity,
+        SpyAppConfig $spyAppConfig,
         TransferInterface $transfer
     ): TransferInterface {
-        $decodedAppConfig = (array)$this->utilEncodingService->decodeJson($appConfigEntity->getConfig(), true);
+        $decodedAppConfig = (array)$this->appKernelToUtilEncodingService->decodeJson($spyAppConfig->getConfig(), true);
         $transfer->fromArray(
-            (array)$this->utilEncodingService->decodeJson($appConfigEntity->getConfig(), true),
+            (array)$this->appKernelToUtilEncodingService->decodeJson($spyAppConfig->getConfig(), true),
             true,
         );
 
         if ($transfer instanceof AppConfigTransfer) {
-            $transfer->fromArray($appConfigEntity->toArray(), true);
+            $transfer->fromArray($spyAppConfig->toArray(), true);
             $transfer->setConfig($decodedAppConfig);
         }
 

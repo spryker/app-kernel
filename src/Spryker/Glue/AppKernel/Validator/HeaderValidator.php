@@ -15,11 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HeaderValidator implements RequestValidatorInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestValidationTransfer
-     */
     public function validate(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
     {
         $glueRequestValidationTransfer = (new GlueRequestValidationTransfer())

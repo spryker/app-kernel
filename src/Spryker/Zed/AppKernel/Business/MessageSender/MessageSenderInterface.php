@@ -11,10 +11,5 @@ use Generated\Shared\Transfer\AppConfigTransfer;
 
 interface MessageSenderInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     public function sendAppConfigUpdatedMessage(AppConfigTransfer $appConfigTransfer): AppConfigTransfer;
 }

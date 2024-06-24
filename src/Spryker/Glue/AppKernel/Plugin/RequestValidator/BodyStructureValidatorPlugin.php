@@ -22,10 +22,6 @@ class BodyStructureValidatorPlugin extends AbstractPlugin implements RequestVali
      * - Validates request data structure
      *
      * @api
-     *
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestValidationTransfer
      */
     public function validate(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
     {

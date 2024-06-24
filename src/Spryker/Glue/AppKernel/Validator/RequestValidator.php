@@ -19,15 +19,10 @@ class RequestValidator implements RequestValidatorInterface
     {
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestValidationTransfer
-     */
     public function validate(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
     {
-        foreach ($this->requestValidatorPlugins as $validatorPlugin) {
-            $glueRequestValidationTransfer = $validatorPlugin->validate($glueRequestTransfer);
+        foreach ($this->requestValidatorPlugins as $requestValidatorPlugin) {
+            $glueRequestValidationTransfer = $requestValidatorPlugin->validate($glueRequestTransfer);
 
             if (!$glueRequestValidationTransfer->getIsValid()) {
                 return $glueRequestValidationTransfer;

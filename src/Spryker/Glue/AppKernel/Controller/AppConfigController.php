@@ -20,11 +20,6 @@ use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
  */
 class AppConfigController extends AbstractController
 {
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueResponseTransfer
-     */
     public function postConfigureAction(GlueRequestTransfer $glueRequestTransfer): GlueResponseTransfer
     {
         $glueRequestValidationTransfer = $this->getFactory()->createApiRequestSaveConfigValidator()
@@ -54,17 +49,12 @@ class AppConfigController extends AbstractController
         );
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     protected function updateStatus(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         if ($appConfigTransfer->getStatus() === null) {
             try {
                 $existingAppConfigTransfer = $this->getFactory()->getAppKernelFacade()
-                    ->getConfig((new AppConfigCriteriaTransfer())->setTenantIdentifier($appConfigTransfer->getTenantIdentifier()));
+                ->getConfig((new AppConfigCriteriaTransfer())->setTenantIdentifier($appConfigTransfer->getTenantIdentifier()));
 
                 $appConfigTransfer->setStatus($existingAppConfigTransfer->getStatus());
                 $appConfigTransfer->setIsActive($existingAppConfigTransfer->getIsActive());

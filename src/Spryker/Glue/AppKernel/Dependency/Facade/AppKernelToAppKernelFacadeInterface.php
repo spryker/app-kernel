@@ -13,17 +13,7 @@ use Generated\Shared\Transfer\AppConfigTransfer;
 
 interface AppKernelToAppKernelFacadeInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     public function getConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer): AppConfigTransfer;
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigResponseTransfer
-     */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer;
 }

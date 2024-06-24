@@ -21,12 +21,7 @@ class AppKernelRepository extends AbstractRepository implements AppKernelReposit
     use LoggerTrait;
 
     /**
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $transfer
-     *
      * @throws \Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException
-     *
-     * @return \Spryker\Shared\Kernel\Transfer\TransferInterface
      */
     public function findAppConfigByCriteria(
         AppConfigCriteriaTransfer $appConfigCriteriaTransfer,
@@ -36,7 +31,7 @@ class AppKernelRepository extends AbstractRepository implements AppKernelReposit
             ->createAppConfigQuery()
             ->findOneByTenantIdentifier($appConfigCriteriaTransfer->getTenantIdentifierOrFail());
 
-        if (!$appConfigEntity) {
+        if ($appConfigEntity === null) {
             $errorMessage = 'Could not find an App configuration for the given Tenant';
 
             $this->getLogger()->error($errorMessage, [

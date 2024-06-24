@@ -15,18 +15,10 @@ class PropelEncryptionConfigurator implements PropelEncryptionConfiguratorInterf
 {
     use LoggerTrait;
 
-    /**
-     * @param \Spryker\Zed\AppKernel\Business\SecretsManager\SecretsManagerInterface $secretsManager
-     */
     public function __construct(protected SecretsManagerInterface $secretsManager)
     {
     }
 
-    /**
-     * @param string $tenantIdentifier
-     *
-     * @return bool
-     */
     public function configurePropelEncryption(string $tenantIdentifier): bool
     {
         $passphrase = $this->secretsManager->getPassphrase($tenantIdentifier);

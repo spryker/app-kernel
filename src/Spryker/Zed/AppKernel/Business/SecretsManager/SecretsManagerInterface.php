@@ -9,10 +9,5 @@ namespace Spryker\Zed\AppKernel\Business\SecretsManager;
 
 interface SecretsManagerInterface
 {
-    /**
-     * @param string $tenantIdentifier
-     *
-     * @return string
-     */
     public function getPassphrase(string $tenantIdentifier): string;
 }

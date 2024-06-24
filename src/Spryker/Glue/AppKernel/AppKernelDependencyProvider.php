@@ -38,11 +38,6 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
      */
     public const PLUGINS_REQUEST_DISCONNECT_VALIDATOR = 'PLUGINS_REQUEST_DISCONNECT_VALIDATOR';
 
-    /**
-     * @param \Spryker\Glue\Kernel\Backend\Container $glueBackendContainer
-     *
-     * @return \Spryker\Glue\Kernel\Backend\Container
-     */
     public function provideBackendDependencies(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
         $glueBackendContainer = parent::provideBackendDependencies($glueBackendContainer);
@@ -55,42 +50,27 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         return $glueBackendContainer;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Backend\Container $glueBackendContainer
-     *
-     * @return \Spryker\Glue\Kernel\Backend\Container
-     */
     protected function addUtilEncodingService(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
-        $glueBackendContainer->set(static::SERVICE_UTIL_ENCODING, function (GlueBackendContainer $container) {
-            return $container->getLocator()->utilEncoding()->service();
+        $glueBackendContainer->set(static::SERVICE_UTIL_ENCODING, static function (GlueBackendContainer $glueBackendContainer) {
+            return $glueBackendContainer->getLocator()->utilEncoding()->service();
         });
 
         return $glueBackendContainer;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Backend\Container $glueBackendContainer
-     *
-     * @return \Spryker\Glue\Kernel\Backend\Container
-     */
     protected function addAppKernelFacade(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
-        $glueBackendContainer->set(static::FACADE_APP_KERNEL, function (GlueBackendContainer $container) {
-            return new AppKernelToAppKernelFacadeBridge($container->getLocator()->appKernel()->facade());
+        $glueBackendContainer->set(static::FACADE_APP_KERNEL, static function (GlueBackendContainer $glueBackendContainer): AppKernelToAppKernelFacadeBridge {
+            return new AppKernelToAppKernelFacadeBridge($glueBackendContainer->getLocator()->appKernel()->facade());
         });
 
         return $glueBackendContainer;
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Backend\Container $glueBackendContainer
-     *
-     * @return \Spryker\Glue\Kernel\Backend\Container
-     */
     protected function addRequestConfigureValidatorPlugins(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
-        $glueBackendContainer->set(static::PLUGINS_REQUEST_CONFIGURE_VALIDATOR, function () {
+        $glueBackendContainer->set(static::PLUGINS_REQUEST_CONFIGURE_VALIDATOR, function (): array {
             return array_merge($this->getDefaultRequestConfigureValidatorPlugins(), $this->getRequestConfigureValidatorPlugins());
         });
 
@@ -116,14 +96,9 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         return [];
     }
 
-    /**
-     * @param \Spryker\Glue\Kernel\Backend\Container $glueBackendContainer
-     *
-     * @return \Spryker\Glue\Kernel\Backend\Container
-     */
     protected function addRequestDisconnectValidatorPlugins(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
-        $glueBackendContainer->set(static::PLUGINS_REQUEST_DISCONNECT_VALIDATOR, function () {
+        $glueBackendContainer->set(static::PLUGINS_REQUEST_DISCONNECT_VALIDATOR, function (): array {
             return array_merge($this->getDefaultRequestDisconnectValidatorPlugins(), $this->getRequestDisconnectValidatorPlugins());
         });
 

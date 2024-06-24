@@ -12,10 +12,5 @@ use Generated\Shared\Transfer\AppConfigTransfer;
 
 interface ConfigWriterInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigResponseTransfer
-     */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer;
 }

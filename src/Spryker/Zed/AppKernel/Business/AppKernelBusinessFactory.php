@@ -30,9 +30,6 @@ use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
  */
 class AppKernelBusinessFactory extends AbstractBusinessFactory
 {
- /**
-  * @return \Spryker\Zed\AppKernel\Business\Writer\ConfigWriterInterface
-  */
     public function createConfigWriter(): ConfigWriterInterface
     {
         return new ConfigWriter(
@@ -47,9 +44,6 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\AppKernel\Business\Reader\ConfigReaderInterface
-     */
     public function createConfigReader(): ConfigReaderInterface
     {
         return new ConfigReader(
@@ -58,9 +52,6 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface
-     */
     public function createPropelEncryptionConfigurator(): PropelEncryptionConfiguratorInterface
     {
         return new PropelEncryptionConfigurator(
@@ -68,9 +59,6 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\AppKernel\Business\SecretsManager\SecretsManagerInterface
-     */
     public function createSecretsManager(): SecretsManagerInterface
     {
         return new SecretsManager(
@@ -79,25 +67,16 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
         );
     }
 
-    /**
-     * @return \Spryker\Zed\AppKernel\Business\MessageSender\MessageSenderInterface
-     */
     public function createMessageSender(): MessageSenderInterface
     {
         return new MessageSender($this->getMessageBrokerFacade(), $this->getConfig());
     }
 
-    /**
-     * @return \Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientInterface
-     */
     public function getSecretsManagerClient(): AppKernelToSecretsManagerClientInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::CLIENT_SECRETS_MANAGER);
     }
 
-    /**
-     * @return \Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilTextServiceInterface
-     */
     public function getTextServiceUtil(): AppKernelToUtilTextServiceInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::SERVICE_UTIL_TEXT);
@@ -135,9 +114,6 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
         return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS);
     }
 
-    /**
-     * @return \Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface
-     */
     public function getMessageBrokerFacade(): AppKernelToMessageBrokerFacadeInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::FACADE_MESSAGE_BROKER);

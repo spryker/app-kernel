@@ -22,10 +22,6 @@ class HeaderValidatorPlugin extends AbstractPlugin implements RequestValidatorPl
      * - Checks if X-Tenant-Identifier is present in headers
      *
      * @api
-     *
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return \Generated\Shared\Transfer\GlueRequestValidationTransfer
      */
     public function validate(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
     {

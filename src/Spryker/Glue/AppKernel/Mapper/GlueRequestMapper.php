@@ -14,19 +14,10 @@ use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
 
 class GlueRequestMapper implements GlueRequestMapperInterface
 {
-    /**
-     * @param \Spryker\Service\UtilEncoding\UtilEncodingServiceInterface $utilEncodingService
-     */
     public function __construct(protected UtilEncodingServiceInterface $utilEncodingService)
     {
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     public function mapGlueRequestTransferToAppConfigTransfer(
         GlueRequestTransfer $glueRequestTransfer,
         AppConfigTransfer $appConfigTransfer
@@ -40,19 +31,12 @@ class GlueRequestMapper implements GlueRequestMapperInterface
         return $appConfigTransfer;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
-     * @return string
-     */
     protected function getTenantIdentifier(GlueRequestTransfer $glueRequestTransfer): string
     {
         return $glueRequestTransfer->getMeta()[AppKernelConfig::HEADER_TENANT_IDENTIFIER][0];
     }
 
     /**
-     * @param \Generated\Shared\Transfer\GlueRequestTransfer $glueRequestTransfer
-     *
      * @return array<string, string>
      */
     protected function getConfiguration(GlueRequestTransfer $glueRequestTransfer): array

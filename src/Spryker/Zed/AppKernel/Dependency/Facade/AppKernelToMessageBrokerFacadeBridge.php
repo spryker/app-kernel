@@ -9,14 +9,13 @@ namespace Spryker\Zed\AppKernel\Dependency\Facade;
 
 use Generated\Shared\Transfer\MessageResponseTransfer;
 use Spryker\Shared\Kernel\Transfer\TransferInterface;
-use Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface;
 
 class AppKernelToMessageBrokerFacadeBridge implements AppKernelToMessageBrokerFacadeInterface
 {
     /**
      * @var \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface
      */
-    protected MessageBrokerFacadeInterface $messageBrokerFacade;
+    protected $messageBrokerFacade;
 
     /**
      * @param \Spryker\Zed\MessageBroker\Business\MessageBrokerFacadeInterface $messageBrokerFacade
@@ -26,11 +25,6 @@ class AppKernelToMessageBrokerFacadeBridge implements AppKernelToMessageBrokerFa
         $this->messageBrokerFacade = $messageBrokerFacade;
     }
 
-    /**
-     * @param \Spryker\Shared\Kernel\Transfer\TransferInterface $messageTransfer
-     *
-     * @return \Generated\Shared\Transfer\MessageResponseTransfer
-     */
     public function sendMessage(TransferInterface $messageTransfer): MessageResponseTransfer
     {
         return $this->messageBrokerFacade->sendMessage($messageTransfer);

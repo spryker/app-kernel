@@ -31,13 +31,9 @@ class SecretsManager implements SecretsManagerInterface
      */
     protected const SECRET_KEY_TAG_VALUE = 'tenant_key';
 
-    /**
-     * @param \Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientInterface $secretsManagerClient
-     * @param \Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilTextServiceInterface $utilTextService
-     */
     public function __construct(
-        protected AppKernelToSecretsManagerClientInterface $secretsManagerClient,
-        protected AppKernelToUtilTextServiceInterface $utilTextService
+        protected AppKernelToSecretsManagerClientInterface $appKernelToSecretsManagerClient,
+        protected AppKernelToUtilTextServiceInterface $appKernelToUtilTextService
     ) {
     }
 
@@ -53,7 +49,7 @@ class SecretsManager implements SecretsManagerInterface
         $secretTransfer = (new SecretTransfer())
             ->setSecretKey($secretKeyTransfer);
 
-        $secretTransfer = $this->secretsManagerClient->getSecret($secretTransfer);
+        $secretTransfer = $this->appKernelToSecretsManagerClient->getSecret($secretTransfer);
 
         $passphrase = $secretTransfer->getValue();
 
@@ -65,16 +61,11 @@ class SecretsManager implements SecretsManagerInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\SecretTransfer $secretTransfer
-     * @param string $tenantIdentifier
-     *
      * @throws \Spryker\Zed\AppKernel\Business\Exception\SecretNotCreatedException
-     *
-     * @return \Generated\Shared\Transfer\SecretTransfer
      */
     public function createSecret(SecretTransfer $secretTransfer, string $tenantIdentifier): SecretTransfer
     {
-        $passphrase = $this->utilTextService->generateRandomString(128);
+        $passphrase = $this->appKernelToUtilTextService->generateRandomString(128);
 
         $secretTagTransfer = (new SecretTagTransfer())
             ->setKey(static::SECRET_KEY_TAG_KEY)
@@ -83,7 +74,7 @@ class SecretsManager implements SecretsManagerInterface
         $secretTransfer->setValue($passphrase)
             ->addSecretTag($secretTagTransfer);
 
-        $isSuccessful = $this->secretsManagerClient->createSecret($secretTransfer);
+        $isSuccessful = $this->appKernelToSecretsManagerClient->createSecret($secretTransfer);
 
         if (!$isSuccessful) {
             throw new SecretNotCreatedException(

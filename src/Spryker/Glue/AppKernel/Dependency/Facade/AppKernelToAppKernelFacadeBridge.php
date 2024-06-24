@@ -26,21 +26,11 @@ class AppKernelToAppKernelFacadeBridge implements AppKernelToAppKernelFacadeInte
         $this->appKernelFacade = $appKernelFacade;
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigCriteriaTransfer $appConfigCriteriaTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     public function getConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer): AppConfigTransfer
     {
         return $this->appKernelFacade->getConfig($appConfigCriteriaTransfer, new AppConfigTransfer());
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigResponseTransfer
-     */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer
     {
         return $this->appKernelFacade->saveConfig($appConfigTransfer);

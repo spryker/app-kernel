@@ -11,8 +11,6 @@ interface AppKernelToUtilTextServiceInterface
 {
     /**
      * @param int $length
-     *
-     * @return string
      */
     public function generateRandomString($length): string;
 }

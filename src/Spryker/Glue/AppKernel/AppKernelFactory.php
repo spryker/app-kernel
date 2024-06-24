@@ -23,17 +23,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AppKernelFactory extends AbstractFactory
 {
-    /**
-     * @return \Spryker\Glue\AppKernel\Validator\RequestValidatorInterface
-     */
     public function createHeaderValidator(): RequestValidatorInterface
     {
         return new HeaderValidator();
     }
 
-    /**
-     * @return \Spryker\Glue\AppKernel\Validator\RequestValidatorInterface
-     */
     public function createBodyStructureValidator(): RequestValidatorInterface
     {
         return new BodyStructureValidator(
@@ -42,25 +36,16 @@ class AppKernelFactory extends AbstractFactory
         );
     }
 
-    /**
-     * @return \Spryker\Glue\AppKernel\Builder\ResponseBuilderInterface
-     */
     public function createResponseBuilder(): ResponseBuilderInterface
     {
         return new ResponseBuilder($this->getUtilEncodingService());
     }
 
-    /**
-     * @return \Symfony\Component\Validator\Validator\ValidatorInterface
-     */
     public function createValidator(): ValidatorInterface
     {
         return Validation::createValidator();
     }
 
-    /**
-     * @return \Spryker\Glue\AppKernel\Mapper\GlueRequestMapperInterface
-     */
     public function createGlueRequestMapper(): GlueRequestMapperInterface
     {
         return new GlueRequestMapper(
@@ -68,33 +53,21 @@ class AppKernelFactory extends AbstractFactory
         );
     }
 
-    /**
-     * @return \Spryker\Glue\AppKernel\Validator\RequestValidatorInterface
-     */
     public function createApiRequestSaveConfigValidator(): RequestValidatorInterface
     {
         return new RequestValidator($this->getApiRequestConfigureValidatorPlugins());
     }
 
-    /**
-     * @return \Spryker\Glue\AppKernel\Validator\RequestValidatorInterface
-     */
     public function createApiRequestDisconnectValidator(): RequestValidatorInterface
     {
         return new RequestValidator($this->getApiRequestDisconnectValidatorPlugins());
     }
 
-    /**
-     * @return \Spryker\Service\UtilEncoding\UtilEncodingServiceInterface
-     */
     public function getUtilEncodingService(): UtilEncodingServiceInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::SERVICE_UTIL_ENCODING);
     }
 
-    /**
-     * @return \Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeInterface
-     */
     public function getAppKernelFacade(): AppKernelToAppKernelFacadeInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::FACADE_APP_KERNEL);

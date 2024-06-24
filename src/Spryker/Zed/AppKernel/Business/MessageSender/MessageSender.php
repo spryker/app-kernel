@@ -15,48 +15,33 @@ use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterf
 
 class MessageSender implements MessageSenderInterface
 {
-    /**
-     * @param \Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade
-     * @param \Spryker\Zed\AppKernel\AppKernelConfig $config
-     */
-    public function __construct(protected AppKernelToMessageBrokerFacadeInterface $messageBrokerFacade, protected AppKernelConfig $config)
+    public function __construct(protected AppKernelToMessageBrokerFacadeInterface $appKernelToMessageBrokerFacade, protected AppKernelConfig $appKernelConfig)
     {
     }
 
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     public function sendAppConfigUpdatedMessage(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         $appConfigUpdatedTransfer = new AppConfigUpdatedTransfer();
         $appConfigUpdatedTransfer->fromArray($appConfigTransfer->toArray(), true);
         $appConfigUpdatedTransfer
-            ->setAppIdentifier($this->config->getAppIdentifier());
+            ->setAppIdentifier($this->appKernelConfig->getAppIdentifier());
 
         $appConfigUpdatedTransfer->setMessageAttributes($this->getMessageAttributes(
             $appConfigTransfer->getTenantIdentifierOrFail(),
             $appConfigTransfer::class,
         ));
 
-        $this->messageBrokerFacade->sendMessage($appConfigUpdatedTransfer);
+        $this->appKernelToMessageBrokerFacade->sendMessage($appConfigUpdatedTransfer);
 
         return $appConfigTransfer;
     }
 
-    /**
-     * @param string $tenantIdentifier
-     * @param string $transferName
-     *
-     * @return \Generated\Shared\Transfer\MessageAttributesTransfer
-     */
     protected function getMessageAttributes(string $tenantIdentifier, string $transferName): MessageAttributesTransfer
     {
         $messageAttributesTransfer = new MessageAttributesTransfer();
         $messageAttributesTransfer
-            ->setActorId($this->config->getAppIdentifier())
-            ->setEmitter($this->config->getAppIdentifier())
+            ->setActorId($this->appKernelConfig->getAppIdentifier())
+            ->setEmitter($this->appKernelConfig->getAppIdentifier())
             ->setTenantIdentifier($tenantIdentifier)
             ->setStoreReference($tenantIdentifier)
             ->setTransferName($transferName);

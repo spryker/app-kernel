@@ -16,18 +16,13 @@ use Spryker\Zed\Kernel\Persistence\AbstractEntityManager;
  */
 class AppKernelEntityManager extends AbstractEntityManager implements AppKernelEntityManagerInterface
 {
-    /**
-     * @param \Generated\Shared\Transfer\AppConfigTransfer $appConfigTransfer
-     *
-     * @return \Generated\Shared\Transfer\AppConfigTransfer
-     */
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
     {
         $appConfigEntity = $this->getFactory()
             ->createAppConfigQuery()
             ->findOneByTenantIdentifier($appConfigTransfer->getTenantIdentifierOrFail());
 
-        if (!$appConfigEntity) {
+        if ($appConfigEntity === null) {
             $appConfigEntity = new SpyAppConfig();
         }
 
