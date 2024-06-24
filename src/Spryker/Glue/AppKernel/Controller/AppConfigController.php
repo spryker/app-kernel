@@ -54,7 +54,7 @@ class AppConfigController extends AbstractController
         if ($appConfigTransfer->getStatus() === null) {
             try {
                 $existingAppConfigTransfer = $this->getFactory()->getAppKernelFacade()
-                ->getConfig((new AppConfigCriteriaTransfer())->setTenantIdentifier($appConfigTransfer->getTenantIdentifier()));
+                    ->getConfig((new AppConfigCriteriaTransfer())->setTenantIdentifier($appConfigTransfer->getTenantIdentifier()));
 
                 $appConfigTransfer->setStatus($existingAppConfigTransfer->getStatus());
                 $appConfigTransfer->setIsActive($existingAppConfigTransfer->getIsActive());

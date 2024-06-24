@@ -29,20 +29,20 @@ class AppRouteProviderPlugin extends AbstractPlugin implements RouteProviderPlug
     protected function getPostConfigureRoute(): Route
     {
         return (new Route(AppKernelConfig::CONFIGURE_ROUTE_PATH))
-        ->setDefaults([
-            '_controller' => [AppConfigController::class, 'postConfigureAction'],
-            '_resourceName' => 'App',
-        ])
-        ->setMethods(Request::METHOD_POST);
+            ->setDefaults([
+                '_controller' => [AppConfigController::class, 'postConfigureAction'],
+                '_resourceName' => 'App',
+            ])
+            ->setMethods(Request::METHOD_POST);
     }
 
     protected function getPostDisconnectRoute(): Route
     {
         return (new Route(AppKernelConfig::DISCONNECT_ROUTE_PATH))
-        ->setDefaults([
-            '_controller' => [AppDisconnectController::class, 'postDisconnectAction'],
-            '_resourceName' => 'App',
-        ])
-        ->setMethods(Request::METHOD_POST);
+            ->setDefaults([
+                '_controller' => [AppDisconnectController::class, 'postDisconnectAction'],
+                '_resourceName' => 'App',
+            ])
+            ->setMethods(Request::METHOD_POST);
     }
 }

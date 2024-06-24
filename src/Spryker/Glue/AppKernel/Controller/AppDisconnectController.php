@@ -47,14 +47,14 @@ class AppDisconnectController extends AbstractController
                 ->saveConfig($appConfigTransfer);
         } catch (AppConfigNotFoundException $appConfigNotFoundException) {
             return $this->getFactory()
-            ->createResponseBuilder()
-            ->buildErrorResponse($appConfigNotFoundException->getMessage());
+                ->createResponseBuilder()
+                ->buildErrorResponse($appConfigNotFoundException->getMessage());
         }
 
         if (!$appConfigResponseTransfer->getIsSuccessful()) {
             return $this->getFactory()
-             ->createResponseBuilder()
-             ->buildErrorResponse(AppKernelConfig::RESPONSE_MESSAGE_DISCONNECT_ERROR);
+                 ->createResponseBuilder()
+                 ->buildErrorResponse(AppKernelConfig::RESPONSE_MESSAGE_DISCONNECT_ERROR);
         }
 
         return $this->getFactory()->createResponseBuilder()->buildSuccessfulResponse();

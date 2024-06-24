@@ -50,7 +50,7 @@ class ConfigWriter implements ConfigWriterInterface
     public function saveConfig(AppConfigTransfer $appConfigTransfer): AppConfigResponseTransfer
     {
         try {
-            $appConfigTransfer = $this->getTransactionHandler()->handleTransaction(function () use ($appConfigTransfer): \Generated\Shared\Transfer\AppConfigTransfer {
+            $appConfigTransfer = $this->getTransactionHandler()->handleTransaction(function () use ($appConfigTransfer): AppConfigTransfer {
                 return $this->doSaveAppConfig($appConfigTransfer);
             });
 
