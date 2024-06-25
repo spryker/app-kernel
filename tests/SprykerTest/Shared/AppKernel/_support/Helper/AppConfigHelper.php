@@ -109,10 +109,7 @@ class AppConfigHelper extends Module
     protected function getDefaultConfigData(bool $isLiveMode = false, bool $isMarketplace = false): array
     {
         return [
-            'business_model' => ($isMarketplace) ? StripeConfig::BUSINESS_MODEL_MARKETPLACE : StripeConfig::BUSINESS_MODEL_DIRECT,
-            'mode' => ($isLiveMode) ? StripeConfig::MODE_LIVE : StripeConfig::MODE_TEST,
-            'accountId' => 'acct_xxxxxxxx',
-            'paymentPageLabel' => 'paymentPageLabel',
+            'key' => 'value',
         ];
     }
 }
