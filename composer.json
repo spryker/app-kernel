@@ -37,7 +37,7 @@
             "Spryker\\": "src/Spryker/",
             "SprykerTest\\Glue\\AppKernel\\Helper\\": "tests/SprykerTest/Glue/AppKernel/_support/Helper/",
             "SprykerTest\\Zed\\AppKernel\\Helper\\": "tests/SprykerTest/Zed/AppKernel/_support/Helper/",
-            "SprykerTest\\Shared\\AppKernel\\Helper\\": "tests/SprykerTest/Zed/AppKernel/_support/Helper/",
+            "SprykerTest\\Shared\\AppKernel\\Helper\\": "tests/SprykerTest/Shared/AppKernel/_support/Helper/",
             "SprykerTest\\Zed\\Propel\\Helper\\": "tests/SprykerTest/Zed/Propel/_support/Helper/"
         }
     },
