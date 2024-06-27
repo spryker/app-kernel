@@ -6,12 +6,9 @@
  */
 
 use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
-use Rector\CodeQuality\Rector\If_\ConsecutiveNullCompareReturnsToNullCoalesceQueueRector;
 use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Set\ValueObject\SetList;
-use Rector\Strict\Rector\Ternary\BooleanInTernaryOperatorRuleFixerRector;
-use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddParamTypeFromPropertyTypeRector;
 
 return static function (RectorConfig $rectorConfig): void {
