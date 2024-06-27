@@ -41,7 +41,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->skip([
         // Ignore this rule on the AppRouteProviderPlugin as it breaks the code
         CallableThisArrayToAnonymousFunctionRector::class => [
-            __DIR__ . '/src/Spryker/Glue/AppKernel/Plugin/RouteProvider/AppRouteProviderPlugin.php',
+            __DIR__ . '/src/Spryker/Glue/AppKernel/Plugin/RouteProvider/AppKernelRouteProviderPlugin.php',
         ],
         ClassPropertyAssignToConstructorPromotionRector::class => [
             __DIR__ . '/src/Spryker/Zed/AppKernel/Dependency/Client/AppKernelToSecretsManagerClientBridge.php',
