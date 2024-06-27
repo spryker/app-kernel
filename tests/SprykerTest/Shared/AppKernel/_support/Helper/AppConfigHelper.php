@@ -1,13 +1,14 @@
 <?php
 
 /**
- * This file is part of the Spryker Suite.
- * For full license information, please view the LICENSE file that was distributed with this source code.
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
 namespace SprykerTest\Shared\AppKernel\Helper;
 
 use Codeception\Module;
+use Generated\Shared\DataBuilder\AppConfigBuilder;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
 use Orm\Zed\AppKernel\Persistence\SpyAppConfigQuery;
@@ -24,15 +25,13 @@ class AppConfigHelper extends Module
      */
     public function haveAppConfigForTenant(
         string $tenantIdentifier,
-        ?array $appConfiguration = [],
-        bool $isLiveMode = false,
-        bool $isMarketplace = false
+        array $appConfiguration = []
     ): AppConfigTransfer {
-        $appConfiguration = array_merge($this->getDefaultConfigData($isLiveMode, $isMarketplace), $appConfiguration);
+        $seed = [];
+        $seed['config'] = array_merge($this->getDefaultConfigData(), $appConfiguration);
+        $seed['tenantIdentifier'] = $tenantIdentifier;
 
-        $appConfigTransfer = new AppConfigTransfer();
-        $appConfigTransfer->setTenantIdentifier($tenantIdentifier)
-            ->setConfig($appConfiguration);
+        $appConfigTransfer = (new AppConfigBuilder($seed))->build();
 
         $appKernelEntityManager = new AppKernelEntityManager();
         $appKernelEntityManager->saveConfig($appConfigTransfer);
@@ -106,7 +105,7 @@ class AppConfigHelper extends Module
         ];
     }
 
-    protected function getDefaultConfigData(bool $isLiveMode = false, bool $isMarketplace = false): array
+    protected function getDefaultConfigData(): array
     {
         return [
             'key' => 'value',
