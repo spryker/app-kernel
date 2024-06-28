@@ -13,7 +13,6 @@
     "__configurationPayload": {
         "clientId": "ClientID",
         "clientSecret": "ClientSecret",
-        "isActive": true,
-        "config": "{}"
+        "isActive": true
     }
 }

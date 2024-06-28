@@ -8,9 +8,11 @@
 namespace Spryker\Zed\AppKernel\Business\Reader;
 
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
-use Spryker\Shared\Kernel\Transfer\TransferInterface;
+use Generated\Shared\Transfer\AppConfigTransfer;
 
 interface ConfigReaderInterface
 {
-    public function getAppConfigByCriteria(AppConfigCriteriaTransfer $appConfigCriteriaTransfer, TransferInterface $transfer): TransferInterface;
+    public function getAppConfigByCriteria(
+        AppConfigCriteriaTransfer $appConfigCriteriaTransfer
+    ): AppConfigTransfer;
 }

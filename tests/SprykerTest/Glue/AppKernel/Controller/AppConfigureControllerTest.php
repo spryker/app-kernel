@@ -65,6 +65,8 @@ class AppConfigureControllerTest extends Unit
     }
 
     /**
+     * @group single
+     *
      * @return void
      */
     public function testPostConfigureReturnsSuccessResponseAndActivatesTheAppConfigurationWhenAnAppConfigurationExistsAndWasMarkedAsDeactivated(): void

@@ -56,12 +56,6 @@
         <property name="value" type="string"/>
     </transfer>
 
-    <transfer name="MyAppConfig" strict="true" deprecated="Transfer is only needed for tests, do not use this outside of tests.">
-        <property name="foo" type="string"/>
-        <property name="bar" type="int"/>
-        <property name="baz" type="array" singular="baz"/>
-    </transfer>
-
     <transfer name="GlueRequest">
         <property name="meta" type="array" associative="true" singular="meta"/>
         <property name="content" type="string"/>

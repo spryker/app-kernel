@@ -10,7 +10,6 @@ namespace Spryker\Zed\AppKernel\Business;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Spryker\Shared\Kernel\Transfer\TransferInterface;
 
 interface AppKernelFacadeInterface
 {
@@ -42,12 +41,6 @@ interface AppKernelFacadeInterface
      * - Returns a populated `TransferInterface` when App configuration was found.
      *
      * @api
-     *
-     * @template T of \Spryker\Shared\Kernel\Transfer\TransferInterface
-     *
-     * @param T $transfer
-     *
-     * @return T
      */
-    public function getConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer, TransferInterface $transfer): TransferInterface;
+    public function getConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer): AppConfigTransfer;
 }

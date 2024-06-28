@@ -8,7 +8,7 @@
 namespace Spryker\Zed\AppKernel\Persistence;
 
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
-use Spryker\Shared\Kernel\Transfer\TransferInterface;
+use Generated\Shared\Transfer\AppConfigTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
@@ -24,9 +24,8 @@ class AppKernelRepository extends AbstractRepository implements AppKernelReposit
      * @throws \Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException
      */
     public function findAppConfigByCriteria(
-        AppConfigCriteriaTransfer $appConfigCriteriaTransfer,
-        TransferInterface $transfer
-    ): TransferInterface {
+        AppConfigCriteriaTransfer $appConfigCriteriaTransfer
+    ): AppConfigTransfer {
         $appConfigEntity = $this->getFactory()
             ->createAppConfigQuery()
             ->findOneByTenantIdentifier($appConfigCriteriaTransfer->getTenantIdentifierOrFail());
@@ -45,7 +44,7 @@ class AppKernelRepository extends AbstractRepository implements AppKernelReposit
 
         return $appConfigMapper->mapAppConfigEntityToAppConfigTransfer(
             $appConfigEntity,
-            $transfer,
+            new AppConfigTransfer(),
         );
     }
 }

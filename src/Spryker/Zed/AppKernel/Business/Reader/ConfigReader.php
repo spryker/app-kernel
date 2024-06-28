@@ -8,8 +8,8 @@
 namespace Spryker\Zed\AppKernel\Business\Reader;
 
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
+use Generated\Shared\Transfer\AppConfigTransfer;
 use Spryker\Client\SecretsManager\Exception\MissingSecretsManagerProviderPluginException;
-use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
 use Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface;
@@ -24,11 +24,12 @@ class ConfigReader implements ConfigReaderInterface
     ) {
     }
 
-    public function getAppConfigByCriteria(AppConfigCriteriaTransfer $appConfigCriteriaTransfer, TransferInterface $transfer): TransferInterface
-    {
+    public function getAppConfigByCriteria(
+        AppConfigCriteriaTransfer $appConfigCriteriaTransfer
+    ): AppConfigTransfer {
         $this->configurePropelEncryption($appConfigCriteriaTransfer);
 
-        return $this->appKernelRepository->findAppConfigByCriteria($appConfigCriteriaTransfer, $transfer);
+        return $this->appKernelRepository->findAppConfigByCriteria($appConfigCriteriaTransfer);
     }
 
     protected function configurePropelEncryption(AppConfigCriteriaTransfer $appConfigCriteriaTransfer): void

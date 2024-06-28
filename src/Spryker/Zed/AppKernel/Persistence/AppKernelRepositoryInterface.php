@@ -8,12 +8,11 @@
 namespace Spryker\Zed\AppKernel\Persistence;
 
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
-use Spryker\Shared\Kernel\Transfer\TransferInterface;
+use Generated\Shared\Transfer\AppConfigTransfer;
 
 interface AppKernelRepositoryInterface
 {
     public function findAppConfigByCriteria(
-        AppConfigCriteriaTransfer $appConfigCriteriaTransfer,
-        TransferInterface $transfer
-    ): TransferInterface;
+        AppConfigCriteriaTransfer $appConfigCriteriaTransfer
+    ): AppConfigTransfer;
 }
