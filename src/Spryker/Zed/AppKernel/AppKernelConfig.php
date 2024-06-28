@@ -23,6 +23,11 @@ class AppKernelConfig extends AbstractBundleConfig
     public const APP_STATUS_CONNECTED = 'CONNECTED';
 
     /**
+     * @var string
+     */
+    public const APP_STATUS_DISCONNECTED = 'DISCONNECTED';
+
+    /**
      * @api
      */
     public function getAppIdentifier(): string
