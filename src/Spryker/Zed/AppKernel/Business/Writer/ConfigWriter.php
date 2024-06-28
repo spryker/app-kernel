@@ -94,9 +94,9 @@ class ConfigWriter implements ConfigWriterInterface
         $appConfigCriteriaTransfer->setTenantIdentifier($appConfigTransfer->getTenantIdentifierOrFail());
 
         try {
-            $persistedPppConfigTransfer = $this->appKernelRepository->findAppConfigByCriteria($appConfigCriteriaTransfer);
+            $persistedAppConfigTransfer = $this->appKernelRepository->findAppConfigByCriteria($appConfigCriteriaTransfer);
 
-            return $this->mergeAppConfig($appConfigTransfer, $persistedPppConfigTransfer);
+            return $this->mergeAppConfig($appConfigTransfer, $persistedAppConfigTransfer);
         } catch (AppConfigNotFoundException) {
             // We ignore this exception for cases when the App gets the first time configured for a Tenant.
             return $appConfigTransfer;
@@ -116,6 +116,9 @@ class ConfigWriter implements ConfigWriterInterface
     {
         if ($appConfigTransfer->getStatus() === null) {
             $appConfigTransfer->setStatus($persistedAppConfigTransfer->getStatus());
+        }
+
+        if ($appConfigTransfer->getIsActive() === null) {
             $appConfigTransfer->setIsActive($persistedAppConfigTransfer->getIsActive());
         }
 
@@ -123,7 +126,7 @@ class ConfigWriter implements ConfigWriterInterface
         // The new values will overwrite existing values.
         $newAppConfig = array_merge($persistedAppConfigTransfer->getConfig(), $appConfigTransfer->getConfig());
 
-        $appConfigTransfer->fromArray($newAppConfig, true);
+        $appConfigTransfer->setConfig($newAppConfig);
 
         return $appConfigTransfer;
     }

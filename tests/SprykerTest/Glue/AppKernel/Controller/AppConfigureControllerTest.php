@@ -65,8 +65,6 @@ class AppConfigureControllerTest extends Unit
     }
 
     /**
-     * @group single
-     *
      * @return void
      */
     public function testPostConfigureReturnsSuccessResponseAndActivatesTheAppConfigurationWhenAnAppConfigurationExistsAndWasMarkedAsDeactivated(): void
@@ -82,6 +80,31 @@ class AppConfigureControllerTest extends Unit
         // Assert
         $this->tester->assertGlueResponseContainsSuccessContents($glueRequest, $glueResponse);
         $this->tester->assertAppConfigIsActivated('tenant-identifier');
+    }
+
+    /**
+     * @group single
+     *
+     * @return void
+     */
+    public function testPostConfigureReturnsSuccessResponseAndKeepsPreviousConfigurationWhenAnAppConfigurationExists(): void
+    {
+        // Arrange
+        $glueRequest = $this->tester->createGlueRequestFromFixture('valid-config-request');
+        $this->tester->havePersistedAppConfigTransfer([AppConfigTransfer::TENANT_IDENTIFIER => 'tenant-identifier', AppConfigTransfer::IS_ACTIVE => false, AppConfigTransfer::CONFIG => ['key' => 'value']]);
+        $appConfigController = $this->tester->createAppConfigController();
+
+        $expectedConfig = ['key' => 'value', 'clientId' => 'ClientID', 'clientSecret' => 'ClientSecret', 'isActive' => true];
+
+        // Act
+        $glueResponse = $appConfigController->postConfigureAction($glueRequest);
+
+        // Set the expected content for the validation
+        $glueRequest->setContent('{"data":{"type":"configuration","attributes":{"configuration":"{\"key\":\"value\",\"clientId\":\"ClientID\",\"clientSecret\":\"ClientSecret\",\"isActive\":true}"}}}');
+
+        // Assert
+        $this->tester->assertGlueResponseContainsSuccessContents($glueRequest, $glueResponse);
+        $this->tester->assertPersistedAppConfig('tenant-identifier', $expectedConfig);
     }
 
     /**
