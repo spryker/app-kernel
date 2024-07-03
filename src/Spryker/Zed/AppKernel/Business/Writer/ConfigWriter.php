@@ -87,10 +87,10 @@ class ConfigWriter implements ConfigWriterInterface
             $appConfigTransfer->setStatus(AppKernelConfig::APP_STATUS_DISCONNECTED);
         }
 
-//        // When the app gets activated, and it was deactivated before, we set the status to connected.
-//        if ($appConfigTransfer->getIsActive() === true && $appConfigTransfer->getStatus() === AppKernelConfig::APP_STATUS_DISCONNECTED) {
-//            $appConfigTransfer->setStatus(AppKernelConfig::APP_STATUS_CONNECTED);
-//        }
+        // When the app gets activated, and it was deactivated before, we set the status to connected.
+        if ($appConfigTransfer->getIsActive() === true && $appConfigTransfer->getStatus() === AppKernelConfig::APP_STATUS_DISCONNECTED) {
+            $appConfigTransfer->setStatus(AppKernelConfig::APP_STATUS_CONNECTED);
+        }
 
         $appConfigTransfer = $this->appKernelEntityManager->saveConfig($appConfigTransfer);
 
