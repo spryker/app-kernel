@@ -76,6 +76,34 @@ class AppKernelAssertionHelper extends Module
 
     /**
      * @param string $tenantIdentifier
+     * @param array<string, string> $expectedConfig
+     *
+     * @return void
+     */
+    public function assertPersistedAppConfig(string $tenantIdentifier, array $expectedConfig): void
+    {
+        $appConfigEntities = SpyAppConfigQuery::create()
+            ->filterByTenantIdentifier($tenantIdentifier)
+            ->find()
+            ->toArray();
+
+        $this->assertSame(1, count($appConfigEntities), sprintf(
+            'Expected to have one persisted configurations for tenant identifier "%s" but found "%d".',
+            $tenantIdentifier,
+            count($appConfigEntities),
+        ));
+
+        $jsonEncodedExpectedConfig = json_encode($expectedConfig);
+        $this->assertSame($jsonEncodedExpectedConfig, $appConfigEntities[0]['Config'], sprintf(
+            'Expected to have the same configuration for tenant identifier "%s" but it is different. Expected: %s given: %s',
+            $tenantIdentifier,
+            $jsonEncodedExpectedConfig,
+            $appConfigEntities[0]['Config'],
+        ));
+    }
+
+    /**
+     * @param string $tenantIdentifier
      *
      * @return void
      */

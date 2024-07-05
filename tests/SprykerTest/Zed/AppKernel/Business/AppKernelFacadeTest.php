@@ -10,7 +10,6 @@ namespace SprykerTest\Zed\AppKernel\Business;
 use Codeception\Test\Unit;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\MyAppConfigTransfer;
 use Ramsey\Uuid\Uuid;
 use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
 use SprykerTest\Shared\Testify\Helper\LocatorHelperTrait;
@@ -35,32 +34,6 @@ class AppKernelFacadeTest extends Unit
      * @var \SprykerTest\Zed\AppKernel\AppKernelBusinessTester
      */
     protected AppKernelBusinessTester $tester;
-
-    /**
-     * @return void
-     */
-    public function testGetConfigReturnsMyAppConfigTransferWhenAppConfigByTenantIdentifierFound(): void
-    {
-        // Arrange
-        $tenantIdentifier = Uuid::uuid4()->toString();
-        $seed = [
-            AppConfigTransfer::TENANT_IDENTIFIER => $tenantIdentifier,
-            AppConfigTransfer::CONFIG => ['foo' => 'foo', 'bar' => 123],
-        ];
-
-        $this->tester->havePersistedAppConfigTransfer($seed);
-
-        $appConfigCriteriaTransfer = new AppConfigCriteriaTransfer();
-        $appConfigCriteriaTransfer->setTenantIdentifier($tenantIdentifier);
-
-        // Act
-        $myAppConfigTransfer = $this->tester->getFacade()->getConfig($appConfigCriteriaTransfer, new MyAppConfigTransfer());
-
-        // Assert
-        $this->assertInstanceOf(MyAppConfigTransfer::class, $myAppConfigTransfer);
-        $this->assertSame('foo', $myAppConfigTransfer->getFoo());
-        $this->assertSame(123, $myAppConfigTransfer->getBar());
-    }
 
     /**
      * @return void
@@ -102,6 +75,6 @@ class AppKernelFacadeTest extends Unit
         $this->expectException(AppConfigNotFoundException::class);
 
         // Act
-        $this->tester->getFacade()->getConfig($appConfigCriteriaTransfer, new MyAppConfigTransfer());
+        $this->tester->getFacade()->getConfig($appConfigCriteriaTransfer);
     }
 }

@@ -9,7 +9,6 @@ namespace Spryker\Zed\AppKernel\Persistence\Propel\Mapper;
 
 use Generated\Shared\Transfer\AppConfigTransfer;
 use Orm\Zed\AppKernel\Persistence\SpyAppConfig;
-use Spryker\Shared\Kernel\Transfer\TransferInterface;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 
 class AppConfigMapper
@@ -32,19 +31,15 @@ class AppConfigMapper
 
     public function mapAppConfigEntityToAppConfigTransfer(
         SpyAppConfig $spyAppConfig,
-        TransferInterface $transfer
-    ): TransferInterface {
+        AppConfigTransfer $appConfigTransfer
+    ): AppConfigTransfer {
+        // Decode the existing SpyAppConfig::CONFIG JSON string to an array.
         $decodedAppConfig = (array)$this->appKernelToUtilEncodingService->decodeJson($spyAppConfig->getConfig(), true);
-        $transfer->fromArray(
-            (array)$this->appKernelToUtilEncodingService->decodeJson($spyAppConfig->getConfig(), true),
-            true,
-        );
+        $persistedData = $spyAppConfig->toArray();
 
-        if ($transfer instanceof AppConfigTransfer) {
-            $transfer->fromArray($spyAppConfig->toArray(), true);
-            $transfer->setConfig($decodedAppConfig);
-        }
+        $appConfigTransfer->fromArray($persistedData, true);
+        $appConfigTransfer->setConfig($decodedAppConfig);
 
-        return $transfer;
+        return $appConfigTransfer;
     }
 }

@@ -37,6 +37,7 @@
             "Spryker\\": "src/Spryker/",
             "SprykerTest\\Glue\\AppKernel\\Helper\\": "tests/SprykerTest/Glue/AppKernel/_support/Helper/",
             "SprykerTest\\Zed\\AppKernel\\Helper\\": "tests/SprykerTest/Zed/AppKernel/_support/Helper/",
+            "SprykerTest\\Shared\\AppKernel\\Helper\\": "tests/SprykerTest/Shared/AppKernel/_support/Helper/",
             "SprykerTest\\Zed\\Propel\\Helper\\": "tests/SprykerTest/Zed/Propel/_support/Helper/"
         }
     },
@@ -50,6 +51,7 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
+        "setup": "tests/bin/console app-kernel:setup && tests/bin/console transfer:generate && tests/bin/console transfer:databuilder:generate && tests/bin/console propel:install && tests/bin/console dev:ide-auto-completion:zed:generate && tests/bin/console dev:ide-auto-completion:glue:generate && tests/bin/console dev:ide-auto-completion:glue-backend:generate",
         "cs-check": "phpcs -p src/ tests/",
         "cs-fix": "phpcbf -p src/ tests/",
         "stan": "phpstan analyze src/Spryker/",

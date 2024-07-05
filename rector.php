@@ -6,12 +6,9 @@
  */
 
 use Rector\CodeQuality\Rector\Array_\CallableThisArrayToAnonymousFunctionRector;
-use Rector\CodeQuality\Rector\If_\ConsecutiveNullCompareReturnsToNullCoalesceQueueRector;
 use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Set\ValueObject\SetList;
-use Rector\Strict\Rector\Ternary\BooleanInTernaryOperatorRuleFixerRector;
-use Rector\DeadCode\Rector\ClassMethod\RemoveUselessParamTagRector;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddParamTypeFromPropertyTypeRector;
 
 return static function (RectorConfig $rectorConfig): void {
@@ -41,7 +38,7 @@ return static function (RectorConfig $rectorConfig): void {
     $rectorConfig->skip([
         // Ignore this rule on the AppRouteProviderPlugin as it breaks the code
         CallableThisArrayToAnonymousFunctionRector::class => [
-            __DIR__ . '/src/Spryker/Glue/AppKernel/Plugin/RouteProvider/AppRouteProviderPlugin.php',
+            __DIR__ . '/src/Spryker/Glue/AppKernel/Plugin/RouteProvider/AppKernelRouteProviderPlugin.php',
         ],
         ClassPropertyAssignToConstructorPromotionRector::class => [
             __DIR__ . '/src/Spryker/Zed/AppKernel/Dependency/Client/AppKernelToSecretsManagerClientBridge.php',

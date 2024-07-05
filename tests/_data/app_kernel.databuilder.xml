@@ -10,10 +10,4 @@
         <property name="config" dataBuilderRule="=[]"/>
     </transfer>
 
-    <transfer name="MyAppConfig" strict="true">
-        <property name="foo" dataBuilderRule="unique()->uuid()"/>
-        <property name="bar" dataBuilderRule="int()"/>
-        <property name="baz" dataBuilderRule="=[]"/>
-    </transfer>
-
 </transfers>

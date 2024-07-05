@@ -7,13 +7,11 @@
 
 namespace Spryker\Glue\AppKernel\Controller;
 
-use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
 use Spryker\Glue\AppKernel\AppKernelConfig;
 use Spryker\Glue\Kernel\Backend\Controller\AbstractController;
-use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
 
 /**
  * @method \Spryker\Glue\AppKernel\AppKernelFactory getFactory()
@@ -33,7 +31,7 @@ class AppConfigController extends AbstractController
         $appConfigTransfer = $this->getFactory()->createGlueRequestMapper()
             ->mapGlueRequestTransferToAppConfigTransfer($glueRequestTransfer, new AppConfigTransfer());
 
-        $appConfigTransfer = $this->updateStatus($appConfigTransfer);
+        // Assuming that when someone configures an App it should be set to active.
         $appConfigTransfer->setIsActive(true);
 
         $appConfigResponseTransfer = $this->getFactory()->getAppKernelFacade()
@@ -47,21 +45,5 @@ class AppConfigController extends AbstractController
         return $this->getFactory()->createResponseBuilder()->buildSuccessfulResponse(
             $appConfigResponseTransfer->getAppConfig(),
         );
-    }
-
-    protected function updateStatus(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
-    {
-        if ($appConfigTransfer->getStatus() === null) {
-            try {
-                $existingAppConfigTransfer = $this->getFactory()->getAppKernelFacade()
-                    ->getConfig((new AppConfigCriteriaTransfer())->setTenantIdentifier($appConfigTransfer->getTenantIdentifier()));
-
-                $appConfigTransfer->setStatus($existingAppConfigTransfer->getStatus());
-                $appConfigTransfer->setIsActive($existingAppConfigTransfer->getIsActive());
-            } catch (AppConfigNotFoundException) {
-            }
-        }
-
-        return $appConfigTransfer;
     }
 }

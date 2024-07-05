@@ -27,13 +27,7 @@ $config[AppConstants::APP_IDENTIFIER] = getenv('APP_IDENTIFIER') ?: 'hello-world
 You can test the AppKernel as usual with Codeception. Before that you need to run some commands:
 
 ```
-tests/bin/console app-kernel:setup
-tests/bin/console transfer:generate
-tests/bin/console transfer:databuilder:generate
-tests/bin/console propel:install
-tests/bin/console dev:ide-auto-completion:zed:generate
-tests/bin/console dev:ide-auto-completion:glue:generate
-tests/bin/console dev:ide-auto-completion:glue-backend:generate
+composer setup
 ```
 
 With these commands you've set up the AppKernel and can start the tests

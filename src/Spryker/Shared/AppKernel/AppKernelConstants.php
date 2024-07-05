@@ -31,9 +31,4 @@ class AppKernelConstants
      * @var string
      */
     public const APP_VERSION = 'APP:APP_VERSION';
-
-    /**
-     * @var string
-     */
-    public const VENDOR_CODE = 'hello-world';
 }

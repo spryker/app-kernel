@@ -1,6 +1,4 @@
 parameters:
     level: 8
-    ignoreErrors:
-        - '#Method Spryker\\Zed\\AppKernel\\Business\\AppKernelFacade::getConfig\(\) should return T.#'
     bootstrapFiles:
         - '%rootDir%/../../../phpstan-bootstrap.php'
