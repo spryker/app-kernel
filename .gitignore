@@ -25,7 +25,8 @@ composer.lock
 
 # built resources
 src/Generated
-src/Orm
+src/Orm/Zed/
+src/Orm/Propel/Migration_SQLite/
 tests/_data/app_kernel_db
 
 # tests
