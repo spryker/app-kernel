@@ -77,9 +77,9 @@ class ConfigWriter implements ConfigWriterInterface
 
         $this->configurePropelEncryption($appConfigTransfer);
 
-        // New configurations will be set to true by default.
+        // New configurations will be set to "connected" by default.
         if ($appConfigTransfer->getStatus() === null || $appConfigTransfer->getStatus() === '' || $appConfigTransfer->getStatus() === '0') {
-            $appConfigTransfer->setStatus(AppKernelConfig::APP_STATUS_NEW);
+            $appConfigTransfer->setStatus(AppKernelConfig::APP_STATUS_CONNECTED);
         }
 
         // When the app gets deactivated, we set the status to disconnected.
@@ -127,10 +127,6 @@ class ConfigWriter implements ConfigWriterInterface
     {
         if ($appConfigTransfer->getStatus() === null) {
             $appConfigTransfer->setStatus($persistedAppConfigTransfer->getStatus());
-        }
-
-        if ($appConfigTransfer->getIsActive() === null) {
-            $appConfigTransfer->setIsActive($persistedAppConfigTransfer->getIsActive());
         }
 
         // Merge the new config into the persisted one. By this we keep the old values that are not present in the new config.

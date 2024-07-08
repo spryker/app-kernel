@@ -10,6 +10,7 @@ namespace SprykerTest\Glue\AppKernel\Controller;
 use Codeception\Test\Unit;
 use Exception;
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\AppKernelDependencyProvider;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterSavePluginInterface;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface;
@@ -83,8 +84,24 @@ class AppConfigureControllerTest extends Unit
     }
 
     /**
-     * @group single
-     *
+     * @return void
+     */
+    public function testPostConfigureReturnsSuccessResponseAndActivatesTheAppConfigurationWhenAnAppConfigurationExistsAndWasMarkedAsDisconnected(): void
+    {
+        // Arrange
+        $glueRequest = $this->tester->createGlueRequestFromFixture('valid-config-request');
+        $this->tester->havePersistedAppConfigTransfer([AppConfigTransfer::TENANT_IDENTIFIER => 'tenant-identifier', AppConfigTransfer::IS_ACTIVE => true, AppConfigTransfer::STATUS => AppKernelConfig::APP_STATUS_DISCONNECTED]);
+        $appConfigController = $this->tester->createAppConfigController();
+
+        // Act
+        $glueResponse = $appConfigController->postConfigureAction($glueRequest);
+
+        // Assert
+        $this->tester->assertGlueResponseContainsSuccessContents($glueRequest, $glueResponse);
+        $this->tester->assertAppConfigIsActivated('tenant-identifier');
+    }
+
+    /**
      * @return void
      */
     public function testPostConfigureReturnsSuccessResponseAndKeepsPreviousConfigurationWhenAnAppConfigurationExists(): void
