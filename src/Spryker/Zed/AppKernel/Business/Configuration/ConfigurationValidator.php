@@ -7,15 +7,12 @@
 
 namespace Spryker\Zed\AppKernel\Business\Configuration;
 
-use Generated\Shared\Transfer\AppConfigTransfer;
 use Generated\Shared\Transfer\AppConfigValidateResponseTransfer;
-use Generated\Shared\Transfer\GlueErrorTransfer;
-use Generated\Shared\Transfer\GlueRequestTransfer;
-use Generated\Shared\Transfer\GlueRequestValidationTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationRequestTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationResponseTransfer;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\AppKernelPlatformPluginInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class ConfigurationValidator
@@ -28,32 +25,31 @@ class ConfigurationValidator
     ) {
     }
 
-    public function validateConfiguration(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
-    {
-        $glueRequestValidationTransfer = (new GlueRequestValidationTransfer())
-            ->setIsValid(true)->setStatus(Response::HTTP_OK);
+    public function validateConfiguration(
+        ConfigurationValidationRequestTransfer $configurationValidationRequestTransfer
+    ): ConfigurationValidationResponseTransfer {
+        $configurationValidationResponseTransfer = (new ConfigurationValidationResponseTransfer())
+            ->setIsSuccessful(true);
 
         try {
-            $appConfigTransfer = $this->mapGlueRequestTransferToAppConfigTransfer($glueRequestTransfer);
-            $appConfigValidateResponseTransfer = $this->appKernelPlatformPlugin->validateConfiguration($appConfigTransfer);
+            $appConfigValidateResponseTransfer = $this->appKernelPlatformPlugin->validateConfiguration($configurationValidationRequestTransfer->getAppConfigOrFail());
         } catch (Throwable $throwable) {
-            return $this->buildFailedResponseFromException($throwable, $glueRequestValidationTransfer);
+            return $this->buildFailedResponseFromException($throwable, $configurationValidationResponseTransfer);
         }
 
         if ($appConfigValidateResponseTransfer->getIsSuccessful() === true) {
-            return $glueRequestValidationTransfer;
+            return $configurationValidationResponseTransfer;
         }
 
-        return $this->mapAppConfigurationValidationResponseTransferToGlueRequestValidationTransfer($appConfigValidateResponseTransfer, $glueRequestValidationTransfer);
+        return $this->mapAppConfigurationValidationResponseTransferToConfigurationValidationResponseTransfer($appConfigValidateResponseTransfer, $configurationValidationResponseTransfer);
     }
 
-    protected function mapAppConfigurationValidationResponseTransferToGlueRequestValidationTransfer(
+    protected function mapAppConfigurationValidationResponseTransferToConfigurationValidationResponseTransfer(
         AppConfigValidateResponseTransfer $appConfigValidateResponseTransfer,
-        GlueRequestValidationTransfer $glueRequestValidationTransfer
-    ): GlueRequestValidationTransfer {
-        $glueRequestValidationTransfer
-            ->setIsValid(false)
-            ->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+        ConfigurationValidationResponseTransfer $configurationValidationResponseTransfer
+    ): ConfigurationValidationResponseTransfer {
+        $configurationValidationResponseTransfer
+            ->setIsSuccessful(false);
 
         $messages = [];
         foreach ($appConfigValidateResponseTransfer->getConfigurationValidationErrors() as $configurationValidationErrorTransfer) {
@@ -64,62 +60,20 @@ class ConfigurationValidator
             $messages[$configurationValidationErrorTransfer->getProperty()] = implode(', ', $messages[$configurationValidationErrorTransfer->getProperty()]);
         }
 
-        $glueRequestValidationTransfer->addError(
-            (new GlueErrorTransfer())
-                ->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
-                ->setCode('443')
-                ->setMessage(implode(', ', $messages)), // json-encoded messages grouped by properties are not displayed :(
-        );
+        $configurationValidationResponseTransfer->setMessage(implode(', ', $messages));
 
-        return $glueRequestValidationTransfer;
-    }
-
-    protected function mapGlueRequestTransferToAppConfigTransfer(GlueRequestTransfer $glueRequestTransfer): AppConfigTransfer
-    {
-        $configuration = $this->getConfiguration($glueRequestTransfer);
-
-        if ($glueRequestTransfer->getLocale() == null) {
-            $glueRequestTransfer->setLocale('en_US');
-        }
-
-        $appConfigTransfer = new AppConfigTransfer();
-        $appConfigTransfer->fromArray($configuration, true);
-        $appConfigTransfer->setLocale($glueRequestTransfer->getLocaleOrFail());
-        $appConfigTransfer->setConfig($configuration);
-
-        return $appConfigTransfer;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    protected function getConfiguration(GlueRequestTransfer $glueRequestTransfer): array
-    {
-        /** @phpstan-var array<array<array<string, mixed>>> */
-        $payload = $this->appKernelToUtilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
-
-        /** @phpstan-var string */
-        $configJson = $payload['data']['attributes']['configuration'] ?? [];
-
-        /** @phpstan-var array<string, mixed> */
-        return $this->appKernelToUtilEncodingService->decodeJson((string)$configJson, true);
+        return $configurationValidationResponseTransfer;
     }
 
     protected function buildFailedResponseFromException(
         Throwable $throwable,
-        GlueRequestValidationTransfer $glueRequestValidationTransfer
-    ): GlueRequestValidationTransfer {
+        ConfigurationValidationResponseTransfer $configurationValidationResponseTransfer
+    ): ConfigurationValidationResponseTransfer {
         $this->getLogger()->error($throwable->getMessage());
-        $glueErrorTransfer = new GlueErrorTransfer();
-        $glueErrorTransfer
-            ->setMessage($throwable->getMessage())
-            ->setCode($throwable->getCode());
+        $configurationValidationResponseTransfer
+            ->setIsSuccessful(false)
+            ->setExceptionMessage($throwable->getMessage());
 
-        $glueRequestValidationTransfer
-            ->addError($glueErrorTransfer)
-            ->setIsValid(false)
-            ->setStatus(Response::HTTP_INTERNAL_SERVER_ERROR);
-
-        return $glueRequestValidationTransfer;
+        return $configurationValidationResponseTransfer;
     }
 }

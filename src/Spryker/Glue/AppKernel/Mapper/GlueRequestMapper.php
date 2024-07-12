@@ -8,9 +8,14 @@
 namespace Spryker\Glue\AppKernel\Mapper;
 
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationRequestTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationResponseTransfer;
+use Generated\Shared\Transfer\GlueErrorTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Spryker\Glue\AppKernel\AppKernelConfig;
 use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class GlueRequestMapper implements GlueRequestMapperInterface
 {
@@ -28,12 +33,45 @@ class GlueRequestMapper implements GlueRequestMapperInterface
         $appConfigTransfer->setConfig($configuration)
             ->setTenantIdentifier($tenantIdentifier);
 
+        if ($glueRequestTransfer->getLocale() === null) {
+            $glueRequestTransfer->setLocale('en_US');
+        }
+
+        $appConfigTransfer->setLocale($glueRequestTransfer->getLocale());
+
         return $appConfigTransfer;
+    }
+
+    public function mapGlueRequestTransferToConfigurationValidationRequestTransfer(
+        GlueRequestTransfer $glueRequestTransfer
+    ): ConfigurationValidationRequestTransfer {
+        $configurationValidationRequestTransfer = new ConfigurationValidationRequestTransfer();
+        $configurationValidationRequestTransfer->setAppConfig($this->mapGlueRequestTransferToAppConfigTransfer($glueRequestTransfer, new AppConfigTransfer()));
+
+        return $configurationValidationRequestTransfer;
+    }
+
+    public function mapConfigurationValidationResponseTransferToGlueRequestValidationTransfer(
+        ConfigurationValidationResponseTransfer $configurationValidationResponseTransfer
+    ): GlueRequestValidationTransfer {
+        $glueRequestValidationTransfer = new GlueRequestValidationTransfer();
+        $glueRequestValidationTransfer->setIsValid($configurationValidationResponseTransfer->getIsSuccessful())
+            ->setStatus($configurationValidationResponseTransfer->getIsSuccessful() === false ? Response::HTTP_UNPROCESSABLE_ENTITY : null);
+
+        if ($configurationValidationResponseTransfer->getIsSuccessful() === false) {
+            $glueErrorTransfer = new GlueErrorTransfer();
+            $glueErrorTransfer->setMessage($configurationValidationResponseTransfer->getMessage() ?? $configurationValidationResponseTransfer->getExceptionMessage());
+
+            $glueRequestValidationTransfer->addError($glueErrorTransfer);
+            $glueRequestValidationTransfer->setStatus($configurationValidationResponseTransfer->getExceptionMessage() !== null && $configurationValidationResponseTransfer->getExceptionMessage() !== '' && $configurationValidationResponseTransfer->getExceptionMessage() !== '0' ? Response::HTTP_INTERNAL_SERVER_ERROR : Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $glueRequestValidationTransfer;
     }
 
     protected function getTenantIdentifier(GlueRequestTransfer $glueRequestTransfer): string
     {
-        return $glueRequestTransfer->getMeta()[AppKernelConfig::HEADER_TENANT_IDENTIFIER][0];
+        return $glueRequestTransfer->getMeta()[AppKernelConfig::HEADER_TENANT_IDENTIFIER][0] ?? '';
     }
 
     /**

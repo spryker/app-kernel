@@ -42,6 +42,16 @@
         <property name="errorMessages" type="array" singular="errorMessage"/>
     </transfer>
 
+    <transfer name="ConfigurationValidationRequest" strict="true">
+        <property name="appConfig" type="AppConfig"/>
+    </transfer>
+
+    <transfer name="ConfigurationValidationResponse" strict="true">
+        <property name="isSuccessful" type="bool"/>
+        <property name="message" type="string" description="In case of a failure we want to return a HTTP response code 422"/>
+        <property name="exceptionMessage" type="string" description="When an exception occurs we want to return a HTTP response code 500."/>
+    </transfer>
+
     <transfer name="AppConfigCriteria" strict="true">
         <property name="tenantIdentifier" type="string"/>
     </transfer>

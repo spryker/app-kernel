@@ -10,8 +10,8 @@ namespace Spryker\Zed\AppKernel\Business;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\GlueRequestTransfer;
-use Generated\Shared\Transfer\GlueRequestValidationTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationRequestTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationResponseTransfer;
 
 interface AppKernelFacadeInterface
 {
@@ -29,7 +29,9 @@ interface AppKernelFacadeInterface
      *
      * @api
      */
-    public function validateConfiguration(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer;
+    public function validateConfiguration(
+        ConfigurationValidationRequestTransfer $configurationValidationRequestTransfer
+    ): ConfigurationValidationResponseTransfer;
 
     /**
      * Specification:

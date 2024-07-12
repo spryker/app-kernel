@@ -10,8 +10,8 @@ namespace Spryker\Zed\AppKernel\Business;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\GlueRequestTransfer;
-use Generated\Shared\Transfer\GlueRequestValidationTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationRequestTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationResponseTransfer;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -26,9 +26,10 @@ class AppKernelFacade extends AbstractFacade implements AppKernelFacadeInterface
      *
      * @inheritDoc
      */
-    public function validateConfiguration(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
-    {
-        return $this->getFactory()->createConfigurationValidator()->validateConfiguration($glueRequestTransfer);
+    public function validateConfiguration(
+        ConfigurationValidationRequestTransfer $configurationValidationRequestTransfer
+    ): ConfigurationValidationResponseTransfer {
+        return $this->getFactory()->createConfigurationValidator()->validateConfiguration($configurationValidationRequestTransfer);
     }
 
     /**

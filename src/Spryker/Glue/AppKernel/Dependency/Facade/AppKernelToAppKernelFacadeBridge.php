@@ -10,8 +10,8 @@ namespace Spryker\Glue\AppKernel\Dependency\Facade;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
-use Generated\Shared\Transfer\GlueRequestTransfer;
-use Generated\Shared\Transfer\GlueRequestValidationTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationRequestTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationResponseTransfer;
 
 class AppKernelToAppKernelFacadeBridge implements AppKernelToAppKernelFacadeInterface
 {
@@ -28,9 +28,10 @@ class AppKernelToAppKernelFacadeBridge implements AppKernelToAppKernelFacadeInte
         $this->appKernelFacade = $appKernelFacade;
     }
 
-    public function validateConfiguration(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
-    {
-        return $this->appKernelFacade->validateConfiguration($glueRequestTransfer);
+    public function validateConfiguration(
+        ConfigurationValidationRequestTransfer $configurationValidationRequestTransfer
+    ): ConfigurationValidationResponseTransfer {
+        return $this->appKernelFacade->validateConfiguration($configurationValidationRequestTransfer);
     }
 
     public function getConfig(AppConfigCriteriaTransfer $appConfigCriteriaTransfer): AppConfigTransfer

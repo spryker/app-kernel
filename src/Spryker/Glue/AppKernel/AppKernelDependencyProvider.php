@@ -8,9 +8,6 @@
 namespace Spryker\Glue\AppKernel;
 
 use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeBridge;
-use Spryker\Glue\AppKernel\Plugin\RequestValidator\BodyStructureValidatorPlugin;
-use Spryker\Glue\AppKernel\Plugin\RequestValidator\ConfigurationValidatorPlugin;
-use Spryker\Glue\AppKernel\Plugin\RequestValidator\HeaderValidatorPlugin;
 use Spryker\Glue\Kernel\Backend\AbstractBundleDependencyProvider;
 use Spryker\Glue\Kernel\Backend\Container as GlueBackendContainer;
 
@@ -72,22 +69,10 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     protected function addRequestConfigureValidatorPlugins(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
         $glueBackendContainer->set(static::PLUGINS_REQUEST_CONFIGURE_VALIDATOR, function (): array {
-            return array_merge($this->getDefaultRequestConfigureValidatorPlugins(), $this->getRequestConfigureValidatorPlugins());
+            return array_merge($this->getRequestConfigureValidatorPlugins());
         });
 
         return $glueBackendContainer;
-    }
-
-    /**
-     * @return array<\Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RequestValidatorPluginInterface>
-     */
-    private function getDefaultRequestConfigureValidatorPlugins(): array
-    {
-        return [
-            new HeaderValidatorPlugin(),
-            new BodyStructureValidatorPlugin(),
-            new ConfigurationValidatorPlugin(),
-        ];
     }
 
     /**
@@ -101,20 +86,10 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     protected function addRequestDisconnectValidatorPlugins(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
         $glueBackendContainer->set(static::PLUGINS_REQUEST_DISCONNECT_VALIDATOR, function (): array {
-            return array_merge($this->getDefaultRequestDisconnectValidatorPlugins(), $this->getRequestDisconnectValidatorPlugins());
+            return array_merge($this->getRequestDisconnectValidatorPlugins());
         });
 
         return $glueBackendContainer;
-    }
-
-    /**
-     * @return array<\Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RequestValidatorPluginInterface>
-     */
-    protected function getDefaultRequestDisconnectValidatorPlugins(): array
-    {
-        return [
-            new HeaderValidatorPlugin(),
-        ];
     }
 
     /**
