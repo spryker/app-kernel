@@ -18,6 +18,7 @@ suites:
         modules:
             enabled:
                 - \SprykerTest\Zed\Testify\Helper\Business\BusinessHelper
+                - \SprykerTest\Glue\Testify\Helper\DependencyProviderHelper
                 - \SprykerTest\Shared\Testify\Helper\Environment
                 - \SprykerTest\Zed\Propel\Helper\PropelEncryptionHelper
                 - \SprykerTest\Zed\Testify\Helper\Business\DependencyProviderHelper
@@ -25,7 +26,11 @@ suites:
                 - \SprykerTest\Glue\AppKernel\Helper\AppKernelAssertionHelper
                 - \SprykerTest\Zed\AppKernel\Helper\AppKernelAssertionHelper
                 - \SprykerTest\Zed\AppKernel\Helper\AppKernelHelper
+                - \SprykerTest\Shared\AppKernel\Helper\AppConfigHelper
                 - \SprykerTest\Shared\Propel\Helper\TransactionHelper
                 - \SprykerTest\Shared\Testify\Helper\LocatorHelper
                 - \SprykerTest\Shared\Testify\Helper\ConfigHelper
                 - \SprykerTest\Zed\MessageBroker\Helper\InMemoryMessageBrokerHelper
+                - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
+                - \SprykerTest\Shared\Testify\Helper\DependencyHelper
+                - \SprykerTest\Glue\Testify\Helper\AppKernelGlueBackendApiHelper

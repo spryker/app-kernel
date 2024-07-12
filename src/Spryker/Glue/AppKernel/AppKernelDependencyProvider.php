@@ -9,6 +9,7 @@ namespace Spryker\Glue\AppKernel;
 
 use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeBridge;
 use Spryker\Glue\AppKernel\Plugin\RequestValidator\BodyStructureValidatorPlugin;
+use Spryker\Glue\AppKernel\Plugin\RequestValidator\ConfigurationValidatorPlugin;
 use Spryker\Glue\AppKernel\Plugin\RequestValidator\HeaderValidatorPlugin;
 use Spryker\Glue\Kernel\Backend\AbstractBundleDependencyProvider;
 use Spryker\Glue\Kernel\Backend\Container as GlueBackendContainer;
@@ -85,6 +86,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         return [
             new HeaderValidatorPlugin(),
             new BodyStructureValidatorPlugin(),
+            new ConfigurationValidatorPlugin(),
         ];
     }
 
