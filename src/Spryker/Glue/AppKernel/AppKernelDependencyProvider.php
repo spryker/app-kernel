@@ -7,9 +7,9 @@
 
 namespace Spryker\Glue\AppKernel;
 
-use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeBridge;
 use Spryker\Glue\Kernel\Backend\AbstractBundleDependencyProvider;
 use Spryker\Glue\Kernel\Backend\Container as GlueBackendContainer;
+use Spryker\Zed\AppKernel\Business\AppKernelFacadeInterface;
 
 /**
  * @method \Spryker\Glue\AppKernel\AppKernelConfig getConfig()
@@ -59,8 +59,8 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
 
     protected function addAppKernelFacade(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
-        $glueBackendContainer->set(static::FACADE_APP_KERNEL, static function (GlueBackendContainer $glueBackendContainer): AppKernelToAppKernelFacadeBridge {
-            return new AppKernelToAppKernelFacadeBridge($glueBackendContainer->getLocator()->appKernel()->facade());
+        $glueBackendContainer->set(static::FACADE_APP_KERNEL, static function (GlueBackendContainer $glueBackendContainer): AppKernelFacadeInterface {
+            return $glueBackendContainer->getLocator()->appKernel()->facade();
         });
 
         return $glueBackendContainer;
@@ -69,7 +69,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     protected function addRequestConfigureValidatorPlugins(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
         $glueBackendContainer->set(static::PLUGINS_REQUEST_CONFIGURE_VALIDATOR, function (): array {
-            return array_merge($this->getRequestConfigureValidatorPlugins());
+            return $this->getRequestConfigureValidatorPlugins();
         });
 
         return $glueBackendContainer;
@@ -86,7 +86,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     protected function addRequestDisconnectValidatorPlugins(GlueBackendContainer $glueBackendContainer): GlueBackendContainer
     {
         $glueBackendContainer->set(static::PLUGINS_REQUEST_DISCONNECT_VALIDATOR, function (): array {
-            return array_merge($this->getRequestDisconnectValidatorPlugins());
+            return $this->getRequestDisconnectValidatorPlugins();
         });
 
         return $glueBackendContainer;
