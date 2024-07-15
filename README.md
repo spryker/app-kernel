@@ -77,7 +77,7 @@ Example
 </database>
 ```
 
-Next, execute the migrations by running the docker/sdk console propel:install command, then these columns will be encrypted.
+Next, execute the migrations by running the `docker/sdk console propel:install` command, then these columns will be encrypted.
 
 ## Plugins
 
@@ -106,13 +106,13 @@ This package provides the following extensions.
 
 This plugin stack can be used to add your own validators for the configuration of the App. This will most likely be useful when you need to validate the passed configuration from the App Store Catalog e.g. checking against the implemented provider if credentials are valid.
 
-You can add your own plugins to the \Pyz\Glue\AppKernel\AppKernelDependencyProvider::getRequestConfigureValidatorPlugins() method on the project level.
+You can add your own plugins to the `\Pyz\Glue\AppKernel\AppKernelDependencyProvider::getRequestConfigureValidatorPlugins()` method on the project level.
 
 #### Disconnect validation plugins
 
 This plugin stack can be used to add your own validators for the disconnect of the App. This can be used e.g. for validating if the App can be disconnected or not.
 
-You can add your own plugins to the \Pyz\Glue\AppKernel\AppKernelDependencyProvider::getRequestDisconnectValidatorPlugins() method on the project level.
+You can add your own plugins to the `\Pyz\Glue\AppKernel\AppKernelDependencyProvider::getRequestDisconnectValidatorPlugins()` method on the project level.
 
 ## Zed
 
@@ -132,19 +132,19 @@ You can implement this plugin in the Apps PlatformPlugin. It enables the validat
 
 ### ConfigurationBeforeSavePluginInterface
 
-You can add your plugins to the \Pyz\Zed\AppKernel\AppKernelDependencyProvider::getConfigurationBeforeSavePlugins() method on the project level.
+You can add your plugins to the `\Pyz\Zed\AppKernel\AppKernelDependencyProvider::getConfigurationBeforeSavePlugins()` method on the project level.
 
 ### ConfigurationAfterSavePluginInterface
 
-You can add your plugins to the \Pyz\Zed\AppKernel\AppKernelDependencyProvider::getConfigurationAfterSavePlugins() method on the project level.
+You can add your plugins to the `\Pyz\Zed\AppKernel\AppKernelDependencyProvider::getConfigurationAfterSavePlugins()` method on the project level.
 
 ### ConfigurationBeforeDeletePluginInterface
 
-You can add your plugins to the \Pyz\Zed\AppKernel\AppKernelDependencyProvider::getConfigurationBeforeDeletePlugins() method on the project level.
+You can add your plugins to the `\Pyz\Zed\AppKernel\AppKernelDependencyProvider::getConfigurationBeforeDeletePlugins()` method on the project level.
 
 ### ConfigurationAfterDeletePluginInterface
 
-You can add your plugins to the \Pyz\Zed\AppKernel\AppKernelDependencyProvider::getConfigurationAfterDeletePlugins() method on the project level.
+You can add your plugins to the `\Pyz\Zed\AppKernel\AppKernelDependencyProvider::getConfigurationAfterDeletePlugins()` method on the project level.
 
 
 
