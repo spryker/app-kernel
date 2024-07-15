@@ -10,18 +10,6 @@ Provides SyncAPI and AsyncAPI schema files and the needed code to make the Mini-
 composer require spryker/app-kernel
 ```
 
-### Configure
-
-#### App Identifier
-
-config/Shared/config_default.php
-
-```
-use Spryker\Shared\AppKernel\AppConstants;
-
-$config[AppConstants::APP_IDENTIFIER] = getenv('APP_IDENTIFIER') ?: 'hello-world';
-```
-
 ### Testing the AppKernel
 
 You can test the AppKernel as usual with Codeception. Before that you need to run some commands:
