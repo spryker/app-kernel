@@ -14,12 +14,12 @@ use Generated\Shared\Transfer\GlueErrorTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Spryker\Glue\AppKernel\AppKernelConfig;
-use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
+use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class GlueRequestMapper implements GlueRequestMapperInterface
 {
-    public function __construct(protected UtilEncodingServiceInterface $utilEncodingService)
+    public function __construct(protected AppKernelToUtilEncodingServiceInterface $appKernelToUtilEncodingService)
     {
     }
 
@@ -79,12 +79,12 @@ class GlueRequestMapper implements GlueRequestMapperInterface
      */
     protected function getConfiguration(GlueRequestTransfer $glueRequestTransfer): array
     {
-        $content = (array)$this->utilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
+        $content = (array)$this->appKernelToUtilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
 
         if (!isset($content['data']['attributes']['configuration'])) {
             return [];
         }
 
-        return (array)$this->utilEncodingService->decodeJson($content['data']['attributes']['configuration'], true);
+        return (array)$this->appKernelToUtilEncodingService->decodeJson($content['data']['attributes']['configuration'], true);
     }
 }

@@ -8,9 +8,11 @@
 namespace Spryker\Glue\AppKernel;
 
 use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeBridge;
+use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeInterface;
+use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceBridge;
+use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Spryker\Glue\Kernel\Backend\AbstractBundleDependencyProvider;
 use Spryker\Glue\Kernel\Backend\Container;
-use Spryker\Zed\AppKernel\Business\AppKernelFacadeInterface;
 
 /**
  * @method \Spryker\Glue\AppKernel\AppKernelConfig getConfig()
@@ -51,8 +53,8 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
 
     protected function addUtilEncodingService(Container $container): Container
     {
-        $container->set(static::SERVICE_UTIL_ENCODING, static function (Container $container) {
-            return $container->getLocator()->utilEncoding()->service();
+        $container->set(static::SERVICE_UTIL_ENCODING, static function (Container $container): AppKernelToUtilEncodingServiceInterface {
+            return new AppKernelToUtilEncodingServiceBridge($container->getLocator()->utilEncoding()->service());
         });
 
         return $container;
@@ -60,7 +62,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
 
     protected function addAppKernelFacade(Container $container): Container
     {
-        $container->set(static::FACADE_APP_KERNEL, static function (Container $container): AppKernelFacadeInterface {
+        $container->set(static::FACADE_APP_KERNEL, static function (Container $container): AppKernelToAppKernelFacadeInterface {
             return new AppKernelToAppKernelFacadeBridge($container->getLocator()->appKernel()->facade());
         });
 

@@ -10,6 +10,7 @@ namespace Spryker\Glue\AppKernel;
 use Spryker\Glue\AppKernel\Builder\ResponseBuilder;
 use Spryker\Glue\AppKernel\Builder\ResponseBuilderInterface;
 use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeInterface;
+use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Spryker\Glue\AppKernel\Mapper\GlueRequestMapper;
 use Spryker\Glue\AppKernel\Mapper\GlueRequestMapperInterface;
 use Spryker\Glue\AppKernel\Validator\BodyStructureValidator;
@@ -18,7 +19,6 @@ use Spryker\Glue\AppKernel\Validator\HeaderValidator;
 use Spryker\Glue\AppKernel\Validator\RequestValidator;
 use Spryker\Glue\AppKernel\Validator\RequestValidatorInterface;
 use Spryker\Glue\Kernel\Backend\AbstractFactory;
-use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -78,7 +78,7 @@ class AppKernelFactory extends AbstractFactory
         ]);
     }
 
-    public function getUtilEncodingService(): UtilEncodingServiceInterface
+    public function getUtilEncodingService(): AppKernelToUtilEncodingServiceInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::SERVICE_UTIL_ENCODING);
     }
