@@ -7,6 +7,7 @@
 
 namespace Spryker\Glue\AppKernel;
 
+use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeBridge;
 use Spryker\Glue\Kernel\Backend\AbstractBundleDependencyProvider;
 use Spryker\Glue\Kernel\Backend\Container;
 use Spryker\Zed\AppKernel\Business\AppKernelFacadeInterface;
@@ -60,7 +61,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     protected function addAppKernelFacade(Container $container): Container
     {
         $container->set(static::FACADE_APP_KERNEL, static function (Container $container): AppKernelFacadeInterface {
-            return $container->getLocator()->appKernel()->facade();
+            return new AppKernelToAppKernelFacadeBridge($container->getLocator()->appKernel()->facade());
         });
 
         return $container;
