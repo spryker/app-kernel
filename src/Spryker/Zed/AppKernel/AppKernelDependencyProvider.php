@@ -7,11 +7,14 @@
 
 namespace Spryker\Zed\AppKernel;
 
+use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\AppConfigValidateResponseTransfer;
 use Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientBridge;
 use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeBridge;
 use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceBridge;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilTextServiceBridge;
+use Spryker\Zed\AppKernelExtension\Dependency\Plugin\AppKernelPlatformPluginInterface;
 use Spryker\Zed\Kernel\AbstractBundleDependencyProvider;
 use Spryker\Zed\Kernel\Container;
 
@@ -20,6 +23,11 @@ use Spryker\Zed\Kernel\Container;
  */
 class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
 {
+    /**
+     * @var string
+     */
+    public const PLUGIN_PLATFORM = 'APP_KERNEL:PLUGIN_PLATFORM';
+
     /**
      * @var string
      */
@@ -71,6 +79,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addConfigurationAfterSavePlugins($container);
         $container = $this->addConfigurationBeforeDeletePlugins($container);
         $container = $this->addConfigurationAfterDeletePlugins($container);
+        $container = $this->addPlatformPlugin($container);
 
         return $container;
     }
@@ -80,6 +89,31 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         $container = parent::providePersistenceLayerDependencies($container);
 
         return $this->addUtilEncodingService($container);
+    }
+
+    protected function addPlatformPlugin(Container $container): Container
+    {
+        $container->set(static::PLUGIN_PLATFORM, function (): AppKernelPlatformPluginInterface {
+            // @codeCoverageIgnoreStart
+            return $this->getPlatformPlugin();
+            // @codeCoverageIgnoreEnd
+        });
+
+        return $container;
+    }
+
+    /**
+     * This method must be overridden in the project implementation of the AppKernelDependencyProvider.
+     * This one exists only for simpler testing.
+     */
+    protected function getPlatformPlugin(): AppKernelPlatformPluginInterface
+    {
+        return new class implements AppKernelPlatformPluginInterface {
+            public function validateConfiguration(AppConfigTransfer $appConfigTransfer): AppConfigValidateResponseTransfer
+            {
+                return (new AppConfigValidateResponseTransfer())->setIsSuccessful(true);
+            }
+        };
     }
 
     protected function addMessageBrokerFacade(Container $container): Container

@@ -8,6 +8,7 @@
 namespace Spryker\Zed\AppKernel\Business;
 
 use Spryker\Zed\AppKernel\AppKernelDependencyProvider;
+use Spryker\Zed\AppKernel\Business\Configuration\ConfigurationValidator;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfigurator;
 use Spryker\Zed\AppKernel\Business\EncryptionConfigurator\PropelEncryptionConfiguratorInterface;
 use Spryker\Zed\AppKernel\Business\MessageSender\MessageSender;
@@ -20,7 +21,9 @@ use Spryker\Zed\AppKernel\Business\Writer\ConfigWriter;
 use Spryker\Zed\AppKernel\Business\Writer\ConfigWriterInterface;
 use Spryker\Zed\AppKernel\Dependency\Client\AppKernelToSecretsManagerClientInterface;
 use Spryker\Zed\AppKernel\Dependency\Facade\AppKernelToMessageBrokerFacadeInterface;
+use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Spryker\Zed\AppKernel\Dependency\Service\AppKernelToUtilTextServiceInterface;
+use Spryker\Zed\AppKernelExtension\Dependency\Plugin\AppKernelPlatformPluginInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
 
 /**
@@ -30,6 +33,11 @@ use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
  */
 class AppKernelBusinessFactory extends AbstractBusinessFactory
 {
+    public function createConfigurationValidator(): ConfigurationValidator
+    {
+        return new ConfigurationValidator($this->getPlatformPlugin(), $this->getUtilEncodingService());
+    }
+
     public function createConfigWriter(): ConfigWriterInterface
     {
         return new ConfigWriter(
@@ -63,7 +71,7 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
     {
         return new SecretsManager(
             $this->getSecretsManagerClient(),
-            $this->getTextServiceUtil(),
+            $this->getUtilTextService(),
         );
     }
 
@@ -72,14 +80,24 @@ class AppKernelBusinessFactory extends AbstractBusinessFactory
         return new MessageSender($this->getMessageBrokerFacade(), $this->getConfig());
     }
 
+    public function getPlatformPlugin(): AppKernelPlatformPluginInterface
+    {
+        return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGIN_PLATFORM);
+    }
+
     public function getSecretsManagerClient(): AppKernelToSecretsManagerClientInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::CLIENT_SECRETS_MANAGER);
     }
 
-    public function getTextServiceUtil(): AppKernelToUtilTextServiceInterface
+    public function getUtilTextService(): AppKernelToUtilTextServiceInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::SERVICE_UTIL_TEXT);
+    }
+
+    public function getUtilEncodingService(): AppKernelToUtilEncodingServiceInterface
+    {
+        return $this->getProvidedDependency(AppKernelDependencyProvider::SERVICE_UTIL_ENCODING);
     }
 
     /**

@@ -10,14 +10,15 @@ namespace Spryker\Glue\AppKernel;
 use Spryker\Glue\AppKernel\Builder\ResponseBuilder;
 use Spryker\Glue\AppKernel\Builder\ResponseBuilderInterface;
 use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeInterface;
+use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Spryker\Glue\AppKernel\Mapper\GlueRequestMapper;
 use Spryker\Glue\AppKernel\Mapper\GlueRequestMapperInterface;
 use Spryker\Glue\AppKernel\Validator\BodyStructureValidator;
+use Spryker\Glue\AppKernel\Validator\ConfigurationValidator;
 use Spryker\Glue\AppKernel\Validator\HeaderValidator;
 use Spryker\Glue\AppKernel\Validator\RequestValidator;
 use Spryker\Glue\AppKernel\Validator\RequestValidatorInterface;
 use Spryker\Glue\Kernel\Backend\AbstractFactory;
-use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -33,6 +34,14 @@ class AppKernelFactory extends AbstractFactory
         return new BodyStructureValidator(
             $this->createValidator(),
             $this->getUtilEncodingService(),
+        );
+    }
+
+    public function createConfigurationValidator(): RequestValidatorInterface
+    {
+        return new ConfigurationValidator(
+            $this->createGlueRequestMapper(),
+            $this->getAppKernelFacade(),
         );
     }
 
@@ -55,15 +64,21 @@ class AppKernelFactory extends AbstractFactory
 
     public function createApiRequestSaveConfigValidator(): RequestValidatorInterface
     {
-        return new RequestValidator($this->getApiRequestConfigureValidatorPlugins());
+        return new RequestValidator($this->getApiRequestConfigureValidatorPlugins(), [
+            $this->createBodyStructureValidator(),
+            $this->createHeaderValidator(),
+            $this->createConfigurationValidator(),
+        ]);
     }
 
     public function createApiRequestDisconnectValidator(): RequestValidatorInterface
     {
-        return new RequestValidator($this->getApiRequestDisconnectValidatorPlugins());
+        return new RequestValidator($this->getApiRequestDisconnectValidatorPlugins(), [
+            $this->createHeaderValidator(),
+        ]);
     }
 
-    public function getUtilEncodingService(): UtilEncodingServiceInterface
+    public function getUtilEncodingService(): AppKernelToUtilEncodingServiceInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::SERVICE_UTIL_ENCODING);
     }

@@ -46,6 +46,7 @@ return static function (RectorConfig $rectorConfig): void {
             __DIR__ . '/src/Spryker/Zed/AppKernel/Dependency/Service/AppKernelToUtilEncodingServiceBridge.php',
             __DIR__ . '/src/Spryker/Zed/AppKernel/Dependency/Service/AppKernelToUtilTextServiceBridge.php',
             __DIR__ . '/src/Spryker/Glue/AppKernel/Dependency/Facade/AppKernelToAppKernelFacadeBridge.php',
+            __DIR__ . '/src/Spryker/Glue/AppKernel/Dependency/Service/AppKernelToUtilEncodingServiceBridge.php',
         ],
         AddParamTypeFromPropertyTypeRector::class => [
             __DIR__ . '/src/Spryker/Zed/AppKernel/Dependency/Client/AppKernelToSecretsManagerClientBridge.php',
@@ -53,6 +54,7 @@ return static function (RectorConfig $rectorConfig): void {
             __DIR__ . '/src/Spryker/Zed/AppKernel/Dependency/Service/AppKernelToUtilEncodingServiceBridge.php',
             __DIR__ . '/src/Spryker/Zed/AppKernel/Dependency/Service/AppKernelToUtilTextServiceBridge.php',
             __DIR__ . '/src/Spryker/Glue/AppKernel/Dependency/Facade/AppKernelToAppKernelFacadeBridge.php',
+            __DIR__ . '/src/Spryker/Glue/AppKernel/Dependency/Service/AppKernelToUtilEncodingServiceBridge.php',
         ],
     ]);
 };

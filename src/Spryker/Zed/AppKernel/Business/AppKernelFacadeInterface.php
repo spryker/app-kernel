@@ -10,9 +10,29 @@ namespace Spryker\Zed\AppKernel\Business;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigResponseTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationRequestTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationResponseTransfer;
 
 interface AppKernelFacadeInterface
 {
+    /**
+     * Specification:
+     * - Converts the `GlueRequestTransfer::getContent()` data from a JSON string into a `AppConfigTransfer`.
+     * - Calls `PlatformPluginInterface::validateConfiguration()` and passes the `AppConfigTransfer`.
+     * - When `PlatformPluginInterface::validateConfiguration()` throws an exception, the exception is logged.
+     * - When `PlatformPluginInterface::validateConfiguration()` throws an exception, a `GlueRequestValidationTransfer` with a failed response is returned.
+     * - When `PlatformPluginInterface::validateConfiguration()` is successful, a `GlueRequestValidationTransfer` with HTTP Status Code 200 (OK) is returned.
+     * - When `PlatformPluginInterface::validateConfiguration()` is not successful, validation errors from the `AppConfigValidateResponseTransfer` are converted
+     *   to error messages and added to the `GlueRequestValidationTransfer`.
+     * - When `PlatformPluginInterface::validateConfiguration()` is NOT successful, a `GlueRequestValidationTransfer` with HTTP Status Code 422 (UNPROCESSABLE ENTITY) is returned.
+     * - Requires `GlueRequestTransfer::getContent()`.
+     *
+     * @api
+     */
+    public function validateConfiguration(
+        ConfigurationValidationRequestTransfer $configurationValidationRequestTransfer
+    ): ConfigurationValidationResponseTransfer;
+
     /**
      * Specification:
      * - Saves the App configuration in the DB.
