@@ -54,7 +54,7 @@ class AppDisconnectController extends AbstractController
         if (!$appConfigResponseTransfer->getIsSuccessful()) {
             return $this->getFactory()
                  ->createResponseBuilder()
-                 ->buildErrorResponse(AppKernelConfig::RESPONSE_MESSAGE_DISCONNECT_ERROR);
+                 ->buildErrorResponse($appConfigResponseTransfer->getErrorMessage() ?? AppKernelConfig::RESPONSE_MESSAGE_DISCONNECT_ERROR);
         }
 
         return $this->getFactory()->createResponseBuilder()->buildSuccessfulResponse();
