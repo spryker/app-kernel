@@ -85,7 +85,7 @@ class AppKernelAssertionHelper extends Module
         $this->assertNotEmpty($contentData);
         $this->assertEquals(1, count($contentData['errors']));
         $this->assertEquals(
-            'Tenant registration failed: Something went wrong',
+            'Tenant operation failed: Something went wrong',
             $contentData['errors'][0]['message'],
         );
     }
