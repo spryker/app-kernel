@@ -29,7 +29,7 @@ class ConfigWriter implements ConfigWriterInterface
     /**
      * @var string
      */
-    protected const FAILED_TO_REGISTER_TENANT_MESSAGE = 'Tenant registration failed';
+    protected const FAILED_TO_OPERATION_TENANT_MESSAGE = 'Tenant operation failed';
 
     /**
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface> $configurationBeforeSavePlugins
@@ -59,14 +59,14 @@ class ConfigWriter implements ConfigWriterInterface
             return $this->getSuccessResponse($appConfigTransfer);
         } catch (Throwable $throwable) {
             $this->getLogger()->error(
-                static::FAILED_TO_REGISTER_TENANT_MESSAGE,
+                static::FAILED_TO_OPERATION_TENANT_MESSAGE,
                 [
                     'tenantIdentifier' => $appConfigTransfer->getTenantIdentifier(),
                     'exception' => $throwable,
                 ],
             );
 
-            return $this->getFailResponse(sprintf('%s: %s', static::FAILED_TO_REGISTER_TENANT_MESSAGE, $throwable->getMessage()));
+            return $this->getFailResponse(sprintf('%s: %s', static::FAILED_TO_OPERATION_TENANT_MESSAGE, $throwable->getMessage()));
         }
     }
 
