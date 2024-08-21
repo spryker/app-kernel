@@ -21,15 +21,21 @@ class AppConfigHelper extends Module
     use DataCleanupHelperTrait;
 
     /**
-     * @param array|string $appConfiguration
+     * @param string $tenantIdentifier
+     * @param array $appConfiguration
+     * @param bool $isActive
+     *
+     * @return \Generated\Shared\Transfer\AppConfigTransfer
      */
     public function haveAppConfigForTenant(
         string $tenantIdentifier,
-        array $appConfiguration = []
+        array $appConfiguration = [],
+        bool $isActive = false,
     ): AppConfigTransfer {
         $seed = [];
-        $seed['config'] = array_merge($this->getDefaultConfigData(), $appConfiguration);
-        $seed['tenantIdentifier'] = $tenantIdentifier;
+        $seed[AppConfigTransfer::CONFIG] = array_merge($this->getDefaultConfigData(), $appConfiguration);
+        $seed[AppConfigTransfer::TENANT_IDENTIFIER] = $tenantIdentifier;
+        $seed[AppConfigTransfer::IS_ACTIVE] = $isActive;
 
         $appConfigTransfer = (new AppConfigBuilder($seed))->build();
 
