@@ -30,7 +30,7 @@ class AppConfigHelper extends Module
     public function haveAppConfigForTenant(
         string $tenantIdentifier,
         array $appConfiguration = [],
-        bool $isActive = false,
+        bool $isActive = false
     ): AppConfigTransfer {
         $seed = [];
         $seed[AppConfigTransfer::CONFIG] = array_merge($this->getDefaultConfigData(), $appConfiguration);
