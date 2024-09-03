@@ -59,11 +59,13 @@ class GlueRequestMapper implements GlueRequestMapperInterface
             ->setStatus($configurationValidationResponseTransfer->getIsSuccessful() === false ? Response::HTTP_UNPROCESSABLE_ENTITY : null);
 
         if ($configurationValidationResponseTransfer->getIsSuccessful() === false) {
+            $status = $configurationValidationResponseTransfer->getExceptionMessage() !== null && $configurationValidationResponseTransfer->getExceptionMessage() !== '' && $configurationValidationResponseTransfer->getExceptionMessage() !== '0' ? Response::HTTP_INTERNAL_SERVER_ERROR : Response::HTTP_UNPROCESSABLE_ENTITY;
             $glueErrorTransfer = new GlueErrorTransfer();
             $glueErrorTransfer->setMessage($configurationValidationResponseTransfer->getMessage() ?? $configurationValidationResponseTransfer->getExceptionMessage());
+            $glueErrorTransfer->setCode((string)$status);
 
             $glueRequestValidationTransfer->addError($glueErrorTransfer);
-            $glueRequestValidationTransfer->setStatus($configurationValidationResponseTransfer->getExceptionMessage() !== null && $configurationValidationResponseTransfer->getExceptionMessage() !== '' && $configurationValidationResponseTransfer->getExceptionMessage() !== '0' ? Response::HTTP_INTERNAL_SERVER_ERROR : Response::HTTP_UNPROCESSABLE_ENTITY);
+            $glueRequestValidationTransfer->setStatus($status);
         }
 
         return $glueRequestValidationTransfer;

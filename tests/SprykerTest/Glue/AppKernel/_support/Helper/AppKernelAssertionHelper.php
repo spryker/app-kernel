@@ -53,6 +53,10 @@ class AppKernelAssertionHelper extends Module
             'X-Tenant-Identifier in header is required.',
             $contentData['errors'][0]['message'],
         );
+        $this->assertEquals(
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            $contentData['errors'][0]['code'],
+        );
     }
 
     /**
@@ -71,6 +75,10 @@ class AppKernelAssertionHelper extends Module
             'Wrong request format.',
             $contentData['errors'][0]['message'],
         );
+        $this->assertEquals(
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            $contentData['errors'][0]['code'],
+        );
     }
 
     /**
@@ -87,6 +95,10 @@ class AppKernelAssertionHelper extends Module
         $this->assertEquals(
             'Tenant action failed: Something went wrong',
             $contentData['errors'][0]['message'],
+        );
+        $this->assertEquals(
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            $contentData['errors'][0]['code'],
         );
     }
 
