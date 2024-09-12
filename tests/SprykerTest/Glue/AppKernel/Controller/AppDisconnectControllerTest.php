@@ -10,6 +10,12 @@ namespace SprykerTest\Glue\AppKernel\Controller;
 use Codeception\Test\Unit;
 use Exception;
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\GlueErrorConfirmTransfer;
+use Generated\Shared\Transfer\GlueErrorTransfer;
+use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueRequestValidationTransfer;
+use Spryker\Glue\AppKernel\AppKernelDependencyProvider as GlueAppKernelDependencyProvider;
+use Spryker\Glue\AppKernel\Plugin\GlueApplication\AbstractConfirmDisconnectionRequestValidatorPlugin;
 use Spryker\Zed\AppKernel\AppKernelDependencyProvider;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface;
@@ -227,5 +233,82 @@ class AppDisconnectControllerTest extends Unit
 
         // Assert
         $this->assertSame(Response::HTTP_BAD_REQUEST, $glueResponse->getHttpStatus());
+    }
+
+    public function testPostDisconnectReturnsConfirmationErrorResponseWhenConfirmationErrorOccurred(): void
+    {
+        // Arrange
+        $glueRequest = $this->tester->createGlueRequestFromFixture('valid-disconnect-request');
+        $appConfigTransfer = $this->tester->havePersistedAppConfigTransfer(
+            ['tenantIdentifier' => 'tenant-identifier'],
+        );
+
+        $confirmDisconnectionRequestValidatorPlugin = new class extends AbstractConfirmDisconnectionRequestValidatorPlugin {
+            /**
+             * @var string
+             */
+            public const LABEL_OK = 'Ok';
+
+            /**
+             * @var string
+             */
+            public const LABEL_CANCEL = 'Cancel';
+
+            protected function validateDisconnectionRequest(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
+            {
+                return (new GlueRequestValidationTransfer())
+                    ->setIsValid(false)
+                    ->setStatus(Response::HTTP_CONFLICT)
+                    ->addError(
+                        (new GlueErrorTransfer())
+                            ->setConfirm(
+                                (new GlueErrorConfirmTransfer())
+                                    ->setLabelOk($this->getLabelOk())
+                                    ->setLabelCancel($this->getLabelCancel()),
+                            ),
+                    );
+            }
+
+            protected function getLabelOk(): string
+            {
+                return static::LABEL_OK;
+            }
+
+            protected function getLabelCancel(): string
+            {
+                return static::LABEL_CANCEL;
+            }
+
+            protected function onConfirmationOk(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
+            {
+                return (new GlueRequestValidationTransfer())
+                    ->setIsValid(true);
+            }
+
+            protected function onConfirmationCancel(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
+            {
+                return (new GlueRequestValidationTransfer())
+                    ->setIsValid(false)
+                    ->setStatus(Response::HTTP_BAD_REQUEST)
+                    ->addError(
+                        (new GlueErrorTransfer())
+                            ->setCode(400)
+                            ->setMessage('Action failed: Something went wrong'),
+                    );
+            }
+        };
+
+        $this->getDependencyProviderHelper()->setDependency(GlueAppKernelDependencyProvider::PLUGINS_REQUEST_DISCONNECT_VALIDATOR, [$confirmDisconnectionRequestValidatorPlugin]);
+
+        $appDisconnectController = $this->tester->createAppDisconnectController();
+
+        // Act
+        $glueResponse = $appDisconnectController->postDisconnectAction($glueRequest);
+
+        // Assert
+        $this->assertCount(1, $glueResponse->getErrors());
+        $this->assertInstanceOf(GlueErrorConfirmTransfer::class, $glueResponse->getErrors()[0]->getConfirm());
+        $this->assertSame($confirmDisconnectionRequestValidatorPlugin::LABEL_OK, $glueResponse->getErrors()[0]->getConfirm()->getLabelOk());
+        $this->assertSame($confirmDisconnectionRequestValidatorPlugin::LABEL_CANCEL, $glueResponse->getErrors()[0]->getConfirm()->getLabelCancel());
     }
 }

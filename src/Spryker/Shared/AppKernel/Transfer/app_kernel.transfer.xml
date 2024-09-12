@@ -99,6 +99,12 @@
         <property name="code" type="string"/>
         <property name="status" type="int"/>
         <property name="message" type="string"/>
+        <property name="confirm" type="GlueErrorConfirm"/>
+    </transfer>
+
+    <transfer name="GlueErrorConfirm" strict="true">
+        <property name="labelOk" type="string"/>
+        <property name="labelCancel" type="string"/>
     </transfer>
 
 </transfers>
