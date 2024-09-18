@@ -8,12 +8,17 @@
 namespace Spryker\Glue\AppKernel\Plugin\GlueApplication;
 
 use Generated\Shared\Transfer\GlueErrorConfirmTransfer;
+use Generated\Shared\Transfer\GlueErrorTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
+use Spryker\Glue\AppKernel\AppKernelConfig;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RequestValidatorPluginInterface;
 use Spryker\Glue\Kernel\Backend\AbstractPlugin;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @method \Spryker\Glue\AppKernel\AppKernelFactory getFactory()
+ */
 abstract class AbstractConfirmDisconnectionRequestValidatorPlugin extends AbstractPlugin implements RequestValidatorPluginInterface
 {
     /**
@@ -23,7 +28,16 @@ abstract class AbstractConfirmDisconnectionRequestValidatorPlugin extends Abstra
 
     public function validate(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
     {
-        $glueRequestValidationTransfer = $this->validateDisconnectionRequest($glueRequestTransfer);
+        $tenantIdentifier = $this->findTenantIdentifier($glueRequestTransfer);
+
+        if ($tenantIdentifier === null || $tenantIdentifier === '') {
+            return $this->getFailedGlueRequestValidationTransfer(
+                AppKernelConfig::ERROR_CODE_PAYMENT_DISCONNECTION_TENANT_IDENTIFIER_MISSING,
+                $this->getFactory()->getTranslatorFacade()->trans('Tenant identifier is missing.'),
+            );
+        }
+
+        $glueRequestValidationTransfer = $this->validateDisconnectionRequest($glueRequestTransfer, $tenantIdentifier);
 
         if ($glueRequestValidationTransfer->getIsValid()) {
             return $glueRequestValidationTransfer;
@@ -37,8 +51,8 @@ abstract class AbstractConfirmDisconnectionRequestValidatorPlugin extends Abstra
             $isConfirmed = filter_var($confirmationStatusValue, FILTER_VALIDATE_BOOLEAN);
 
             return match ($isConfirmed) {
-                true => $this->onConfirmationOk($glueRequestTransfer),
-                false => $this->onConfirmationCancel($glueRequestTransfer),
+                true => $this->onConfirmationOk(),
+                false => $this->onConfirmationCancel(),
             };
         }
 
@@ -54,15 +68,64 @@ abstract class AbstractConfirmDisconnectionRequestValidatorPlugin extends Abstra
         return $glueRequestValidationTransfer;
     }
 
-    abstract protected function validateDisconnectionRequest(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer;
+    abstract protected function validateDisconnectionRequest(
+        GlueRequestTransfer $glueRequestTransfer,
+        string $tenantIdentifier
+    ): GlueRequestValidationTransfer;
 
-    abstract protected function getLabelOk(): string;
+    abstract protected function getCancellationErrorCode(): string;
 
-    abstract protected function getLabelCancel(): string;
+    abstract protected function getCancellationErrorMessage(): string;
 
-    abstract protected function onConfirmationOk(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer;
+    protected function onConfirmationOk(): GlueRequestValidationTransfer
+    {
+        return (new GlueRequestValidationTransfer())
+            ->setIsValid(true);
+    }
 
-    abstract protected function onConfirmationCancel(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer;
+    protected function onConfirmationCancel(): GlueRequestValidationTransfer
+    {
+        return (new GlueRequestValidationTransfer())
+            ->setIsValid(false)
+            ->setStatus(Response::HTTP_BAD_REQUEST)
+            ->addError(
+                (new GlueErrorTransfer())
+                    ->setCode($this->getCancellationErrorCode())
+                    ->setStatus(Response::HTTP_BAD_REQUEST)
+                    ->setMessage($this->getCancellationErrorMessage()),
+            );
+    }
+
+    protected function getLabelOk(): string
+    {
+        return $this->getFactory()->getTranslatorFacade()->trans('Ignore & Disconnect');
+    }
+
+    protected function getLabelCancel(): string
+    {
+        return $this->getFactory()->getTranslatorFacade()->trans('Cancel');
+    }
+
+    protected function findTenantIdentifier(GlueRequestTransfer $glueRequestTransfer): ?string
+    {
+        return $glueRequestTransfer->getMeta()[AppKernelConfig::HEADER_TENANT_IDENTIFIER][0] ?? null;
+    }
+
+    protected function getFailedGlueRequestValidationTransfer(
+        string $errorCode,
+        string $errorMessage,
+        ?int $httpStatus = Response::HTTP_BAD_REQUEST
+    ): GlueRequestValidationTransfer {
+        return (new GlueRequestValidationTransfer())
+            ->setIsValid(false)
+            ->setStatus($httpStatus)
+            ->addError(
+                (new GlueErrorTransfer())
+                    ->setCode($errorCode)
+                    ->setStatus($httpStatus)
+                    ->setMessage($errorMessage),
+            );
+    }
 
     protected function extractConfirmationStatusValue(GlueRequestTransfer $glueRequestTransfer): ?string
     {

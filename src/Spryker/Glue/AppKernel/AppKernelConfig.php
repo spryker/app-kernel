@@ -54,20 +54,5 @@ class AppKernelConfig extends AbstractBundleConfig
     /**
      * @var string
      */
-    public const RESPONSE_MESSAGE_BLANK_CLIENT_ID_FIELD = 'Client ID is required.';
-
-    /**
-     * @var string
-     */
-    public const RESPONSE_MESSAGE_NOT_STRING_CLIENT_ID_FIELD = 'Client ID must be a string.';
-
-    /**
-     * @var string
-     */
-    public const RESPONSE_MESSAGE_BLANK_CLIENT_SECRET_FIELD = 'Client Secret is required.';
-
-    /**
-     * @var string
-     */
-    public const RESPONSE_MESSAGE_NOT_STRING_CLIENT_SECRET_FIELD = 'Client Secret must be a string.';
+    public const ERROR_CODE_PAYMENT_DISCONNECTION_TENANT_IDENTIFIER_MISSING = '20000';
 }
