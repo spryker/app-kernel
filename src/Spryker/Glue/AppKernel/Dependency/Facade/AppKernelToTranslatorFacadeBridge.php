@@ -7,12 +7,19 @@
 
 namespace Spryker\Glue\AppKernel\Dependency\Facade;
 
-use Spryker\Zed\Translator\Business\TranslatorFacadeInterface;
-
 class AppKernelToTranslatorFacadeBridge implements AppKernelToTranslatorFacadeInterface
 {
-    public function __construct(protected TranslatorFacadeInterface $translatorFacade)
+    /**
+     * @var \Spryker\Zed\Translator\Business\TranslatorFacadeInterface
+     */
+    protected $translatorFacade;
+
+    /**
+     * @param \Spryker\Zed\Translator\Business\TranslatorFacadeInterface $translatorFacade
+     */
+    public function __construct($translatorFacade)
     {
+        $this->translatorFacade = $translatorFacade;
     }
 
     /**
