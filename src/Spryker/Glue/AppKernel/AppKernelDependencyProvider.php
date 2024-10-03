@@ -9,6 +9,8 @@ namespace Spryker\Glue\AppKernel;
 
 use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeBridge;
 use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeInterface;
+use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToTranslatorFacadeBridge;
+use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToTranslatorFacadeInterface;
 use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceBridge;
 use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Spryker\Glue\Kernel\Backend\AbstractBundleDependencyProvider;
@@ -23,6 +25,11 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
      * @var string
      */
     public const FACADE_APP_KERNEL = 'FACADE_APP_KERNEL';
+
+    /**
+     * @var string
+     */
+    public const FACADE_TRANSLATOR = 'FACADE_TRANSLATOR';
 
     /**
      * @var string
@@ -47,6 +54,7 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addAppKernelFacade($container);
         $container = $this->addRequestConfigureValidatorPlugins($container);
         $container = $this->addRequestDisconnectValidatorPlugins($container);
+        $container = $this->addTranslatorFacade($container);
 
         return $container;
     }
@@ -101,5 +109,14 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     protected function getRequestDisconnectValidatorPlugins(): array
     {
         return [];
+    }
+
+    protected function addTranslatorFacade(Container $container): Container
+    {
+        $container->set(static::FACADE_TRANSLATOR, static function (Container $container): AppKernelToTranslatorFacadeInterface {
+            return new AppKernelToTranslatorFacadeBridge($container->getLocator()->translator()->facade());
+        });
+
+        return $container;
     }
 }

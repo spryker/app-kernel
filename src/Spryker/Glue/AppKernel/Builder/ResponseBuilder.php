@@ -34,6 +34,7 @@ class ResponseBuilder implements ResponseBuilderInterface
                 'code' => $error->getCode(),
                 'message' => $error->getMessage(),
                 'status' => $error->getStatus(),
+                'confirm' => $error->getConfirm()?->toArray(true, true),
             ];
         }
 

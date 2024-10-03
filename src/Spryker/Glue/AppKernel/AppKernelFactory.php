@@ -10,6 +10,7 @@ namespace Spryker\Glue\AppKernel;
 use Spryker\Glue\AppKernel\Builder\ResponseBuilder;
 use Spryker\Glue\AppKernel\Builder\ResponseBuilderInterface;
 use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToAppKernelFacadeInterface;
+use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToTranslatorFacadeInterface;
 use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Spryker\Glue\AppKernel\Mapper\GlueRequestMapper;
 use Spryker\Glue\AppKernel\Mapper\GlueRequestMapperInterface;
@@ -86,6 +87,11 @@ class AppKernelFactory extends AbstractFactory
     public function getAppKernelFacade(): AppKernelToAppKernelFacadeInterface
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::FACADE_APP_KERNEL);
+    }
+
+    public function getTranslatorFacade(): AppKernelToTranslatorFacadeInterface
+    {
+        return $this->getProvidedDependency(AppKernelDependencyProvider::FACADE_TRANSLATOR);
     }
 
     /**

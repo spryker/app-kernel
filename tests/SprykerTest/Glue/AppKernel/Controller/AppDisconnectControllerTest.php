@@ -10,6 +10,13 @@ namespace SprykerTest\Glue\AppKernel\Controller;
 use Codeception\Test\Unit;
 use Exception;
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\GlueErrorConfirmTransfer;
+use Generated\Shared\Transfer\GlueErrorTransfer;
+use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueRequestValidationTransfer;
+use Spryker\Glue\AppKernel\AppKernelDependencyProvider as GlueAppKernelDependencyProvider;
+use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToTranslatorFacadeInterface;
+use Spryker\Glue\AppKernel\Plugin\GlueApplication\AbstractConfirmDisconnectionRequestValidatorPlugin;
 use Spryker\Zed\AppKernel\AppKernelDependencyProvider;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface;
 use Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeDeletePluginInterface;
@@ -80,23 +87,15 @@ class AppDisconnectControllerTest extends Unit
         );
 
         $configurationBeforeDeletePlugin = new class ($this) implements ConfigurationBeforeDeletePluginInterface {
-            /**
-             * @param \SprykerTest\Glue\AppKernel\Controller\AppDisconnectControllerTest $test
-             */
             public function __construct(protected AppDisconnectControllerTest $test)
             {
             }
 
-            /**
-             * @param \Generated\Shared\Transfer\AppConfigTransfer $appDisconnectTransfer
-             *
-             * @return \Generated\Shared\Transfer\AppConfigTransfer
-             */
-            public function beforeDelete(AppConfigTransfer $appDisconnectTransfer): AppConfigTransfer
+            public function beforeDelete(AppConfigTransfer $appConfigTransfer): AppConfigTransfer
             {
                 $this->test->beforeDeletePluginWasExecuted = true;
 
-                return $appDisconnectTransfer;
+                return $appConfigTransfer;
             }
         };
 
@@ -139,7 +138,7 @@ class AppDisconnectControllerTest extends Unit
             {
                 $this->test->afterDeletePluginWasExecuted = true;
 
-                return $appDisconnectTransfer;
+                return $appConfigTransfer;
             }
         };
 
@@ -227,5 +226,134 @@ class AppDisconnectControllerTest extends Unit
 
         // Assert
         $this->assertSame(Response::HTTP_BAD_REQUEST, $glueResponse->getHttpStatus());
+    }
+
+    public function testPostDisconnectReturnsConfirmationErrorResponseWhenConfirmationErrorOccurred(): void
+    {
+        // Arrange
+        $this->tester->setDependency(GlueAppKernelDependencyProvider::FACADE_TRANSLATOR, $this->getMockBuilder(AppKernelToTranslatorFacadeInterface::class)->getMock());
+
+        $glueRequest = $this->tester->createGlueRequestFromFixture('valid-disconnect-request');
+        $appConfigTransfer = $this->tester->havePersistedAppConfigTransfer(
+            ['tenantIdentifier' => 'tenant-identifier'],
+        );
+
+        $confirmDisconnectionRequestValidatorPlugin = new class extends AbstractConfirmDisconnectionRequestValidatorPlugin {
+            /**
+             * @var string
+             */
+            public const LABEL_OK = 'Ok';
+
+            /**
+             * @var string
+             */
+            public const LABEL_CANCEL = 'Cancel';
+
+            protected function validateDisconnectionRequest(
+                GlueRequestTransfer $glueRequestTransfer,
+                string $tenantIdentifier
+            ): GlueRequestValidationTransfer {
+                return (new GlueRequestValidationTransfer())
+                    ->setIsValid(false)
+                    ->addError(new GlueErrorTransfer());
+            }
+
+            protected function getCancellationErrorCode(): string
+            {
+                return 400;
+            }
+
+            protected function getCancellationErrorMessage(): string
+            {
+                return 'Action failed: Something went wrong';
+            }
+
+            protected function getLabelOk(): string
+            {
+                return static::LABEL_OK;
+            }
+
+            protected function getLabelCancel(): string
+            {
+                return static::LABEL_CANCEL;
+            }
+        };
+
+        $this->getDependencyProviderHelper()->setDependency(GlueAppKernelDependencyProvider::PLUGINS_REQUEST_DISCONNECT_VALIDATOR, [$confirmDisconnectionRequestValidatorPlugin]);
+
+        $appDisconnectController = $this->tester->createAppDisconnectController();
+
+        // Act
+        $glueResponse = $appDisconnectController->postDisconnectAction($glueRequest);
+
+        // Assert
+        $this->assertCount(1, $glueResponse->getErrors());
+        $this->assertInstanceOf(GlueErrorConfirmTransfer::class, $glueResponse->getErrors()[0]->getConfirm());
+        $this->assertSame($confirmDisconnectionRequestValidatorPlugin::LABEL_OK, $glueResponse->getErrors()[0]->getConfirm()->getLabelOk());
+        $this->assertSame($confirmDisconnectionRequestValidatorPlugin::LABEL_CANCEL, $glueResponse->getErrors()[0]->getConfirm()->getLabelCancel());
+        $this->tester->assertAppConfigIsPersisted($appConfigTransfer->getTenantIdentifier());
+    }
+
+    public function testPostDisconnectReturnsSuccessfulResponseWhenConfirmationStatusIsPresentInRequest(): void
+    {
+        // Arrange
+        $this->tester->setDependency(GlueAppKernelDependencyProvider::FACADE_TRANSLATOR, $this->getMockBuilder(AppKernelToTranslatorFacadeInterface::class)->getMock());
+
+        $glueRequest = $this->tester->createGlueRequestFromFixture('valid-disconnect-request-with-confirmation-status');
+        $appConfigTransfer = $this->tester->havePersistedAppConfigTransfer(
+            ['tenantIdentifier' => 'tenant-identifier'],
+        );
+
+        $confirmDisconnectionRequestValidatorPlugin = new class extends AbstractConfirmDisconnectionRequestValidatorPlugin {
+            /**
+             * @var string
+             */
+            public const LABEL_OK = 'Ok';
+
+            /**
+             * @var string
+             */
+            public const LABEL_CANCEL = 'Cancel';
+
+            protected function validateDisconnectionRequest(
+                GlueRequestTransfer $glueRequestTransfer,
+                string $tenantIdentifier
+            ): GlueRequestValidationTransfer {
+                return (new GlueRequestValidationTransfer())
+                    ->setIsValid(false)
+                    ->addError(new GlueErrorTransfer());
+            }
+
+            protected function getCancellationErrorCode(): string
+            {
+                return 400;
+            }
+
+            protected function getCancellationErrorMessage(): string
+            {
+                return 'Action failed: Something went wrong';
+            }
+
+            protected function getLabelOk(): string
+            {
+                return static::LABEL_OK;
+            }
+
+            protected function getLabelCancel(): string
+            {
+                return static::LABEL_CANCEL;
+            }
+        };
+
+        $this->getDependencyProviderHelper()->setDependency(GlueAppKernelDependencyProvider::PLUGINS_REQUEST_DISCONNECT_VALIDATOR, [$confirmDisconnectionRequestValidatorPlugin]);
+
+        $appDisconnectController = $this->tester->createAppDisconnectController();
+
+        // Act
+        $glueResponse = $appDisconnectController->postDisconnectAction($glueRequest);
+
+        // Assert
+        $this->tester->assertGlueResponseContainsSuccessContentsWhenDisconnectIsSuccessful($glueResponse);
+        $this->tester->assertAppConfigIsDeactivated($appConfigTransfer->getTenantIdentifier());
     }
 }
