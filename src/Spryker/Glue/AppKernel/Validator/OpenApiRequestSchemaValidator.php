@@ -30,7 +30,7 @@ class OpenApiRequestSchemaValidator
 
         $openApiSchemaPath = $this->appKernelConfig->getOpenApiSchemaPath();
 
-        if (!$openApiSchemaPath) {
+        if ($openApiSchemaPath === null || $openApiSchemaPath === '' || $openApiSchemaPath === '0') {
             return $glueRequestValidationTransfer;
         }
 
