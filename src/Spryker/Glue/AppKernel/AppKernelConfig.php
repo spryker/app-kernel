@@ -8,6 +8,7 @@
 namespace Spryker\Glue\AppKernel;
 
 use Spryker\Glue\Kernel\AbstractBundleConfig;
+use Spryker\Shared\AppKernel\AppKernelConstants;
 
 class AppKernelConfig extends AbstractBundleConfig
 {
@@ -52,7 +53,14 @@ class AppKernelConfig extends AbstractBundleConfig
     public const RESPONSE_MESSAGE_DISCONNECT_ERROR = 'Disconnecting error.';
 
     /**
+     * @api
+     *
      * @var string
      */
     public const ERROR_CODE_PAYMENT_DISCONNECTION_TENANT_IDENTIFIER_MISSING = '20000';
+
+    public function getOpenApiSchemaPath(): ?string
+    {
+        return $this->getConfig()->hasKey(AppKernelConstants::OPEN_API_SCHEMA_PATH) ? $this->getConfig()->get(AppKernelConstants::OPEN_API_SCHEMA_PATH) : null;
+    }
 }
