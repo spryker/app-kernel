@@ -57,7 +57,7 @@ class OpenApiRequestSchemaValidator
             $glueRequestValidationTransfer
                 ->setIsValid(false)
                 ->addError($glueErrorTransfer)
-                ->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+                ->setStatus(Response::HTTP_BAD_REQUEST);
 
             return $glueRequestValidationTransfer;
         }
