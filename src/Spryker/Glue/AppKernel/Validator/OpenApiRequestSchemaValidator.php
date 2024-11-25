@@ -14,11 +14,14 @@ use GuzzleHttp\Psr7\Request;
 use League\OpenAPIValidation\PSR7\Exception\Validation\InvalidBody;
 use League\OpenAPIValidation\PSR7\ValidatorBuilder;
 use Spryker\Glue\AppKernel\AppKernelConfig;
+use Spryker\Shared\Log\LoggerTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 class OpenApiRequestSchemaValidator
 {
+    use LoggerTrait;
+
     public function __construct(protected AppKernelConfig $appKernelConfig)
     {
     }
@@ -50,6 +53,11 @@ class OpenApiRequestSchemaValidator
         try {
             $validator->validate($psr7Request);
         } catch (Throwable $throwable) {
+            $this->getLogger()->error(
+                $this->getMessageFromThrowable($throwable),
+                $glueRequestTransfer->getMeta(),
+            );
+
             $glueErrorTransfer = new GlueErrorTransfer();
             $glueErrorTransfer
                 ->setMessage($this->getMessageFromThrowable($throwable));
