@@ -17,12 +17,16 @@ use Spryker\Glue\AppKernel\Mapper\GlueRequestMapperInterface;
 use Spryker\Glue\AppKernel\Validator\BodyStructureValidator;
 use Spryker\Glue\AppKernel\Validator\ConfigurationValidator;
 use Spryker\Glue\AppKernel\Validator\HeaderValidator;
+use Spryker\Glue\AppKernel\Validator\OpenApiRequestSchemaValidator;
 use Spryker\Glue\AppKernel\Validator\RequestValidator;
 use Spryker\Glue\AppKernel\Validator\RequestValidatorInterface;
 use Spryker\Glue\Kernel\Backend\AbstractFactory;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
+/**
+ * @method \Spryker\Glue\AppKernel\AppKernelConfig getConfig()
+ */
 class AppKernelFactory extends AbstractFactory
 {
     public function createHeaderValidator(): RequestValidatorInterface
@@ -108,5 +112,10 @@ class AppKernelFactory extends AbstractFactory
     public function getApiRequestDisconnectValidatorPlugins(): array
     {
         return $this->getProvidedDependency(AppKernelDependencyProvider::PLUGINS_REQUEST_DISCONNECT_VALIDATOR);
+    }
+
+    public function createOpenApiRequestSchemaValidator(): OpenApiRequestSchemaValidator
+    {
+        return new OpenApiRequestSchemaValidator($this->getConfig());
     }
 }
