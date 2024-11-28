@@ -26,9 +26,13 @@ class AppKernelRepository extends AbstractRepository implements AppKernelReposit
     public function findAppConfigByCriteria(
         AppConfigCriteriaTransfer $appConfigCriteriaTransfer
     ): AppConfigTransfer {
-        $appConfigEntity = $this->getFactory()
-            ->createAppConfigQuery()
-            ->findOneByTenantIdentifier($appConfigCriteriaTransfer->getTenantIdentifierOrFail());
+        $appConfigQuery = $this->getFactory()->createAppConfigQuery();
+
+        if ($appConfigCriteriaTransfer->getIsActive() !== null) {
+            $appConfigQuery->filterByIsActive($appConfigCriteriaTransfer->getIsActive());
+        }
+
+        $appConfigEntity = $appConfigQuery->findOneByTenantIdentifier($appConfigCriteriaTransfer->getTenantIdentifierOrFail());
 
         if ($appConfigEntity === null) {
             $errorMessage = 'Could not find an App configuration for the given Tenant';
@@ -46,5 +50,17 @@ class AppKernelRepository extends AbstractRepository implements AppKernelReposit
             $appConfigEntity,
             new AppConfigTransfer(),
         );
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getConnectedTenantIdentifiers(): array
+    {
+        return $this->getFactory()
+            ->createAppConfigQuery()
+            ->select(AppConfigTransfer::TENANT_IDENTIFIER)
+            ->find()
+            ->toArray();
     }
 }

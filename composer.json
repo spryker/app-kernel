@@ -5,7 +5,7 @@
   "license": "proprietary",
   "require": {
     "php": ">=8.1",
-    "spryker/app-kernel-extension": "^1.0.0",
+    "spryker/app-kernel-extension": "dev-bugfix/acp-4499-message-broker-conditional-channels-handling as 1.1.0",
     "spryker/glue-application-extension": "^1.0.0",
     "spryker/kernel": "^3.30.0",
     "spryker/log": "^3.0.0",
