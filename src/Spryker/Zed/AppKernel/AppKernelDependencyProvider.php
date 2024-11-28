@@ -68,6 +68,11 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
      */
     public const PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS = 'APP_KERNEL:PLUGIN_CONFIGURATION_AFTER_DELETE_PLUGINS';
 
+    /**
+     * @var string
+     */
+    public const PLUGINS_POST_INSTALL_TASK = 'APP_KERNEL:PLUGINS_POST_INSTALL_TASK';
+
     public function provideBusinessLayerDependencies(Container $container): Container
     {
         $container = parent::provideBusinessLayerDependencies($container);
@@ -82,6 +87,13 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
         $container = $this->addPlatformPlugin($container);
 
         return $container;
+    }
+
+    public function provideCommunicationLayerDependencies(Container $container): Container
+    {
+        $container = parent::provideCommunicationLayerDependencies($container);
+
+        return $this->addPostInstallTaskPlugins($container);
     }
 
     public function providePersistenceLayerDependencies(Container $container): Container
@@ -216,6 +228,23 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
      * @return array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationAfterDeletePluginInterface>
      */
     protected function getConfigurationAfterDeletePlugins(): array
+    {
+        return [];
+    }
+
+    protected function addPostInstallTaskPlugins(Container $container): Container
+    {
+        $container->set(static::PLUGINS_POST_INSTALL_TASK, function (): array {
+            return $this->getPostInstallTaskPlugins();
+        });
+
+        return $container;
+    }
+
+    /**
+     * @return list<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\PostInstallTaskPluginInterface>
+     */
+    protected function getPostInstallTaskPlugins(): array
     {
         return [];
     }
