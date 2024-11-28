@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
+ * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
+ */
+
 namespace Spryker\Zed\AppKernel\Communication\Plugin\AppKernel;
 
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
@@ -11,6 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @method \Spryker\Zed\AppKernel\Business\AppKernelFacadeInterface getFacade()
  * @method \Spryker\Zed\AppKernel\Persistence\AppKernelRepositoryInterface getRepository()
+ * @method \Spryker\Zed\AppKernel\AppKernelConfig getConfig()
+ * @method \Spryker\Zed\AppKernel\Communication\AppKernelCommunicationFactory getFactory()
  */
 class TriggerAppConfigUpdatePostInstallTaskPlugin extends AbstractPlugin implements PostInstallTaskPluginInterface
 {

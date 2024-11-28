@@ -13,7 +13,7 @@ coverage:
 
 suites:
     Business:
-        path: .
+        path: Business
         actor: AppKernelBusinessTester
         modules:
             enabled:
@@ -24,6 +24,20 @@ suites:
                 - \SprykerTest\Zed\Propel\Helper\PropelEncryptionHelper
                 - \SprykerTest\Shared\Testify\Helper\DataCleanupHelper
                 - \SprykerTest\Zed\Testify\Helper\Business\BusinessHelper
+                - \SprykerTest\Zed\Testify\Helper\Business\DependencyProviderHelper
+                - \SprykerTest\Zed\AppKernel\Helper\AppKernelHelper
+                - \SprykerTest\Shared\Propel\Helper\TransactionHelper
+                - \SprykerTest\Zed\MessageBroker\Helper\InMemoryMessageBrokerHelper
+
+    Communication:
+        path: Communication
+        actor: AppKernelCommunicationTester
+        modules:
+            enabled:
+                - \SprykerTest\Shared\Testify\Helper\Environment
+                - \SprykerTest\Shared\Testify\Helper\ConfigHelper
+                - \SprykerTest\Service\Container\Helper\ContainerHelper
+                - \SprykerTest\Shared\Testify\Helper\LocatorHelper
                 - \SprykerTest\Zed\Testify\Helper\Business\DependencyProviderHelper
                 - \SprykerTest\Zed\AppKernel\Helper\AppKernelHelper
                 - \SprykerTest\Shared\Propel\Helper\TransactionHelper

@@ -92,9 +92,8 @@ class AppKernelDependencyProvider extends AbstractBundleDependencyProvider
     public function provideCommunicationLayerDependencies(Container $container): Container
     {
         $container = parent::provideCommunicationLayerDependencies($container);
-        $container = $this->addPostInstallTaskPlugins($container);
 
-        return $container;
+        return $this->addPostInstallTaskPlugins($container);
     }
 
     public function providePersistenceLayerDependencies(Container $container): Container

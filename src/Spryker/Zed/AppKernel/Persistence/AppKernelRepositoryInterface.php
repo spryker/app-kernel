@@ -15,4 +15,9 @@ interface AppKernelRepositoryInterface
     public function findAppConfigByCriteria(
         AppConfigCriteriaTransfer $appConfigCriteriaTransfer
     ): AppConfigTransfer;
+
+    /**
+     * @return list<string>
+     */
+    public function getConnectedTenantIdentifiers(): array;
 }

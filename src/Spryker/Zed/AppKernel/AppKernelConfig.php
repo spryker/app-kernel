@@ -8,8 +8,8 @@
 namespace Spryker\Zed\AppKernel;
 
 use Spryker\Shared\AppKernel\AppKernelConstants;
-use Spryker\Zed\Kernel\AbstractBundleConfig;
 use Spryker\Shared\MessageBroker\MessageBrokerConstants;
+use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class AppKernelConfig extends AbstractBundleConfig
 {
