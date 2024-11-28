@@ -41,4 +41,14 @@ class AppKernelConstants
      * @var string
      */
     public const APP_VERSION = 'APP:APP_VERSION';
+
+    /**
+     * Specification:
+     * - Path to an OpenAPI schema path that can be used for request validation.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const OPEN_API_SCHEMA_PATH = 'APP:OPEN_API_SCHEMA_PATH';
 }
