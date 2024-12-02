@@ -12,6 +12,7 @@ use Generated\Shared\DataBuilder\AppConfigBuilder;
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
 use Orm\Zed\AppKernel\Persistence\SpyAppConfigQuery;
+use Spryker\Zed\AppKernel\AppKernelConfig;
 use Spryker\Zed\AppKernel\Business\AppKernelFacade;
 use Spryker\Zed\AppKernel\Persistence\AppKernelEntityManager;
 use SprykerTest\Shared\Testify\Helper\DataCleanupHelperTrait;
@@ -30,12 +31,14 @@ class AppConfigHelper extends Module
     public function haveAppConfigForTenant(
         string $tenantIdentifier,
         array $appConfiguration = [],
-        bool $isActive = false
+        bool $isActive = false,
+        string $status = AppKernelConfig::APP_STATUS_NEW,
+        array $seed = []
     ): AppConfigTransfer {
-        $seed = [];
         $seed[AppConfigTransfer::CONFIG] = array_merge($this->getDefaultConfigData(), $appConfiguration);
         $seed[AppConfigTransfer::TENANT_IDENTIFIER] = $tenantIdentifier;
         $seed[AppConfigTransfer::IS_ACTIVE] = $isActive;
+        $seed[AppConfigTransfer::STATUS] = $status;
 
         $appConfigTransfer = (new AppConfigBuilder($seed))->build();
 
