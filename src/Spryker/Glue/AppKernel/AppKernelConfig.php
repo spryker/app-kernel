@@ -69,7 +69,17 @@ class AppKernelConfig extends AbstractBundleConfig
      *
      * @return array<int, string>
      */
-    public function getValidationExcludedPaths(): array
+    public function getOpenApiSchemaRequestValidationExcludedPaths(): array
+    {
+        return [];
+    }
+
+    /**
+     * @api
+     *
+     * @return array<int, string>
+     */
+    public function getAppConfigRequestValidationExcludedPaths(): array
     {
         return [
             static::CONFIGURE_ROUTE_PATH,

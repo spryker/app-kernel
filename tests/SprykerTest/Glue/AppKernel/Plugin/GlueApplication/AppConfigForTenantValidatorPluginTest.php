@@ -46,7 +46,7 @@ class AppConfigForTenantValidatorPluginTest extends Unit
         $this->tester->haveAppConfigForTenant($tenantIdentifier, status: ZedAppKernelConfig::APP_STATUS_DISCONNECTED);
 
         $configStub = Stub::make(AppKernelConfig::class, [
-            'getValidationExcludedPaths' => ['/excluded-endpoint'],
+            'getAppConfigRequestValidationExcludedPaths' => ['/excluded-endpoint'],
         ]);
 
         $container = (new AppKernelDependencyProvider())->provideDependencies(new Container());

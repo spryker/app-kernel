@@ -74,7 +74,7 @@ class AppConfigForTenantValidator
 
     protected function isPathExcludedFromValidation(GlueRequestTransfer $glueRequestTransfer): bool
     {
-        return in_array($glueRequestTransfer->getPath(), $this->appKernelConfig->getValidationExcludedPaths());
+        return in_array($glueRequestTransfer->getPath(), $this->appKernelConfig->getAppConfigRequestValidationExcludedPaths());
     }
 
     protected function getTenantIdentifier(GlueRequestTransfer $glueRequestTransfer): ?string

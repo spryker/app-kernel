@@ -79,7 +79,7 @@ class OpenApiRequestSchemaValidator
 
     protected function isPathExcludedFromValidation(GlueRequestTransfer $glueRequestTransfer): bool
     {
-        return in_array($glueRequestTransfer->getPath(), $this->appKernelConfig->getValidationExcludedPaths());
+        return in_array($glueRequestTransfer->getPath(), $this->appKernelConfig->getOpenApiSchemaRequestValidationExcludedPaths());
     }
 
     protected function getMessageFromThrowable(Throwable $throwable): string
