@@ -31,6 +31,10 @@ class OpenApiRequestSchemaValidator
         $glueRequestValidationTransfer = new GlueRequestValidationTransfer();
         $glueRequestValidationTransfer->setIsValid(true);
 
+        if ($this->isPathExcludedFromValidation($glueRequestTransfer)) {
+            return $glueRequestValidationTransfer;
+        }
+
         $openApiSchemaPath = $this->appKernelConfig->getOpenApiSchemaPath();
 
         if ($openApiSchemaPath === null || $openApiSchemaPath === '' || $openApiSchemaPath === '0') {
@@ -71,6 +75,11 @@ class OpenApiRequestSchemaValidator
         }
 
         return $glueRequestValidationTransfer;
+    }
+
+    protected function isPathExcludedFromValidation(GlueRequestTransfer $glueRequestTransfer): bool
+    {
+        return in_array($glueRequestTransfer->getPath(), $this->appKernelConfig->getValidationExcludedPaths());
     }
 
     protected function getMessageFromThrowable(Throwable $throwable): string

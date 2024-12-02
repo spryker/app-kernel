@@ -63,4 +63,17 @@ class AppKernelConfig extends AbstractBundleConfig
     {
         return $this->getConfig()->hasKey(AppKernelConstants::OPEN_API_SCHEMA_PATH) ? $this->getConfig()->get(AppKernelConstants::OPEN_API_SCHEMA_PATH) : null;
     }
+
+    /**
+     * @api
+     *
+     * @return array<int, string>
+     */
+    public function getValidationExcludedPaths(): array
+    {
+        return [
+            static::CONFIGURE_ROUTE_PATH,
+            static::DISCONNECT_ROUTE_PATH,
+        ];
+    }
 }
