@@ -38,7 +38,7 @@ class AppConfigForTenantValidatorPluginTest extends Unit
 
     protected AppKernelTester $tester;
 
-    public function testGivenAPathIsExceludedFromTheValidationWhenTheValidatorIsExecutedThenTheRequestValidationIsSuccessful(): void
+    public function testGivenAPathIsExcludedFromTheValidationWhenTheValidatorIsExecutedThenTheRequestValidationIsSuccessful(): void
     {
         // Arrange
         $tenantIdentifier = Uuid::uuid4()->toString();
