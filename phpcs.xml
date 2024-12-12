@@ -36,6 +36,10 @@
         <exclude name="SlevomatCodingStandard.Classes.DisallowConstructorPropertyPromotion.DisallowedConstructorPropertyPromotion"/>
     </rule>
 
+    <rule ref="SlevomatCodingStandard.Functions.DisallowNamedArguments">
+        <exclude name="SlevomatCodingStandard.Functions.DisallowNamedArguments.DisallowedNamedArgument"/>
+    </rule>
+
     <!-- PHP 8.0 null safe operator -->
     <rule ref="SlevomatCodingStandard.ControlStructures.DisallowNullSafeObjectOperator">
         <exclude name="SlevomatCodingStandard.ControlStructures.DisallowNullSafeObjectOperator"/>
