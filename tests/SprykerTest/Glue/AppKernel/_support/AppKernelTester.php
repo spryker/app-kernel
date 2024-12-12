@@ -27,6 +27,7 @@ use Spryker\Glue\AppKernel\Controller\AppDisconnectController;
  * @method void pause()
  *
  * @SuppressWarnings(\SprykerTest\Glue\AppKernel\PHPMD)
+ * @method \Spryker\Glue\AppKernel\AppKernelFactory getFactory()
  */
 class AppKernelTester extends Actor
 {

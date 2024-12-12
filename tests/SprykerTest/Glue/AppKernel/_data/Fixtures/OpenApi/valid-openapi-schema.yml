@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+    version: 1.1.0
+    contact:
+        name: Spryker
+        url: 'https://spryker.com/app-composition-platform'
+        email: support@spryker.com
+    title: 'Hello World'
+    license:
+        name: MIT
+        url: 'https://opensource.org/licenses/MIT'
+servers:
+    - url: 'http://glue-backend.hello-world.spryker.local'
+      description: 'Local development endpoint'
+    - url: 'https://api.hello-world-testing.aop.demo-spryker.com'
+      description: 'Testing'
+    - url: 'https://api.hello-world-staging.aop.demo-spryker.com'
+      description: 'Staging'
+
+paths:
+    '/existing-endpoint':
+        get:
+            operationId: 'getExistingEndpoint'
+            summary: 'Test'
+            parameters:
+                - $ref: '#/components/parameters/tenantIdentifier'
+            responses:
+                200:
+                    description: 'Expected response to a valid request.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Response'
+                400:
+                    description: 'Bad request.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ApiErrorMessages'
+                default:
+                    description: 'Expected response to a bad request.'
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+        post:
+            operationId: 'postExistingEndpoint'
+            summary: 'Test'
+            parameters:
+                -   $ref: '#/components/parameters/tenantIdentifier'
+            requestBody:
+                description: 'Test'
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/Request'
+            responses:
+                200:
+                    description: 'Expected response to a valid request.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Response'
+                400:
+                    description: 'Bad request.'
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ApiErrorMessages'
+                default:
+                    description: 'Expected response to a bad request.'
+                    content:
+                        text/plain:
+                            schema:
+                                type: string
+
+components:
+    schemas:
+        Request:
+            properties:
+                data:
+                    type: object
+                    required:
+                        - attributes
+                    properties:
+                        attributes:
+                            type: object
+                            required:
+                                - foo
+                            properties:
+                                foo:
+                                    type: string
+            required:
+                - data
+        Response:
+            properties:
+                configuration:
+                    type: object
+                    properties:
+                        # Add your properties here
+                        isActive:
+                            type: boolean
+        ApiErrorMessages:
+            properties:
+                data:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ApiErrorMessage'
+        ApiErrorMessage:
+            properties:
+                code:
+                    type: string
+                detail:
+                    type: string
+                status:
+                    type: string
+    parameters:
+        tenantIdentifier:
+            name: X-Tenant-Identifier
+            in: header
+            required: true
+            description: 'Identifier of the Tenant.'
+            schema:
+                type: string
+            examples:
+                local_de:
+                    value: 1234-5678-9012-3456

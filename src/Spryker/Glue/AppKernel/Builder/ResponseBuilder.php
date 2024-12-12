@@ -11,12 +11,12 @@ use Generated\Shared\Transfer\AppConfigTransfer;
 use Generated\Shared\Transfer\GlueErrorTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Generated\Shared\Transfer\GlueResponseTransfer;
-use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
+use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseBuilder implements ResponseBuilderInterface
 {
-    public function __construct(protected UtilEncodingServiceInterface $utilEncodingService)
+    public function __construct(protected AppKernelToUtilEncodingServiceInterface $appKernelToUtilEncodingService)
     {
     }
 
@@ -34,11 +34,12 @@ class ResponseBuilder implements ResponseBuilderInterface
                 'code' => $error->getCode(),
                 'message' => $error->getMessage(),
                 'status' => $error->getStatus(),
+                'confirm' => $error->getConfirm()?->toArray(true, true),
             ];
         }
 
         return $glueResponseTransfer
-            ->setContent($this->utilEncodingService->encodeJson(['errors' => $errors]))
+            ->setContent($this->appKernelToUtilEncodingService->encodeJson(['errors' => $errors]))
             ->setHttpStatus($glueRequestValidationTransfer->getStatus() ?? Response::HTTP_BAD_REQUEST);
     }
 
@@ -47,7 +48,7 @@ class ResponseBuilder implements ResponseBuilderInterface
         $errorData = $this->composeErrorArray($errorMessage);
 
         return (new GlueResponseTransfer())
-            ->setContent($this->utilEncodingService
+            ->setContent($this->appKernelToUtilEncodingService
                 ->encodeJson([
                     'errors' => [
                         $errorData,
@@ -71,7 +72,7 @@ class ResponseBuilder implements ResponseBuilderInterface
             ];
 
             $glueResponseTransfer
-                ->setContent($this->utilEncodingService->encodeJson($content))
+                ->setContent($this->appKernelToUtilEncodingService->encodeJson($content))
                 ->setHttpStatus(Response::HTTP_OK);
         }
 

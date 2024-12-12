@@ -1,0 +1,6 @@
+{
+    "meta": {
+        "x-tenant-identifier": ["tenant-identifier"],
+        "x-confirmation-status": ["true"]
+    }
+}

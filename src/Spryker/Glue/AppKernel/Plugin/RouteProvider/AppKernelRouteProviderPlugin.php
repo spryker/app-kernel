@@ -16,6 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * @codeCoverageIgnore
+ */
 class AppKernelRouteProviderPlugin extends AbstractPlugin implements RouteProviderPluginInterface
 {
     public function addRoutes(RouteCollection $routeCollection): RouteCollection

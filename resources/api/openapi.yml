@@ -5,20 +5,24 @@ info:
         name: Spryker
         url: 'https://spryker.com/app-composition-platform/'
         email: support@spryker.com
-    title: 'Hello World'
+    title: 'AppKernel API'
     license:
         name: MIT
+        url: 'https://opensource.org/licenses/MIT'
 servers:
-    - url: 'http://glue-backend.hello-world.spryker.local/'
+    - url: 'http://glue-backend.app-kernel.spryker.local'
       description: 'Local development endpoint'
-    - url: 'https://api.hello-world-testing.aop.demo-spryker.com/'
+    - url: 'https://api.app-kernel-testing.aop.demo-spryker.com'
       description: 'Testing'
-    - url: 'https://api.hello-world-staging.aop.demo-spryker.com/'
+    - url: 'https://api.app-kernel-staging.aop.demo-spryker.com'
       description: 'Staging'
 paths:
     '/private/configure':
         post:
+            operationId: 'configure'
             summary: 'Saves or updates Hello World App configuration between Tenants and this App.'
+            security:
+                -   Bearer: [ ]
             parameters:
                 - $ref: '#/components/parameters/tenantIdentifier'
             requestBody:
@@ -49,8 +53,11 @@ paths:
                                 type: string
     '/private/disconnect':
         post:
+            operationId: 'disconnect'
             summary: 'Disconnects this App from a Tenants Application.
                 Finds configuration and removes it.'
+            security:
+                -   Bearer: [ ]
             parameters:
                 - $ref: '#/components/parameters/tenantIdentifier'
             responses:
@@ -69,6 +76,13 @@ paths:
                             schema:
                                 type: string
 components:
+    securitySchemes:
+        Bearer:
+            type: http
+            scheme: bearer
+            bearerFormat: JWT
+            description: >-
+                Enter the token with the `Bearer ` prefix, e.g. "Bearer abcde12345".
     schemas:
         ConfigurationApiRequest:
             properties:

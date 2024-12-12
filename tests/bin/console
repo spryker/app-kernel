@@ -13,7 +13,7 @@ use Spryker\Zed\Propel\Communication\Console\MigrateConsole;
 use Spryker\Zed\Propel\Communication\Console\PostgresqlCompatibilityConsole;
 use Spryker\Zed\Propel\Communication\Console\PropelInstallConsole;
 use Spryker\Zed\Propel\Communication\Console\SchemaCopyConsole;
-use Symfony\Component\Console\Application;
+use Spryker\Zed\Translator\Communication\Console\GenerateTranslationCacheConsole;use Symfony\Component\Console\Application;
 use Spryker\Zed\Transfer\Communication\Console\TransferGeneratorConsole;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,6 +36,7 @@ $application->addCommands([
     new GenerateZedIdeAutoCompletionConsole(),
     new GenerateGlueIdeAutoCompletionConsole(),
     new GenerateGlueBackendIdeAutoCompletionConsole(),
+    new GenerateTranslationCacheConsole(),
     new class extends Command
     {
         /**

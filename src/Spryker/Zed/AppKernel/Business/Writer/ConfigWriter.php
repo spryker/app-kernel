@@ -29,7 +29,7 @@ class ConfigWriter implements ConfigWriterInterface
     /**
      * @var string
      */
-    protected const FAILED_TO_REGISTER_TENANT_MESSAGE = 'Tenant registration failed';
+    protected const TENANT_ACTION_FAILED_MESSAGE = 'Tenant action failed';
 
     /**
      * @param array<\Spryker\Zed\AppKernelExtension\Dependency\Plugin\ConfigurationBeforeSavePluginInterface> $configurationBeforeSavePlugins
@@ -59,14 +59,14 @@ class ConfigWriter implements ConfigWriterInterface
             return $this->getSuccessResponse($appConfigTransfer);
         } catch (Throwable $throwable) {
             $this->getLogger()->error(
-                static::FAILED_TO_REGISTER_TENANT_MESSAGE,
+                static::TENANT_ACTION_FAILED_MESSAGE,
                 [
                     'tenantIdentifier' => $appConfigTransfer->getTenantIdentifier(),
                     'exception' => $throwable,
                 ],
             );
 
-            return $this->getFailResponse(sprintf('%s: %s', static::FAILED_TO_REGISTER_TENANT_MESSAGE, $throwable->getMessage()));
+            return $this->getFailResponse(sprintf('%s: %s', static::TENANT_ACTION_FAILED_MESSAGE, $throwable->getMessage()));
         }
     }
 
@@ -77,9 +77,9 @@ class ConfigWriter implements ConfigWriterInterface
 
         $this->configurePropelEncryption($appConfigTransfer);
 
-        // New configurations will be set to "connected" by default.
+        // New configurations will be set to true by default.
         if ($appConfigTransfer->getStatus() === null || $appConfigTransfer->getStatus() === '' || $appConfigTransfer->getStatus() === '0') {
-            $appConfigTransfer->setStatus(AppKernelConfig::APP_STATUS_CONNECTED);
+            $appConfigTransfer->setStatus(AppKernelConfig::APP_STATUS_NEW);
         }
 
         // When the app gets deactivated, we set the status to disconnected.

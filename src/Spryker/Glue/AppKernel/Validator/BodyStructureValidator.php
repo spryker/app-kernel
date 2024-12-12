@@ -11,7 +11,7 @@ use Generated\Shared\Transfer\GlueErrorTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Spryker\Glue\AppKernel\AppKernelConfig;
-use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
+use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\EqualTo;
@@ -25,7 +25,7 @@ class BodyStructureValidator implements RequestValidatorInterface
 {
     public function __construct(
         protected ValidatorInterface $validator,
-        protected UtilEncodingServiceInterface $utilEncodingService
+        protected AppKernelToUtilEncodingServiceInterface $appKernelToUtilEncodingService
     ) {
     }
 
@@ -35,7 +35,7 @@ class BodyStructureValidator implements RequestValidatorInterface
             ->setIsValid(true)
             ->setStatus(Response::HTTP_OK);
 
-        $content = $this->utilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
+        $content = $this->appKernelToUtilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
         $constraintViolationList = $this->validator->validate($content, $this->getConstraintForRequestStructure());
 
         if ($constraintViolationList->count() > 0) {

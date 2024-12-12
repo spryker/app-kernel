@@ -5,6 +5,7 @@
     <transfer name="AppConfig" strict="true">
         <property name="tenantIdentifier" type="string"/>
         <property name="isActive" type="bool"/>
+        <property name="locale" type="string"/>
         <property name="config" type="array" singular="config"/>
         <property name="status" type="string"/>
     </transfer>
@@ -29,6 +30,26 @@
         <property name="isSuccessful" type="bool"/>
         <property name="errorMessage" type="string"/>
         <property name="appConfig" type="AppConfig"/>
+    </transfer>
+
+    <transfer name="AppConfigValidateResponse" strict="true">
+        <property name="isSuccessful" type="bool"/>
+        <property name="configurationValidationErrors" type="ConfigurationValidationError[]" singular="configurationValidationError"/>
+    </transfer>
+
+    <transfer name="ConfigurationValidationError" strict="true">
+        <property name="property" type="string"/>
+        <property name="errorMessages" type="array" singular="errorMessage"/>
+    </transfer>
+
+    <transfer name="ConfigurationValidationRequest" strict="true">
+        <property name="appConfig" type="AppConfig"/>
+    </transfer>
+
+    <transfer name="ConfigurationValidationResponse" strict="true">
+        <property name="isSuccessful" type="bool"/>
+        <property name="message" type="string" description="In case of a failure we want to return a HTTP response code 422"/>
+        <property name="exceptionMessage" type="string" description="When an exception occurs we want to return a HTTP response code 500."/>
     </transfer>
 
     <transfer name="AppConfigCriteria" strict="true">
@@ -59,6 +80,7 @@
     <transfer name="GlueRequest">
         <property name="meta" type="array" associative="true" singular="meta"/>
         <property name="content" type="string"/>
+        <property name="locale" type="string"/>
     </transfer>
 
     <transfer name="GlueResponse">
@@ -77,6 +99,12 @@
         <property name="code" type="string"/>
         <property name="status" type="int"/>
         <property name="message" type="string"/>
+        <property name="confirm" type="GlueErrorConfirm"/>
+    </transfer>
+
+    <transfer name="GlueErrorConfirm" strict="true">
+        <property name="labelOk" type="string"/>
+        <property name="labelCancel" type="string"/>
     </transfer>
 
 </transfers>

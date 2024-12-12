@@ -8,6 +8,7 @@
 namespace Spryker\Glue\AppKernel;
 
 use Spryker\Glue\Kernel\AbstractBundleConfig;
+use Spryker\Shared\AppKernel\AppKernelConstants;
 
 class AppKernelConfig extends AbstractBundleConfig
 {
@@ -52,22 +53,14 @@ class AppKernelConfig extends AbstractBundleConfig
     public const RESPONSE_MESSAGE_DISCONNECT_ERROR = 'Disconnecting error.';
 
     /**
+     * @api
+     *
      * @var string
      */
-    public const RESPONSE_MESSAGE_BLANK_CLIENT_ID_FIELD = 'Client ID is required.';
+    public const ERROR_CODE_PAYMENT_DISCONNECTION_TENANT_IDENTIFIER_MISSING = '20000';
 
-    /**
-     * @var string
-     */
-    public const RESPONSE_MESSAGE_NOT_STRING_CLIENT_ID_FIELD = 'Client ID must be a string.';
-
-    /**
-     * @var string
-     */
-    public const RESPONSE_MESSAGE_BLANK_CLIENT_SECRET_FIELD = 'Client Secret is required.';
-
-    /**
-     * @var string
-     */
-    public const RESPONSE_MESSAGE_NOT_STRING_CLIENT_SECRET_FIELD = 'Client Secret must be a string.';
+    public function getOpenApiSchemaPath(): ?string
+    {
+        return $this->getConfig()->hasKey(AppKernelConstants::OPEN_API_SCHEMA_PATH) ? $this->getConfig()->get(AppKernelConstants::OPEN_API_SCHEMA_PATH) : null;
+    }
 }

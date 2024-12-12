@@ -8,13 +8,18 @@
 namespace Spryker\Glue\AppKernel\Mapper;
 
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationRequestTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationResponseTransfer;
+use Generated\Shared\Transfer\GlueErrorTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Spryker\Glue\AppKernel\AppKernelConfig;
-use Spryker\Service\UtilEncoding\UtilEncodingServiceInterface;
+use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class GlueRequestMapper implements GlueRequestMapperInterface
 {
-    public function __construct(protected UtilEncodingServiceInterface $utilEncodingService)
+    public function __construct(protected AppKernelToUtilEncodingServiceInterface $appKernelToUtilEncodingService)
     {
     }
 
@@ -28,12 +33,47 @@ class GlueRequestMapper implements GlueRequestMapperInterface
         $appConfigTransfer->setConfig($configuration)
             ->setTenantIdentifier($tenantIdentifier);
 
+        if ($glueRequestTransfer->getLocale() === null) {
+            $glueRequestTransfer->setLocale('en_US');
+        }
+
+        $appConfigTransfer->setLocale($glueRequestTransfer->getLocale());
+
         return $appConfigTransfer;
+    }
+
+    public function mapGlueRequestTransferToConfigurationValidationRequestTransfer(
+        GlueRequestTransfer $glueRequestTransfer
+    ): ConfigurationValidationRequestTransfer {
+        $configurationValidationRequestTransfer = new ConfigurationValidationRequestTransfer();
+        $configurationValidationRequestTransfer->setAppConfig($this->mapGlueRequestTransferToAppConfigTransfer($glueRequestTransfer, new AppConfigTransfer()));
+
+        return $configurationValidationRequestTransfer;
+    }
+
+    public function mapConfigurationValidationResponseTransferToGlueRequestValidationTransfer(
+        ConfigurationValidationResponseTransfer $configurationValidationResponseTransfer
+    ): GlueRequestValidationTransfer {
+        $glueRequestValidationTransfer = new GlueRequestValidationTransfer();
+        $glueRequestValidationTransfer->setIsValid($configurationValidationResponseTransfer->getIsSuccessful())
+            ->setStatus($configurationValidationResponseTransfer->getIsSuccessful() === false ? Response::HTTP_UNPROCESSABLE_ENTITY : null);
+
+        if ($configurationValidationResponseTransfer->getIsSuccessful() === false) {
+            $status = $configurationValidationResponseTransfer->getExceptionMessage() !== null && $configurationValidationResponseTransfer->getExceptionMessage() !== '' && $configurationValidationResponseTransfer->getExceptionMessage() !== '0' ? Response::HTTP_INTERNAL_SERVER_ERROR : Response::HTTP_UNPROCESSABLE_ENTITY;
+            $glueErrorTransfer = new GlueErrorTransfer();
+            $glueErrorTransfer->setMessage($configurationValidationResponseTransfer->getMessage() ?? $configurationValidationResponseTransfer->getExceptionMessage());
+            $glueErrorTransfer->setCode((string)$status);
+
+            $glueRequestValidationTransfer->addError($glueErrorTransfer);
+            $glueRequestValidationTransfer->setStatus($status);
+        }
+
+        return $glueRequestValidationTransfer;
     }
 
     protected function getTenantIdentifier(GlueRequestTransfer $glueRequestTransfer): string
     {
-        return $glueRequestTransfer->getMeta()[AppKernelConfig::HEADER_TENANT_IDENTIFIER][0];
+        return $glueRequestTransfer->getMeta()[AppKernelConfig::HEADER_TENANT_IDENTIFIER][0] ?? '';
     }
 
     /**
@@ -41,12 +81,12 @@ class GlueRequestMapper implements GlueRequestMapperInterface
      */
     protected function getConfiguration(GlueRequestTransfer $glueRequestTransfer): array
     {
-        $content = (array)$this->utilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
+        $content = (array)$this->appKernelToUtilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
 
         if (!isset($content['data']['attributes']['configuration'])) {
             return [];
         }
 
-        return (array)$this->utilEncodingService->decodeJson($content['data']['attributes']['configuration'], true);
+        return (array)$this->appKernelToUtilEncodingService->decodeJson($content['data']['attributes']['configuration'], true);
     }
 }

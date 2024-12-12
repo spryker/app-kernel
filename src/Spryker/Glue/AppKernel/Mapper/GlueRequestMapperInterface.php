@@ -8,7 +8,10 @@
 namespace Spryker\Glue\AppKernel\Mapper;
 
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationRequestTransfer;
+use Generated\Shared\Transfer\ConfigurationValidationResponseTransfer;
 use Generated\Shared\Transfer\GlueRequestTransfer;
+use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 
 interface GlueRequestMapperInterface
 {
@@ -16,4 +19,12 @@ interface GlueRequestMapperInterface
         GlueRequestTransfer $glueRequestTransfer,
         AppConfigTransfer $appConfigTransfer
     ): AppConfigTransfer;
+
+    public function mapGlueRequestTransferToConfigurationValidationRequestTransfer(
+        GlueRequestTransfer $glueRequestTransfer
+    ): ConfigurationValidationRequestTransfer;
+
+    public function mapConfigurationValidationResponseTransferToGlueRequestValidationTransfer(
+        ConfigurationValidationResponseTransfer $configurationValidationResponseTransfer
+    ): GlueRequestValidationTransfer;
 }

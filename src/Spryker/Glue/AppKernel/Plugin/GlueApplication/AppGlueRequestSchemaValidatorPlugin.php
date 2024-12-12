@@ -5,26 +5,20 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Glue\AppKernel\Plugin\RequestValidator;
+namespace Spryker\Glue\AppKernel\Plugin\GlueApplication;
 
 use Generated\Shared\Transfer\GlueRequestTransfer;
 use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Spryker\Glue\GlueApplicationExtension\Dependency\Plugin\RequestValidatorPluginInterface;
-use Spryker\Glue\Kernel\Backend\AbstractPlugin;
+use Spryker\Glue\Kernel\AbstractPlugin;
 
 /**
  * @method \Spryker\Glue\AppKernel\AppKernelFactory getFactory()
  */
-class HeaderValidatorPlugin extends AbstractPlugin implements RequestValidatorPluginInterface
+class AppGlueRequestSchemaValidatorPlugin extends AbstractPlugin implements RequestValidatorPluginInterface
 {
-    /**
-     * {@inheritDoc}
-     * - Checks if X-Tenant-Identifier is present in headers
-     *
-     * @api
-     */
     public function validate(GlueRequestTransfer $glueRequestTransfer): GlueRequestValidationTransfer
     {
-        return $this->getFactory()->createHeaderValidator()->validate($glueRequestTransfer);
+        return $this->getFactory()->createOpenApiRequestSchemaValidator()->validate($glueRequestTransfer);
     }
 }
