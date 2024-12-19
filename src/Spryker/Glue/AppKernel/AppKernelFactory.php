@@ -14,6 +14,7 @@ use Spryker\Glue\AppKernel\Dependency\Facade\AppKernelToTranslatorFacadeInterfac
 use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Spryker\Glue\AppKernel\Mapper\GlueRequestMapper;
 use Spryker\Glue\AppKernel\Mapper\GlueRequestMapperInterface;
+use Spryker\Glue\AppKernel\Validator\AppConfigForTenantValidator;
 use Spryker\Glue\AppKernel\Validator\BodyStructureValidator;
 use Spryker\Glue\AppKernel\Validator\ConfigurationValidator;
 use Spryker\Glue\AppKernel\Validator\HeaderValidator;
@@ -117,5 +118,10 @@ class AppKernelFactory extends AbstractFactory
     public function createOpenApiRequestSchemaValidator(): OpenApiRequestSchemaValidator
     {
         return new OpenApiRequestSchemaValidator($this->getConfig());
+    }
+
+    public function createAppConfigForTenantValidator(): AppConfigForTenantValidator
+    {
+        return new AppConfigForTenantValidator($this->getAppKernelFacade(), $this->getConfig());
     }
 }

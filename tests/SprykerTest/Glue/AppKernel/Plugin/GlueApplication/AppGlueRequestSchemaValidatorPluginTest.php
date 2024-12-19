@@ -78,6 +78,32 @@ class AppGlueRequestSchemaValidatorPluginTest extends Unit
         $this->assertTrue($glueRequestValidationTransfer->getIsValid());
     }
 
+    public function testGivenAnEndpointThatWouldThrowAnExceptionAndItIsExcludedFromTheValidationWhenTheRequestIsValidatedThenAValidValidationResponseIsReturned(): void
+    {
+        // Arrange
+        $appKernelConfigStub = Stub::make(AppKernelConfig::class, [
+            'getValidationExcludedPaths' => ['/non-existing-endpoint'],
+        ]);
+
+        $appKernelFactory = Stub::make(AppKernelFactory::class, [
+            'getConfig' => $appKernelConfigStub,
+        ]);
+
+        $appGlueRequestSchemaValidatorPlugin = new AppGlueRequestSchemaValidatorPlugin();
+        $appGlueRequestSchemaValidatorPlugin->setFactory($appKernelFactory);
+
+        $glueRequestTransfer = new GlueRequestTransfer();
+        $glueRequestTransfer
+            ->setMethod('GET')
+            ->setPath('/non-existing-endpoint');
+
+        // Act
+        $glueRequestValidationTransfer = $appGlueRequestSchemaValidatorPlugin->validate($glueRequestTransfer);
+
+        // Assert
+        $this->assertTrue($glueRequestValidationTransfer->getIsValid());
+    }
+
     public function testGivenAValidOpenApiSchemaWhenTheRequestedPathIsNotDefinedThenAnInValidValidationResponseIsReturned(): void
     {
         // Arrange
