@@ -13,6 +13,8 @@ use Generated\Shared\Transfer\GlueRequestValidationTransfer;
 use Spryker\Glue\AppKernel\AppKernelConfig;
 use Spryker\Glue\AppKernel\Dependency\Service\AppKernelToUtilEncodingServiceInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\EqualTo;
 use Symfony\Component\Validator\Constraints\Json;
@@ -35,25 +37,33 @@ class BodyStructureValidator implements RequestValidatorInterface
             ->setIsValid(true)
             ->setStatus(Response::HTTP_OK);
 
+        $constraintViolationList = $this->validator->validate($glueRequestTransfer->getContent(), $this->getConstrainForRequestContent());
+
+        if ($constraintViolationList->count() > 0) {
+            return $this->getFailedGlueRequestValidationTransfer($glueRequestValidationTransfer);
+        }
+
         $content = $this->appKernelToUtilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
         $constraintViolationList = $this->validator->validate($content, $this->getConstraintForRequestStructure());
 
         if ($constraintViolationList->count() > 0) {
-            $glueRequestValidationTransfer
-                ->setIsValid(false)
-                ->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
-
-            $glueRequestValidationTransfer->addError(
-                (new GlueErrorTransfer())
-                    ->setCode((string)Response::HTTP_UNPROCESSABLE_ENTITY)
-                    ->setMessage(AppKernelConfig::RESPONSE_MESSAGE_VALIDATION_FORMAT_ERROR_MESSAGE),
-            );
+            return $this->getFailedGlueRequestValidationTransfer($glueRequestValidationTransfer);
         }
 
         return $glueRequestValidationTransfer;
     }
 
-    protected function getConstraintForRequestStructure(): Collection
+    protected function getConstrainForRequestContent(): Constraint
+    {
+        return new All([
+            new Required(),
+            new NotBlank(),
+            new Type(['type' => 'string']),
+            new Json(),
+        ]);
+    }
+
+    protected function getConstraintForRequestStructure(): Constraint
     {
         return new Collection([
             'data' => new Collection([
@@ -68,5 +78,19 @@ class BodyStructureValidator implements RequestValidatorInterface
                 ]),
             ]),
         ]);
+    }
+
+    protected function getFailedGlueRequestValidationTransfer(
+        GlueRequestValidationTransfer $glueRequestValidationTransfer
+    ): GlueRequestValidationTransfer {
+        $glueRequestValidationTransfer
+            ->setIsValid(false)
+            ->setStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
+
+        return $glueRequestValidationTransfer->addError(
+            (new GlueErrorTransfer())
+                ->setCode((string)Response::HTTP_UNPROCESSABLE_ENTITY)
+                ->setMessage(AppKernelConfig::RESPONSE_MESSAGE_VALIDATION_FORMAT_ERROR_MESSAGE),
+        );
     }
 }
