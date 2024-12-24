@@ -60,18 +60,17 @@ class BodyStructureValidator implements RequestValidatorInterface
             'content' => [
                 new Required(),
                 new NotBlank(),
-                new NotNull(),
-                new Type(['type' => 'string']),
-                new Json(),
-                'data' => new Collection([
-                    'type' => new EqualTo(AppKernelConfig::REQUEST_DATA_TYPE),
-                    'attributes' => new Collection([
-                        'configuration' => [
-                            new Required(),
-                            new NotBlank(),
-                            new Type(['type' => 'string']),
-                            new Json(),
-                        ],
+                new Collection([
+                    'data' => new Collection([
+                        'type' => new EqualTo(AppKernelConfig::REQUEST_DATA_TYPE),
+                        'attributes' => new Collection([
+                            'configuration' => [
+                                new Required(),
+                                new NotBlank(),
+                                new Type(['type' => 'string']),
+                                new Json(),
+                            ],
+                        ]),
                     ]),
                 ]),
             ],
