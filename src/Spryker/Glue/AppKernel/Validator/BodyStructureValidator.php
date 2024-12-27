@@ -38,7 +38,7 @@ class BodyStructureValidator implements RequestValidatorInterface
 
         try {
             $content = $this->appKernelToUtilEncodingService->decodeJson((string)$glueRequestTransfer->getContent(), true);
-        } catch (Throwable $exception) {
+        } catch (Throwable $throwable) {
             return $this->getFailedGlueRequestValidationTransfer($glueRequestValidationTransfer);
         }
 
