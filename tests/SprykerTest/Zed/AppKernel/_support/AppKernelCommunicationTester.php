@@ -30,8 +30,4 @@ use Codeception\Actor;
 class AppKernelCommunicationTester extends Actor
 {
     use _generated\AppKernelCommunicationTesterActions;
-
-    /**
-     * Define custom actions here
-     */
 }

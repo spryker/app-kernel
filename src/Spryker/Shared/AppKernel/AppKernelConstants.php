@@ -24,7 +24,7 @@ class AppKernelConstants
 
     /**
      * Specification:
-     * - List of message channels that used by the application.
+     * - List of message channels that are used by the application.
      *
      * @api
      *

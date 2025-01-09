@@ -34,6 +34,8 @@ components:
                     type: boolean
                 config:
                     type: array
+                messageChannels:
+                    type: array
             required:
                 - appIdentifier
                 - status
