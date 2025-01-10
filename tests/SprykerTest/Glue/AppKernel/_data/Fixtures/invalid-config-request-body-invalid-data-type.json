@@ -1,0 +1,11 @@
+{
+    "meta": {
+        "x-tenant-identifier": ["tenant-identifier"]
+    },
+    "content": {
+        "data": {
+            "type": "invalid-data-type"
+        }
+    },
+    "__configurationPayload": {}
+}

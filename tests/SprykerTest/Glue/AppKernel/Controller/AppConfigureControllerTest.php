@@ -348,6 +348,25 @@ class AppConfigureControllerTest extends Unit
     }
 
     /**
+     * @dataProvider invalidConfigRequestFixtures
+     *
+     * @return void
+     */
+    public function testPostConfigureReturnsErrorResponseWhenRequestBodyIsMissingConfiguration(string $fixtureName): void
+    {
+        // Arrange
+        $glueRequest = $this->tester->createGlueRequestFromFixture($fixtureName);
+        $appConfigController = $this->tester->createAppConfigController();
+
+        // Act
+        $glueResponse = $appConfigController->postConfigureAction($glueRequest);
+
+        // Assert
+        $this->tester->assertGlueResponseContainsErrorMessageWhenRequestBodyHasInvalidStructure($glueResponse);
+        $this->tester->assertAppConfigIsNotPersisted('tenant-identifier');
+    }
+
+    /**
      * @throws \Exception
      *
      * @return void
@@ -575,5 +594,19 @@ class AppConfigureControllerTest extends Unit
         // Assert
         $this->assertSame(204, $response->getStatusCode());
         $this->tester->assertAppConfigurationForTenantIsDeactivated($tenantIdentifier);
+    }
+
+    protected function invalidConfigRequestFixtures(): array
+    {
+        return [
+            'invalid-config-request-body-null' => ['invalid-config-request-body-null'],
+            'invalid-config-request-body-non-json-object' => ['invalid-config-request-body-non-json-object'],
+            'invalid-config-request-body-missing-data' => ['invalid-config-request-body-missing-data'],
+            'invalid-config-request-body-empty-data' => ['invalid-config-request-body-empty-data'],
+            'invalid-config-request-body-invalid-data-type' => ['invalid-config-request-body-invalid-data-type'],
+            'invalid-config-request-body-empty-data-attributes' => ['invalid-config-request-body-empty-data-attributes'],
+            'invalid-config-request-body-missing-data-attributes-configuration' => ['invalid-config-request-body-missing-data-attributes-configuration'],
+            'invalid-config-request-body-empty-data-attributes-configuration' => ['invalid-config-request-body-empty-data-attributes-configuration'],
+        ];
     }
 }

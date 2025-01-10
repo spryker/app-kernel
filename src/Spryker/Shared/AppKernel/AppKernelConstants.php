@@ -24,7 +24,17 @@ class AppKernelConstants
 
     /**
      * Specification:
-     * - Identifier of the application.
+     * - List of message channels that are used by the application.
+     *
+     * @api
+     *
+     * @var string
+     */
+    public const APP_MESSAGE_CHANNELS = 'APP:APP_MESSAGE_CHANNELS';
+
+    /**
+     * Specification:
+     * - Version of the application.
      *
      * @api
      *

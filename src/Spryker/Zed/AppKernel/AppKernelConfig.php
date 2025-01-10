@@ -8,6 +8,7 @@
 namespace Spryker\Zed\AppKernel;
 
 use Spryker\Shared\AppKernel\AppKernelConstants;
+use Spryker\Shared\MessageBroker\MessageBrokerConstants;
 use Spryker\Zed\Kernel\AbstractBundleConfig;
 
 class AppKernelConfig extends AbstractBundleConfig
@@ -33,5 +34,18 @@ class AppKernelConfig extends AbstractBundleConfig
     public function getAppIdentifier(): string
     {
         return $this->get(AppKernelConstants::APP_IDENTIFIER);
+    }
+
+    /**
+     * @api
+     *
+     * @return list<string>
+     */
+    public function getAppMessageChannels(): array
+    {
+        return $this->get(
+            AppKernelConstants::APP_MESSAGE_CHANNELS,
+            array_unique(array_values($this->get(MessageBrokerConstants::MESSAGE_TO_CHANNEL_MAP))),
+        );
     }
 }

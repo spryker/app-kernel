@@ -13,8 +13,9 @@
     <transfer name="AppConfigUpdated" strict="true">
         <property name="status" type="bool" description="The Status of an App that enabled (1) or disabled (0)"/>
         <property name="isActive" type="bool" description="The Status of an App that enabled (1) or disabled (0)"/>
-        <property name="config" type="string"/>
+        <property name="config" type="array" singular="config"/>
         <property name="appIdentifier" type="string" description="The identifier of an App"/>
+        <property name="messageChannels" type="array" singular="messageChannel" description="The message channels that are used by an App"/>
         <property name="messageAttributes" type="MessageAttributes"/>
     </transfer>
 
@@ -54,6 +55,7 @@
 
     <transfer name="AppConfigCriteria" strict="true">
         <property name="tenantIdentifier" type="string"/>
+        <property name="isActive" type="bool"/>
     </transfer>
 
     <transfer name="AppDisconnectResponse" strict="true">

@@ -6,12 +6,9 @@
         "data": {
             "type": "configuration",
             "attributes": {
-                "configuration": ""
+                "configuration": null
             }
         }
     },
-    "__configurationPayload": {
-        "clientId": [],
-        "clientSecret": []
-    }
+    "__configurationPayload": {}
 }

@@ -24,6 +24,7 @@ class MessageSender implements MessageSenderInterface
         $appConfigUpdatedTransfer = new AppConfigUpdatedTransfer();
         $appConfigUpdatedTransfer->fromArray($appConfigTransfer->toArray(), true);
         $appConfigUpdatedTransfer
+            ->setMessageChannels($this->appKernelConfig->getAppMessageChannels())
             ->setAppIdentifier($this->appKernelConfig->getAppIdentifier());
 
         $appConfigUpdatedTransfer->setMessageAttributes($this->getMessageAttributes(

@@ -1,0 +1,7 @@
+{
+    "meta": {
+        "x-tenant-identifier": ["tenant-identifier"]
+    },
+    "content": null,
+    "__configurationPayload": {}
+}

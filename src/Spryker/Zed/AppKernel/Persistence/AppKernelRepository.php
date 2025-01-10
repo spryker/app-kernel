@@ -9,6 +9,7 @@ namespace Spryker\Zed\AppKernel\Persistence;
 
 use Generated\Shared\Transfer\AppConfigCriteriaTransfer;
 use Generated\Shared\Transfer\AppConfigTransfer;
+use Orm\Zed\AppKernel\Persistence\Map\SpyAppConfigTableMap;
 use Spryker\Shared\Log\LoggerTrait;
 use Spryker\Zed\AppKernel\Persistence\Exception\AppConfigNotFoundException;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
@@ -26,9 +27,13 @@ class AppKernelRepository extends AbstractRepository implements AppKernelReposit
     public function findAppConfigByCriteria(
         AppConfigCriteriaTransfer $appConfigCriteriaTransfer
     ): AppConfigTransfer {
-        $appConfigEntity = $this->getFactory()
-            ->createAppConfigQuery()
-            ->findOneByTenantIdentifier($appConfigCriteriaTransfer->getTenantIdentifierOrFail());
+        $spyAppConfigQuery = $this->getFactory()->createAppConfigQuery();
+
+        if ($appConfigCriteriaTransfer->getIsActive() !== null) {
+            $spyAppConfigQuery->filterByIsActive($appConfigCriteriaTransfer->getIsActive());
+        }
+
+        $appConfigEntity = $spyAppConfigQuery->findOneByTenantIdentifier($appConfigCriteriaTransfer->getTenantIdentifierOrFail());
 
         if ($appConfigEntity === null) {
             $errorMessage = 'Could not find an App configuration for the given Tenant';
@@ -42,5 +47,24 @@ class AppKernelRepository extends AbstractRepository implements AppKernelReposit
             $appConfigEntity,
             new AppConfigTransfer(),
         );
+    }
+
+    /**
+     * @return array<mixed, string>
+     */
+    public function getConnectedTenantIdentifiers(): array
+    {
+        /** @var \Propel\Runtime\Collection\ObjectCollection $connectedTenantIdentifierCollection */
+        $connectedTenantIdentifierCollection = $this->getFactory()
+            ->createAppConfigQuery()
+            ->filterByIsActive(true)
+            ->filterByStatus_In([SpyAppConfigTableMap::COL_STATUS_NEW, SpyAppConfigTableMap::COL_STATUS_CONNECTED])
+            ->select(AppConfigTransfer::TENANT_IDENTIFIER)
+            ->find();
+
+        /** @var array<mixed, string> $connectedTenantIdentifiers */
+        $connectedTenantIdentifiers = $connectedTenantIdentifierCollection->toArray();
+
+        return $connectedTenantIdentifiers;
     }
 }
